@@ -1,0 +1,103 @@
+#login_data{
+    position: absolute;
+    right: 175px;
+}
+
+.login_register_div{
+    position: relative;
+    top: 100px;
+    left: 45%;
+}
+
+#cart{
+    position: absolute;
+    right: 50px;
+    top: 175px;
+}
+
+#cart_item_number{
+    position: absolute;
+    bottom: 50px;
+    left: 35px;
+}
+
+#header{
+    position: relative;
+    background-color: grey;
+    height: 50px;
+}
+
+table, th, td{
+    border: 1px solid;
+}
+
+#company_name{
+    position: absolute;
+    top: 25%;
+    left: 50%;
+}
+
+#collections{
+    position: absolute;
+    left: 5%;
+}
+
+#menu{
+    position: absolute;
+    right: 10px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    padding: 10px;
+    width: 80%;
+
+  }
+
+  .grid-item {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    text-align: center;
+  }
+
+  .grid-container2 {
+    display: grid;
+    grid-template-columns: auto auto auto ;
+    padding: 10px;
+    width: 65%;
+
+  }
+  
+  .grid-item2 {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    text-align: center;
+  }
+
+.images{
+    width: 160px;
+    height: 170px;
+}
+
+#buy_hud{
+    position: relative;
+    left: 75%;
+    bottom: 175px;
+}
+
+#description{
+    position: relative;
+}
+
+.menu {
+    position: relative;
+    left: 95%;
+    top: 15px;
+  }
+
+.menu-options{
+    position: absolute;
+    left: -75px;
+    top: 30px;    
+}
