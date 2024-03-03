@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import delete_from_cart from "../apis/delete_from_cart";
+import delete_from_cart from "../apis/cart/delete_from_cart";
 
 import cart from "../data/cart.json"
 

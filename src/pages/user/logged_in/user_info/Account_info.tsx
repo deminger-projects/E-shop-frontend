@@ -6,31 +6,30 @@ import login_data from "../../../../data/login_data.json"
 
 import Access_denied from "../../Access_denied";
 
-import change_status from "../../../../apis/change_status";
+import change_status from "../../../../apis/records/change_status";
 
 import {DeliveryData} from "../../../../interfaces/user/User_data"
+import get_account_info_template from "../../../../templates/user/get_account_info_template";
 
 export default function Account_info(){
 
     const location = useLocation()
     
     const [responce_msg, set_responce_msg] = useState<string>(location.state ? location.state.msg : "");
-    const [error_msg, set_error_msg] = useState<string>()
+    const [error_msg, set_error_msg] = useState<string>("")
 
     var handle_delete = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, user_data: DeliveryData) => {
 
         event.preventDefault();
 
-        var tables = {
-            user_data: {status: "Inactive"}
-        }
+        const account_info_template = get_account_info_template()
 
-        const [api_responce, error] = await change_status(tables, user_data.id, login_data[0].users[0].id)
+        const [api_responce, error] = await change_status(account_info_template, user_data.id, login_data[0].users[0].id)
 
         if(error){
             set_error_msg("error ocured")
         }else{
-            set_responce_msg(api_responce.msg)
+            set_responce_msg('info deleted')
         }
     }
 

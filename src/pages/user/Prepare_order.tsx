@@ -9,15 +9,13 @@ import user_data from "../../data/user_data.json"
 import login_data from "../../data/login_data.json"
 import cart from "../../data/cart.json"
 
-import Tables from "../../interfaces/Tables"
 import {DeliveryData} from "../../interfaces/user/User_data"
 
-import add_record from '../../apis/add_record';
-import get_stripe_payment_url from '../../apis/get_stripe_payment_url';
+import add_record from '../../apis/records/add_record';
+import get_order_template from '../../templates/order/get_order_template';
+import Money_sum from '../../components/Money_sum';
 
 export default function Prepare_order(){
-
-    console.log(process.env.REACT_APP_SECRET_SERVER_URL)
 
     const navigate = useNavigate();
 
@@ -29,9 +27,7 @@ export default function Prepare_order(){
     const [city, setCity] = useState<string>("");
     const [PSC, setPSC] = useState<string>("");
 
-    const [error_msg, set_error_msg] = useState<string>();
-
-    const [order_status, set_order_status] = useState<boolean>(false)
+    const [error_msg, set_error_msg] = useState<string>("");
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -50,35 +46,17 @@ export default function Prepare_order(){
 
             var cart_data = get_cart_data()
 
-            var tables: Tables
+            const order_template = get_order_template(login_data[0].users[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, login_data[0].users[0].login_status)
 
-                    if(login_data[0].users[0].login_status === "Active"){
-                         tables = {
-                            orders: {user_id: login_data[0].users[0].id, name: name, surname: surname, email: email, adress: adress, phone: telephone, postcode: PSC},
-                            order_products: {order_id: null, product_id: cart_data.ids, size: cart_data.sizes, amount: cart_data.amounts, prize: cart_data.prizes}
-                        }
-                    }else{
-                         tables = {
-                            orders: {name: name, surname: surname, email: email, adress: adress, phone: telephone, postcode: PSC},
-                            order_products: {order_id: null, product_id: cart_data.ids, size: cart_data.sizes, amount: cart_data.amounts, prize: cart_data.prizes}
-                            }
-                    }
+            const [api_responcem, error] = await add_record(order_template, login_data[0].users[0].id, undefined , undefined, true, login_data[0].users[0].login_status)       
 
-            var [url, stripe_error] = await get_stripe_payment_url(cart_data.cart_items_for_stripe_paywall, tables)
-
-            if(stripe_error){
-                set_error_msg(stripe_error)
+            if(error){
+                set_error_msg(error.msg)
             }else{
-                window.location = url.payment_url
-
-                const [api_responcem, error] = await add_record(tables, login_data[0].users[0].id, undefined , undefined, true)       
-                
-                if(error){
-                    set_error_msg(error.msg)
-                }else{
+                if(api_responcem.next_status === true){
                     navigate("/order-completed", {state: {data: cart_data.cart_products}});
                 }
-            }     
+            }
         }
     }
 
@@ -97,6 +75,8 @@ export default function Prepare_order(){
     return(
         <>
             <Cart_items></Cart_items>
+
+            <Money_sum></Money_sum>
 
             <p>{error_msg}</p>
 

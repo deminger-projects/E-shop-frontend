@@ -9,16 +9,16 @@ import Access_denied from '../../user/Access_denied';
 
 import login_data from "../../../data/login_data.json"
 
-import edit_record from '../../../apis/edit_record';
+import edit_record from '../../../apis/records/edit_record';
 
 import set_up_sizes from '../../../functions/set_ups/set_up_sizes';
 import filter_sizes from '../../../functions/filters/filter_sizes';
-import filter_files from '../../../functions/filters/filter_files';
 import set_up_files from '../../../functions/set_ups/set_up_files';
 
-import Table from "../../../interfaces/Tables"
 import Size from "../../../interfaces/Size"
 import File from '../../../interfaces/Files';
+import get_filtred_data from '../../../functions/get_filtred_data';
+import get_product_template from '../../../templates/admin/get_product_template';
 
 export default function Admin_product_edit(){
 
@@ -35,76 +35,52 @@ export default function Admin_product_edit(){
 
     const [files, set_files] = useState<File>()
     const [sizes, set_sizes] = useState<Array<Size>>(size_set_up)
+    const [urls, set_urls] = useState<{main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}>(file_set_up.ulrs)
 
-    const [error_msg, set_error_msg] = useState<string>()
+    const [error_msg, set_error_msg] = useState<string>("")
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
         event.preventDefault();
 
         const filtred_sizes = filter_sizes(sizes)
+        const filtred_data = get_filtred_data(urls, files, file_set_up.ulrs)
         
         if(!name){set_error_msg("name is empty")}
         if(!cost){set_error_msg("cost is empty")}
         if(!description){set_error_msg("description is empty")}
         if(filtred_sizes.sizes.length <= 0){set_error_msg("select sizes")}
-    
+
+        if(files){
+            if(((files.model_show_case?.status === true && filtred_data.model_show_case_status !== true) || (files.detail_show_case?.status === true && filtred_data.detail_show_case_status !== true))){set_error_msg("missing images in show case")}
+        }
+
         if(name && cost && description && filtred_sizes.sizes.length > 0){
+        
+            const product_template = get_product_template(collection, name, Number(cost), description, filtred_sizes.sizes, location.state.products[0].id, filtred_sizes.amounts, filtred_data.file_names_for_table, files)
 
             if(files){
-                const filtred_files = filter_files(files, file_set_up.urls_without_path)
+                if(((files.model_show_case?.status === true && filtred_data.model_show_case_status === true) || files.model_show_case?.status === false) && ((files.detail_show_case?.status === true && filtred_data.detail_show_case_status === true) || files.detail_show_case?.status === false)){
+                    const [api_responce, error] = await edit_record(product_template, location.state.products[0].id, login_data[0].users[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "products")
 
-                var tables : Table
-    
-                if(collection === "NULL"){
-                     tables = {
-                        products: {collection_id: "NULL", name$: name, price: cost, description: description},
-                        product_sizes: {product_id: location.state.products[0].id, size: filtred_sizes.sizes, current_amount: filtred_sizes.amounts},
-                        product_images: {product_id: location.state.products[0].id, image_url: filtred_files.files_names_tables}
-                    }
-                }else{
-                     tables = {
-                        products: {collection_id: collection, name$: name, price: cost, description: description},
-                        product_sizes: {product_id: location.state.products[0].id, size: filtred_sizes.sizes, current_amount: filtred_sizes.amounts},
-                        product_images: {product_id: location.state.products[0].id, image_url: filtred_files.files_names_tables}
-                    }
-                }
-
-                const [api_responce, error] = await edit_record(tables, location.state.products[0].id, login_data[0].users[0].id, filtred_files.files, filtred_files.file_names_to_keep, "products")
-    
-                if(error){
-                    set_error_msg("error ocured")
-                }else{
-                    navigate("/admin_product_page", {state: {msg: api_responce.msg}})
-                }
-
-            }else{
-                var tables : Table
-    
-                if(collection === "NULL"){
-                     tables = {
-                        products: {collection_id: "NULL", name$: name, price: cost, description: description},
-                        product_sizes: {product_id: location.state.products[0].id, size: filtred_sizes.sizes, current_amount: filtred_sizes.amounts},
-                    }
-                }else{
-                     tables = {
-                        products: {collection_id: collection, name$: name, price: cost, description: description},
-                        product_sizes: {product_id: location.state.products[0].id, size: filtred_sizes.sizes, current_amount: filtred_sizes.amounts},
-                    }
-                }
-
-                const [api_responce, error] = await edit_record(tables, location.state.products[0].id, login_data[0].users[0].id, undefined, file_set_up.files_to_keep, "products")
-                
-                if(api_responce.duplicit_value === true){
-                    set_error_msg("duplicit name")
-                }else{
                     if(error){
                         set_error_msg("error ocured")
-                    }else{
-                        navigate("/admin_product_page", {state: {api_responce}})
+                    }else if(api_responce.next_status === true){
+                        navigate("/admin_product_page", {state: {msg: api_responce.msg}})
+                    }else if(api_responce.next_status === false){
+                        set_error_msg(api_responce.msg)
                     }
                 }
-                
+            }else{
+                const [api_responce, error] = await edit_record(product_template, location.state.products[0].id, login_data[0].users[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "products")
+
+                if(error){
+                    set_error_msg("error ocured")
+                }else if(api_responce.next_status === true){
+                    navigate("/admin_product_page", {state: {msg: api_responce.msg}})
+                }else if(api_responce.next_status === false){
+                    set_error_msg(api_responce.msg)
+                }
             }
         }
     }
@@ -146,7 +122,7 @@ export default function Admin_product_edit(){
                     <br></br>
                     <br></br>
 
-                    <Admin_image_add on_change={set_files} default_urls={file_set_up.ulrs} settings={{hover: true, model_show_case: true, detail_show_case: true}}></Admin_image_add>
+                    <Admin_image_add on_delete={set_urls} on_change={set_files} default_urls={file_set_up.ulrs} settings={{hover: true, model_show_case: true, detail_show_case: true}}></Admin_image_add>
 
                     <button>save</button>
 

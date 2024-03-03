@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import send_aut_code from "../../../apis/send_aut_code";
+import send_aut_code from "../../../apis/other/send_aut_code";
+import get_send_aut_code_template from "../../../templates/other/get_send_aut_code_template";
 
 export default function Forgot_psw(){
 
@@ -9,7 +10,7 @@ export default function Forgot_psw(){
     
     const [email, setEmail] = useState<string>("");
 
-    const [error_msg, set_error_msg] = useState<string>();
+    const [error_msg, set_error_msg] = useState<string>("");
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -19,11 +20,9 @@ export default function Forgot_psw(){
 
         if(email){
 
-            var tables = {
-                users: {email$: email}
-            }
+            const send_aut_code_template = get_send_aut_code_template(email)
 
-            const [api_respocse, error] = await send_aut_code(tables)
+            const [api_respocse, error] = await send_aut_code(send_aut_code_template)
 
             if(error){
                 set_error_msg("error ocured")
@@ -33,7 +32,7 @@ export default function Forgot_psw(){
                 }else if(api_respocse.status === true){
                     navigate('/code-check',{state: {status: true, code: api_respocse.code, record_id: api_respocse.record_id, request: "psw_restart"}})
                 }
-            }     
+            }
         }
     }
 

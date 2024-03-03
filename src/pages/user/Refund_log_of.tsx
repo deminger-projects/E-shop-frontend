@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import refund_request from "../../apis/refund_request";
+import refund_request from "../../apis/other/refund_request";
+import get_refund_request_template from "../../templates/refund/get_refund_request_template";
 
 export default function Refund(){
 
     const navigate = useNavigate();
 
-    const [order_code, set_order_code] = useState<string>();
-    const [email, set_email] = useState<string>();
+    const [order_code, set_order_code] = useState<string>("");
+    const [email, set_email] = useState<string>("");
 
-    const [error_msg, set_error_msg] = useState<string>();
+    const [error_msg, set_error_msg] = useState<string>("");
 
     var handleSubmit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         
@@ -21,18 +22,16 @@ export default function Refund(){
 
             if(order_code && email){
 
-                var tables = {
-                    orders: {id$: order_code, email$: email}
-                }        
+                const refund_template = get_refund_request_template(Number(order_code), email)  
 
-                const [api_responce, error] = await refund_request(tables, email)
-
+                const [api_responce, error] = await refund_request(refund_template, email, true)
+                
                 if(error){
                     set_error_msg("error ocured")
                 }else{
-                    if(api_responce.status === false){
+                    if(api_responce.next_status === false){
                         set_error_msg(api_responce.msg)
-                    }else if(api_responce.status === true){
+                    }else if(api_responce.next_status === true){
                         navigate('/code-check',{state: {code: api_responce.code, data: api_responce.data, request: "refund"}})
                     }
                 }

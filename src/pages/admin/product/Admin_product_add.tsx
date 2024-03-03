@@ -9,7 +9,7 @@ import Access_denied from '../../user/Access_denied';
 
 import login_data from "../../../data/login_data.json"
 
-import add_record from '../../../apis/add_record';
+import add_record from '../../../apis/records/add_record';
 
 import Tables from "../../../interfaces/Tables"
 import Size from "../../../interfaces/Size"
@@ -18,6 +18,9 @@ import Files from '../../../interfaces/Files';
 import filter_sizes from '../../../functions/filters/filter_sizes';
 import filter_files from '../../../functions/filters/filter_files';
 import set_up_sizes from '../../../functions/set_ups/set_up_sizes';
+import set_up_files from '../../../functions/set_ups/set_up_files';
+import get_filtred_data from '../../../functions/get_filtred_data';
+import get_product_template from '../../../templates/admin/get_product_template';
 
 export default function Admin_product_add(){
 
@@ -25,17 +28,21 @@ export default function Admin_product_add(){
 
     const size_set_up = set_up_sizes()
 
+    var file_set_up = set_up_files(undefined, undefined, undefined)
+
+    const [urls, set_urls] = useState<{main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}>(file_set_up.ulrs)
+
     const [name, setName] = useState<string>("");
     const [cost, setCost] = useState<string>("");
-    const [collection, setCollection] = useState<string>("NULL");
+    const [collection, setCollection] = useState<string>();
     const [description, setDescription] = useState<string>("");
 
     const [files, set_files] = useState<Files>()
 
     const [sizes, set_sizes] = useState<Array<Size>>(size_set_up)
 
-    const [error_msg, set_error_msg] = useState<string>();
-    const [responce_msg, set_responce_msg] = useState<string>();
+    const [error_msg, set_error_msg] = useState<string>("");
+    const [responce_msg, set_responce_msg] = useState<string>("");
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         
@@ -43,54 +50,33 @@ export default function Admin_product_add(){
 
         if(files){
 
+            const filtred_data = get_filtred_data(urls, files, file_set_up.ulrs)
             const filtred_sizes = filter_sizes(sizes)
-            const filtred_files = filter_files(files)
 
             if(!files.main){set_error_msg("select main image")}
             if(!files.hover){set_error_msg("select hover image")}
     
-            if((files.model_show_case?.status === true && filtred_files.show_case_status.model_show_case !== true) || (files.detail_show_case?.status === true && filtred_files.show_case_status.detail_show_case !== true)){set_error_msg("show case missing images")}
+            if((files.model_show_case?.status === true && filtred_data.model_show_case_status !== true) || (files.detail_show_case?.status === true && filtred_data.detail_show_case_status !== true)){set_error_msg("show case missing images")}
 
             if(!name){set_error_msg("name is empty")}
             if(!cost){set_error_msg("cost is empty")}
             if(!description){set_error_msg("description is empty")}
-            if(filtred_files.files_names_tables.length <= 0){set_error_msg("select image")}
+            if(filtred_data.file_names_for_table.length <= 0){set_error_msg("select image")}
             if(filtred_sizes.sizes.length <= 0){set_error_msg("select size")}
 
-            
-            if(name && cost && description && filtred_files.files_names_tables.length > 0 && filtred_sizes.sizes.length > 0 && files.main && files.hover && ((files.model_show_case?.status === true && filtred_files.show_case_status.model_show_case === true) || files.model_show_case?.status === false) && ((files.detail_show_case?.status === true && filtred_files.show_case_status.detail_show_case === true) || files.detail_show_case?.status === false)){            
+            if(name && cost && description && filtred_data.file_names_for_table.length > 0 && filtred_sizes.sizes.length > 0 && files.main && files.hover && ((files.model_show_case?.status === true && filtred_data.model_show_case_status === true) || files.model_show_case?.status === false) && ((files.detail_show_case?.status === true && filtred_data.detail_show_case_status === true) || files.detail_show_case?.status === false)){            
     
-                var tables: Tables
+                const product_template = get_product_template(Number(collection), name, Number(cost), description, filtred_sizes.sizes, null, filtred_sizes.amounts, filtred_data.file_names_for_table, files)
     
-                if(collection === "NULL"){
-                     tables = {
-                        products: {name$: name, price: cost, description: description},
-                        product_sizes: {product_id: null, size: filtred_sizes.sizes, current_amount: filtred_sizes.amounts},
-                        product_images: {product_id: null, image_url$: filtred_files.files_names_tables}
-                    }
+                const [api_responce, error] = await add_record(product_template, login_data[0].users[0].id, "products", filtred_data.files_to_save)    
+
+                if(error){
+                    set_error_msg("error ocured")
+                }else if(api_responce.next_status === true){
+                    navigate("/admin_product_page", {state: {msg: api_responce.msg}})
                 }else{
-                     tables = {
-                        products: {collection_id: collection, name$: name, price: cost, description: description},
-                        product_sizes: {product_id: null, size: filtred_sizes.sizes, current_amount: filtred_sizes.amounts},
-                        product_images: {product_id: null, image_url$: filtred_files.files_names_tables}
-                    }
+                    set_responce_msg(api_responce.msg)
                 }
-    
-                const [api_responce, error] = await add_record(tables, login_data[0].users[0].id, "products", filtred_files.files)    
-                
-                if(api_responce.duplicit_value === true){
-                    set_responce_msg("duplicit name")
-                }else{
-                    if(error){
-                        set_error_msg("error ocured")
-                    }else{
-                        if(api_responce.status === true){
-                            navigate("/admin_product_page", {state: {msg: api_responce.msg}})
-                        }
-                        set_responce_msg(api_responce.msg)
-                    }     
-                }
-                       
             }
         }else{
             set_error_msg("select files")
@@ -135,7 +121,7 @@ export default function Admin_product_add(){
 
                     <br></br>
                     
-                    <Admin_image_add settings={{hover: true, detail_show_case: true, model_show_case: true}} on_change={set_files}></Admin_image_add>
+                    <Admin_image_add settings={{hover: true, detail_show_case: true, model_show_case: true}} on_delete={set_urls} on_change={set_files}></Admin_image_add>
 
                     <br></br>
 

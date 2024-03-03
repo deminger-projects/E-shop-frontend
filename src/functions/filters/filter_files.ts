@@ -36,18 +36,20 @@ export default function check_files(files_data: Files, base_files_names?: Url){
     }
 
 
-
+    
 
 
    
     for(let file of files_data.other){
-        file_names.push(file.name)
-        files.push(file)
+        if(file){
+            file_names.push(file.name)
+            files.push(file)
+        }
     }
 
     if(base_files_names){
         if(base_files_names.other){
-            if(base_files_names.other.length = 0){
+            if(base_files_names.other.length != 0){
                 for(let name of base_files_names.other){
                     file_names_to_keep.push(name)
                 }

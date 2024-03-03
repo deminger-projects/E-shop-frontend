@@ -5,7 +5,8 @@ import Access_denied from "../Access_denied";
 
 import login_data from "../../../data/login_data.json"
 
-import add_record from "../../../apis/add_record";
+import add_record from "../../../apis/records/add_record";
+import get_user_data_template from "../../../templates/user/get_user_data_template";
 
 export default function Add_delivery_info(){
 
@@ -19,7 +20,7 @@ export default function Add_delivery_info(){
     const [city, setCity] = useState<string>("");
     const [PSC, setPSC] = useState<string>("");
 
-    const [error_msg, set_error_msg] = useState<string>();
+    const [error_msg, set_error_msg] = useState<string>("");
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -34,17 +35,15 @@ export default function Add_delivery_info(){
         if(!PSC){set_error_msg("postcode is empty")}
 
         if(name && surname && email && telephone && adress && city && PSC){
-    
-            var tables = {
-                user_data: {user_id$: login_data[0].users[0].id, name$: name, surname$: surname, phone$: telephone, adress$: adress, city$: city, postcode$: PSC}
-            }
 
-            const [api_responce, error] = await add_record(tables, login_data[0].users[0].id)
-    
+            const user_data_template = get_user_data_template(login_data[0].users[0].id, name, surname, telephone, adress, city, PSC)
+
+            const [api_responce, error] = await add_record(user_data_template, login_data[0].users[0].id, undefined, undefined, undefined, login_data[0].users[0].login_status)
+            
             if(error){
                 set_error_msg("error ocured")
             }else{
-                if(api_responce.status){
+                if(api_responce.next_status === true){
                     navigate('/account-info', {state: {msg: "info added"}})
                 }else{
                     set_error_msg(api_responce.msg)

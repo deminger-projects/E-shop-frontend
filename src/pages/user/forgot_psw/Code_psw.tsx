@@ -11,7 +11,7 @@ export default function Code_psw(){
     useEffect(() => {
         if(Number(user_code) ===  Number(location.state.code)){
             if(location.state.request === "refund"){
-                navigate('/place-refund',{state: {data: {order_products: location.state.data}}})
+                navigate('/place-refund',{state: {data: location.state.data}})
             }else if(location.state.request === "psw_restart"){
                 navigate('/reset-password',{state: {status: true, record_id: location.state.record_id}})
             }

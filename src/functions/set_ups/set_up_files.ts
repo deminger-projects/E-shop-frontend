@@ -47,6 +47,7 @@ export default function set_up_files(images?: Array<ProductImage>, product?: Pro
             }
 
             files_to_keep.push(images[index].image_url)
+
         }
     }
 

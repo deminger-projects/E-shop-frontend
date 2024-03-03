@@ -6,16 +6,17 @@ import Access_denied from "../../Access_denied";
 import user_data from "../../../../data/user_data.json"
 import login_data from "../../../../data/login_data.json"
 
-import edit_record from "../../../../apis/edit_record";
+import edit_record from "../../../../apis/records/edit_record";
+import get_psw_template from "../../../../templates/other/ger_psw_template";
 
 export default function Psw_change(){
 
     const navigate = useNavigate();
     
-    const [current_psw, set_current_psw] = useState<string>();
-    const [psw_input1, setPsw_input1] = useState<string>();
-    const [psw_input2, setPsw_input2] = useState<string>();
-    const [error_msg, set_error_msg] = useState<string>();
+    const [current_psw, set_current_psw] = useState<string>("");
+    const [psw_input1, setPsw_input1] = useState<string>("");
+    const [psw_input2, setPsw_input2] = useState<string>("");
+    const [error_msg, set_error_msg] = useState<string>("");
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -29,11 +30,9 @@ export default function Psw_change(){
 
         if(current_psw && psw_input1 && psw_input2 && user_data[0].users[0].password === current_psw && psw_input1 === psw_input2){
         
-            var tables = {
-                users: {password: psw_input1}
-            }
+            const psw_template = get_psw_template(psw_input1)
 
-            const api_respocse = await edit_record(tables, user_data[0].users[0].id, login_data[0].users[0].id)
+            const api_respocse = await edit_record(psw_template, user_data[0].users[0].id, login_data[0].users[0].id, undefined, undefined, undefined, true)
 
             navigate("/main", {state: {msg: "password changed"}})
         }

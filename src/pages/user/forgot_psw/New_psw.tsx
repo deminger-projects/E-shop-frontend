@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import Access_denied from "../Access_denied";
 
-import edit_record from "../../../apis/edit_record";
+import edit_record from "../../../apis/records/edit_record";
+import get_psw_template from "../../../templates/other/ger_psw_template";
 
 export default function New_psw(){
     
@@ -12,9 +13,9 @@ export default function New_psw(){
 
     var is_valid = JSON.stringify(location.state) !== "null" ? location.state.status === true ? true : false : false
 
-    const [psw_input1, setPsw_input1] = useState<string>();
-    const [psw_input2, setPsw_input2] = useState<string>();
-    const [error_msg, set_error_msg] = useState<string>();
+    const [psw_input1, setPsw_input1] = useState<string>("");
+    const [psw_input2, setPsw_input2] = useState<string>("");
+    const [error_msg, set_error_msg] = useState<string>("");
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -25,13 +26,11 @@ export default function New_psw(){
         if(psw_input1 !== psw_input2){set_error_msg("passwords do not match")}
 
         if(psw_input1 && psw_input2 && psw_input1 === psw_input2){
-          
-            var tables = {
-                users: {password: psw_input1}
-            }
 
-            const [api_respocse, error] = await edit_record(tables, location.state.record_id)
+            const psw_template = get_psw_template(psw_input1)
 
+            const [api_respocse, error] = await edit_record(psw_template, location.state.record_id, location.state.record_id, undefined, undefined, undefined, true)
+            
             if(error){
                 set_error_msg("error ocured")
             }else{

@@ -5,22 +5,29 @@ import Access_denied from '../../user/Access_denied';
 
 import login_data from "../../../data/login_data.json"
 
-import add_record from '../../../apis/add_record';
+import add_record from '../../../apis/records/add_record';
 
 import filter_files from '../../../functions/filters/filter_files';
 
 import Admin_image_add from '../../../components/Admin/Admin_add_image_handler';
 
 import Files from '../../../interfaces/Files';
+import set_up_files from '../../../functions/set_ups/set_up_files';
+import get_filtred_data from '../../../functions/get_filtred_data';
+import get_edit_collection_template from '../../../templates/admin/get_edit_collection_template';
 
 export default function Admin_collection_add(){
     
     const navigate = useNavigate();
 
     const [collection_name, set_collection_name] = useState<string>("");  
+
+    var file_set_up = set_up_files(undefined, undefined, undefined)
+
+    const [urls, set_urls] = useState<{main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}>(file_set_up.ulrs)
     const [files, set_files] = useState<Files>()
 
-    const [error_msg, set_error_msg] = useState<string>();  
+    const [error_msg, set_error_msg] = useState<string>("");  
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -28,21 +35,18 @@ export default function Admin_collection_add(){
 
         if(files){
 
-            const filtred_files = filter_files(files)
+            var filtred_data = get_filtred_data(urls, files, file_set_up.ulrs)
 
             if(!files.main){set_error_msg("select main image")}
 
             if(!collection_name){set_error_msg("collection name is empty")}
-            if(filtred_files.files_names_tables.length <= 0){set_error_msg("select image")}
+            if(filtred_data.file_names_for_table.length <= 0){set_error_msg("select image")}
     
-            if(collection_name && filtred_files.files_names_tables.length > 0 && files.main){
-                    
-                var tables = {
-                    collections: {name$: collection_name},
-                    collection_images: {collection_id: null, image_url: filtred_files.files_names_tables}
-                }
-    
-                const [api_responce, error] = await add_record(tables, login_data[0].users[0].id, "collections", filtred_files.files)
+            if(collection_name && filtred_data.file_names_for_table.length > 0 && files.main){
+
+                const collection_edit_template = get_edit_collection_template(collection_name, null, filtred_data.file_names_for_table)
+                
+                const [api_responce, error] = await add_record(collection_edit_template, login_data[0].users[0].id, "collections", filtred_data.files_to_save)
     
                 if(api_responce.duplicit_value === true){
                     set_error_msg("duplicit name")
@@ -76,7 +80,7 @@ export default function Admin_collection_add(){
                     <br></br>
                     <br></br>
 
-                    <Admin_image_add on_change={set_files}></Admin_image_add>
+                    <Admin_image_add on_change={set_files} on_delete={set_urls}></Admin_image_add>
 
                     <button>save</button>
 

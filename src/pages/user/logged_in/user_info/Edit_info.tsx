@@ -5,7 +5,8 @@ import Access_denied from "../../Access_denied";
 
 import login_data from "../../../../data/login_data.json"
 
-import edit_record from "../../../../apis/edit_record";
+import edit_record from "../../../../apis/records/edit_record";
+import get_user_template from "../../../../templates/user/get_user_template";
 
 export default function Edit_info(){
     
@@ -26,9 +27,9 @@ export default function Edit_info(){
 
         if(username && email){
 
-            var tables = {users: {username: username, email$: email}}
+            const user_template = get_user_template(username, email)
 
-            const api_responce = await edit_record(tables, user_data.id, login_data[0].users[0].id)
+            const api_responce = await edit_record(user_template, user_data.id, login_data[0].users[0].id)
 
             navigate('/account-info', {state: {msg: "data changed"}})
 

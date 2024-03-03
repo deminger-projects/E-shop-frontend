@@ -5,7 +5,8 @@ import Access_denied from "../../Access_denied";
 
 import login_data from "../../../../data/login_data.json"
 
-import edit_record from "../../../../apis/edit_record";
+import edit_record from "../../../../apis/records/edit_record";
+import get_user_data_template from "../../../../templates/user/get_user_data_template";
 
 export default function Edit_delivery_info(){
 
@@ -19,7 +20,7 @@ export default function Edit_delivery_info(){
     const [phone, set_phone] = useState<string>(user_data.phone);
     const [psc, set_psc] = useState<string>(user_data.postcode);
 
-    const [error_msg, set_error_msg] = useState("");
+    const [error_msg, set_error_msg] = useState<string>("");
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -33,12 +34,20 @@ export default function Edit_delivery_info(){
         if(!psc){set_error_msg("postcode is empty")}
 
         if(name && surname && adress && city && phone && psc){
-            var tables = {user_data: {user_id$: login_data[0].users[0].id, name$: name, surname$: surname, phone$: phone, adress$: adress, city$: city, postcode$: psc}}
+
+            const user_data_template = get_user_data_template(login_data[0].users[0].id, name, surname, phone, adress, city, psc)
             
-            const api_responce = await edit_record(tables, user_data.id, login_data[0].users[0].id)
+            const [api_responce, err] = await edit_record(user_data_template, user_data.id, login_data[0].users[0].id)
 
-            navigate('/account-info', {state: {msg: "data edited"}})
-
+            if(err){
+                set_error_msg("error ocured")
+            }else{
+                if(api_responce.duplicit_value !== true){
+                    navigate('/account-info', {state: {msg: "data edited"}})
+                }else{
+                    set_error_msg("duplicit value")
+                }
+            }
         }
     }
 

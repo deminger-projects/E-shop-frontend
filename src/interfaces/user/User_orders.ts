@@ -1,5 +1,5 @@
 export default interface User_orders {
-    refunds:        Refund[];
+    refunds:        Order[];
     order_products: OrderProduct[];
 }
 
@@ -10,9 +10,10 @@ export interface OrderProduct {
     size:       string;
     amount:     number;
     prize:      number;
+    image_url: string;
 }
 
-export interface Refund {
+export interface Order {
     id:            number;
     name:          string;
     surname:       string;
@@ -22,6 +23,4 @@ export interface Refund {
     postcode:      string;
     add_date:      string;
     status:        string;
-    refund_count: number;
-
 }

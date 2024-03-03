@@ -4,9 +4,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Cart from '../../components/Cart';
 import User_size_select from '../../components/User_size_select';
 
-import Product, {ProductSize} from "../../interfaces/Product"
+import {ProductSize} from "../../interfaces/Product"
 
-import add_to_cart from '../../apis/add_to_cart';
+import add_to_cart from '../../apis/cart/add_to_cart';
 import User_show_case from '../../components/User_show_case';
 
 export default function Item_info(){
@@ -15,9 +15,10 @@ export default function Item_info(){
 
     const product_data = useLocation().state.product_data;
 
-    const [response, set_responce] = useState<string>()
+    const [response, set_responce] = useState<string>("")
     const [size_select, set_size_select] = useState<ProductSize>()
-    const [error_msg, set_error_msg] = useState<string>()
+
+    const [error_msg, set_error_msg] = useState<string>("")
 
     var handle_cart_change = async (event: React.MouseEvent<HTMLButtonElement>, move?: boolean) => {
 
@@ -31,9 +32,7 @@ export default function Item_info(){
             }else{
                 set_responce(api_responce.msg)
 
-                if(move){
-                    navigate("/prepare-order", {state: {data: product_data}});
-                }
+                if(move){navigate("/prepare-order", {state: {data: product_data}});}
             }
         }
     }

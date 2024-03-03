@@ -11,4 +11,5 @@ export interface Collection {
     id:        number;
     name:      string;
     image_url: string;
+    add_date: string;
 }

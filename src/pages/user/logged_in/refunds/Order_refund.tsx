@@ -6,12 +6,14 @@ import login_data from "../../../../data/login_data.json"
 import {OrderProduct} from "../../../../interfaces/user/User_orders"
 import Refund from "../../../../interfaces/Refund_table"
 
-import add_record from "../../../../apis/add_record";
+import add_record from "../../../../apis/records/add_record";
 
 import Refund_row from "../../../../components/Refund_table_row";
 
 import set_up_refund_products from "../../../../functions/set_ups/set_up_refund_products";
 import filter_refund_data from "../../../../functions/filters/filter_refund_data";
+
+import get_refund_template from "../../../../templates/refund/get_refund_template";
 
 export default function Order_refund(){
 
@@ -22,8 +24,10 @@ export default function Order_refund(){
 
     const [refund_data, set_refund_data] = useState<Refund[]>(refund_data_set_up);
 
-    const [error_msg, set_error_msg] = useState<string>();
+    const [error_msg, set_error_msg] = useState<string>("");
 
+    console.log("🚀 ~ Order_refund ~ location.state.data:", location.state.data)
+    
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
         event.preventDefault(); 
@@ -33,19 +37,18 @@ export default function Order_refund(){
         if(filtred_refund_data.ids.length <= 0){set_error_msg("selelct value")}
 
         if(filtred_refund_data.ids.length > 0){
-            var tables = {
-                refunds: {order_id: location.state.data.refunds[0].id},
-                refund_products : {refund_id: null, product_id: filtred_refund_data.ids, reason_id: filtred_refund_data.reasons, amount: filtred_refund_data.amounts, size: filtred_refund_data.sizes}
+
+            const refund_template = get_refund_template(location.state.data.refunds[0].id, null, filtred_refund_data.ids, filtred_refund_data.reasons, filtred_refund_data.amounts, filtred_refund_data.sizes, "Proccesing")
+           
+            const [api_responce, error] = await add_record(refund_template, login_data[0].users[0].id, undefined, undefined, undefined, login_data[0].users[0].login_status)
+           
+            if(error){
+                set_error_msg("error ocured")
+            }else if(api_responce.next_status === true){
+                navigate("/login", {state: {msg: api_responce.msg}})
+            }else if(api_responce.next_status === false){
+                set_error_msg(api_responce.msg)
             }
-
-            if(login_data[0].users[0].login_status === "Active"){
-                const api_responce = await add_record(tables, login_data[0].users[0].id)
-            }else{
-                const api_responce = await add_record(tables)
-            }
-
-            navigate("/refunds", {state: {msg: "refund placed"}})
-
         }
     }
 
@@ -81,3 +84,4 @@ export default function Order_refund(){
         </>
     )
 }
+   

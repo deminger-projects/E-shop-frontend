@@ -2,34 +2,61 @@ import { Link, useLocation } from "react-router-dom";
 
 import Access_denied from "../../Access_denied";
 
-import user_orders from "../../../../data/user_orders.json"
 import login_data from "../../../../data/login_data.json"
 
-import User_orders, {OrderProduct} from "../../../../interfaces/user/User_orders"
+import avalible_refunds from "../../../../data/refund_test.json"
+
+import New_orders, {OrderProduct, Order}  from "../../../../interfaces/new_refunds";
+
+import { useEffect, useState } from "react";
 
 export default function Refunds(){
 
     const location = useLocation()
 
+    const [orders_arr, set_orders_arr] = useState<Array<New_orders>>(avalible_refunds)
+    const [search_order_id, set_search_order_id] = useState<string>("")
+
+    useEffect(() => {
+        var res_arr: Array<New_orders> = []
+
+        for(var order of avalible_refunds){
+
+            console.log(order)
+
+            var order_fix: New_orders = order
+
+            if(search_order_id){
+                if(order_fix.orders[0].id.toString().includes(search_order_id)){
+                    res_arr.push(order)
+                }
+            }
+        }
+
+        if(search_order_id){
+            set_orders_arr(res_arr)
+        }else{
+            set_orders_arr(avalible_refunds)
+        }
+
+    }, [search_order_id])
+    
+
     return(
         <>
+
+            <label htmlFor="">order id</label>
+            <input type="text" value={search_order_id} onChange={(event) => set_search_order_id(event.target.value)}/>
+
             {location.state ? <p>{location.state.msg}</p> : <></>}
 
-            {login_data[0].users[0].login_status  === "Active" ? user_orders.length !== 0 ? user_orders.map((order: User_orders, index: number) => {
-
-                
-
-                if(order.refunds[0].refund_count > 0){
-                    var button = <button>refund in progress</button>    
-                }else{
-                    var button = <button><Link to="/place-refund" state={{data: order}}>refund</Link></button> 
-
-                }
+            {login_data[0].users[0].login_status  === "Active" ? avalible_refunds.length !== 0 ? orders_arr.map((order: New_orders, index: number) => {
 
                 return <div key={index.toString()}>
                 <table>
                     <thead>
                         <tr>
+                            <th>order id</th>
                             <th>name</th>
                             <th>surname</th>
                             <th>email</th>
@@ -42,13 +69,14 @@ export default function Refunds(){
                     
                     <tbody>
                         <tr>
-                            <td><p>{order.refunds[0].name}</p></td>
-                            <td><p>{order.refunds[0].surname}</p></td>
-                            <td><p>{order.refunds[0].email}</p></td>
-                            <td><p>{order.refunds[0].phone}</p></td>
-                            <td><p>{order.refunds[0].adress}</p></td>
-                            <td><p>{order.refunds[0].postcode}</p></td>
-                            <td><p>{order.refunds[0].add_date}</p></td>
+                            <td><p>{order.orders[0].id}</p></td>
+                            <td><p>{order.orders[0].name}</p></td>
+                            <td><p>{order.orders[0].surname}</p></td>
+                            <td><p>{order.orders[0].email}</p></td>
+                            <td><p>{order.orders[0].phone}</p></td>
+                            <td><p>{order.orders[0].adress}</p></td>
+                            <td><p>{order.orders[0].postcode}</p></td>
+                            <td><p>{order.orders[0].add_date}</p></td>
                         </tr>
                     </tbody>
 
@@ -58,6 +86,7 @@ export default function Refunds(){
                             <th>product size</th>
                             <th>product prize</th>
                             <th>product quntity</th>
+                            <th>image</th>
                         </tr>
                     </thead>
 
@@ -70,6 +99,8 @@ export default function Refunds(){
                             <td><p>{refunds.size}</p></td>
                             <td><p>{refunds.prize}</p></td>
                             <td><p>{refunds.amount}</p></td>
+                            <td><img src={"/images/products/" + refunds.product_id + "/" + refunds.image_url} width={"100px"} height={"100px"}/>
+</td>
                         </tr>            
                     )}
 
@@ -77,7 +108,7 @@ export default function Refunds(){
 
                 </table>
 
-                {button}
+                <button><Link to="/place-refund" state={{data: order}}>refund</Link></button> 
 
                 </div>
 

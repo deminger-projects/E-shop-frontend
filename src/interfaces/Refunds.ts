@@ -13,14 +13,14 @@ export interface Refund {
     postcode: string;
     add_date: string;
     status:   string;
+    order_id: number;
 }
 
 export interface Refund_Product {
     product_id: number
-    id: number
     amount: number
     size: string
-    prize: number
+    price: number
     name: string
     reason: string
 }

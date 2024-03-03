@@ -13,6 +13,7 @@ export interface ProductData {
     url:             string;
     collection_id:   number | null;
     collection_name: string | null;
+    add_date?: string;
 }
 
 export interface ProductSize {

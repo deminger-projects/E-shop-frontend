@@ -3,8 +3,9 @@ import { useState } from "react"
 import Sub_image_add from "../sub_components/Sub_image_add"
 import corrent_file_name from "../../functions/sub_functions/fix_file_name"
 import fix_file_name from "../../functions/sub_functions/fix_file_name"
+import Url from "../../interfaces/Url"
 
-export default function Admin_image_add(props: {on_change: Function, default_urls?: {main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}, settings?: {hover: boolean, model_show_case?: boolean, detail_show_case?: boolean}}){
+export default function Admin_image_add(props: {on_change: Function, on_delete: Function, default_urls?: {main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}, settings?: {hover: boolean, model_show_case?: boolean, detail_show_case?: boolean}}){
 
     const settings = props.settings ? {main: true, hover: props.settings.hover, model_show_case: props.settings.model_show_case, detail_show_case: props.settings.detail_show_case} : {main: true, hover: false, model_show_case: false, detail_show_case: false}
 
@@ -16,64 +17,208 @@ export default function Admin_image_add(props: {on_change: Function, default_url
 
         var old_other = [...default_urls.other]
         old_other.push("place_holder")
+
         set_default_urls({...default_urls, other: old_other})
     }
 
     var handle_input_change = (file: FileList|null, type: string, pozition?: number, special_type?: string) => {
 
-        if(file !== null){
-            var new_name = URL.createObjectURL(file[0])    
-            if(type === "main"){
-                
-                var asplit_ild_name = file[0].name.split(".")
-                var extencion = asplit_ild_name[1]
-                var name = fix_file_name(asplit_ild_name[0])
+        if(file){
 
-                var new_file_name = name + "_main." + extencion
-                var blob = file[0].slice(0, file[0].size, 'image/png'); 
-                var new_file = new File([blob], new_file_name, {type: 'image/png'})
+            var all_file_names = []
+    
+            var new_file_url =  file[0].name
 
-                set_files({...files, main: new_file})
-                set_default_urls({...default_urls, main: new_name})
-                props.on_change({...files, main: new_file})
+            var split1_main = default_urls.main?.split(".")
+    
+            if(split1_main){
+                var extencion_main = split1_main[split1_main!.length - 1]
+    
+                var spl_main = default_urls.main?.split("/")
+    
+                if(spl_main){
+                    var temp_split_main = spl_main[spl_main?.length - 1].split("_")
+                    temp_split_main.pop()
+                    temp_split_main?.join("_")
+    
+                    var old_file_url_main =  temp_split_main[0] + "." + extencion_main
 
+                    all_file_names.push(old_file_url_main)
+    
+                }
+            }
+    
+            var split1_hover = default_urls.hover?.split(".")
+    
+            if(split1_hover){
+                var extencion_hover = split1_hover[split1_hover!.length - 1]
+    
+                var spl_hover = default_urls.hover?.split("/")
+    
+                if(spl_hover){
+                    var temp_split_hover = spl_hover[spl_hover?.length - 1].split("_")
+                    temp_split_hover.pop()
+                    temp_split_hover?.join("_")
+    
+                    var old_file_url_hover =  temp_split_hover[0] + "." + extencion_hover
+
+                    all_file_names.push(old_file_url_hover)
+    
+                }
+            }
+            
+
+            for(var other_file of default_urls.other){
+                var temp = other_file.split("/")
+                var new_other_file = temp[temp.length - 1]
+
+                all_file_names.push(new_other_file)
             }
 
-            if(type === "hover"){
 
-                var asplit_ild_name = file[0].name.split(".")
-                var extencion = asplit_ild_name[1]
-                var name = fix_file_name(asplit_ild_name[0])
-
-                var new_file_name = name + "_hover." + extencion
-                var blob = file[0].slice(0, file[0].size, 'image/png'); 
-                var new_file = new File([blob], new_file_name, {type: 'image/png'})
+            if(files.main){
+                var temp = files.main.name.split(".")
+                var extencion = temp[temp.length - 1]
                 
-                set_files({...files, hover: new_file})
-                set_default_urls({...default_urls, hover: new_name})
-                props.on_change({...files, hover: new_file})
+                var spl = files.main.name.split("_")
+                spl.pop()
+                spl.join('_')
 
+                var new_name = spl[0] + "." + extencion
+
+                all_file_names.push(new_name)            
             }
 
-            if(type === "other" && pozition !== undefined){
-                var old_other = [...default_urls.other]
-                var old_files = [...files.other]
+            if(files.hover){
+                var temp = files.hover.name.split(".")
+                var extencion = temp[temp.length - 1]
+                
+                var spl = files.hover.name.split("_")
+                spl.pop()
+                spl.join('_')
 
-                var asplit_ild_name = file[0].name.split(".")
-                var extencion = asplit_ild_name[1]
-                var name = fix_file_name(asplit_ild_name[0])
+                var new_name = spl[0] + "." + extencion
 
-                var new_file_name = name + "." + extencion
-                var blob = file[0].slice(0, file[0].size, 'image/png'); 
-                var new_file = new File([blob], new_file_name, {type: 'image/png'})
+                all_file_names.push(new_name)            
+            }
 
-                old_other[pozition] = new_name
-                old_files[pozition] = new_file
+            for(let other_file of files.other){
+                if(other_file){
+                    all_file_names.push(other_file.name)
+                }
+            }
 
-                set_files({...files, other: old_files})
-                set_default_urls({...default_urls, other: old_other})
-                props.on_change({...files, other: old_files})
+            var count = 0
 
+            for(var file_url of all_file_names){    
+                if(file_url === new_file_url){
+
+                    for(let file_test of all_file_names){
+                        var file_test_split = file_test.split(".")[0]
+                        var new_file_url_split = new_file_url.split(".")[0]
+
+                        if(file_test_split.includes(new_file_url_split)){
+                            count++
+                        }
+                    }
+
+                    if(count === 1){
+                        let temp = new_file_url.split(".")
+                        let extencion = temp[temp.length - 1]
+
+                        new_file_url = temp[0] + "1." + extencion                        
+                
+                    }else if(count > 1){
+                        var last_file_name_index = undefined
+
+                        for(let file_test of all_file_names){
+                            var file_test_split = file_test.split(".")[0]
+                            var new_file_url_split = new_file_url.split(".")[0]                         
+                            
+                            if(file_test_split.includes(new_file_url_split)){
+                                let sup_temp = file_test.split(".")
+                                let extencion = sup_temp[sup_temp.length - 1]
+
+                                var test = sup_temp[sup_temp.length - 2].substring(sup_temp[sup_temp.length - 2].length - 1, -1)
+
+                                var new_neco = test + "." + extencion
+
+                                if(new_neco === new_file_url){
+                                    last_file_name_index = Number(sup_temp[sup_temp.length - 2].slice(-1)) + 1
+                                }
+                            }
+                        }
+
+                        if(last_file_name_index){
+                            let temp = new_file_url.split(".")
+                            new_file_url = temp[0] + last_file_name_index + "." + temp[temp.length - 1]
+                        }
+                        
+                    }
+                    break;
+                }
+            }
+
+            
+                var new_name = URL.createObjectURL(file[0])    
+                if(type === "main"){
+                    
+                    var asplit_ild_name = new_file_url.split(".")
+                    var extencion = asplit_ild_name[1]
+                    var name = fix_file_name(asplit_ild_name[0])
+    
+                    var new_file_name = name + "_main." + extencion
+                    var blob = file[0].slice(0, file[0].size, 'image/png'); 
+                    var new_file = new File([blob], new_file_name, {type: 'image/png'})
+    
+                    set_files({...files, main: new_file})
+                    set_default_urls({...default_urls, main: new_name})
+    
+                    props.on_change({...files, main: new_file})
+                    props.on_delete({...default_urls, main: new_name})
+    
+                }
+    
+                if(type === "hover"){
+    
+                    var asplit_ild_name = new_file_url.split(".")
+                    var extencion = asplit_ild_name[1]
+                    var name = fix_file_name(asplit_ild_name[0])
+    
+                    var new_file_name = name + "_hover." + extencion
+                    var blob = file[0].slice(0, file[0].size, 'image/png'); 
+                    var new_file = new File([blob], new_file_name, {type: 'image/png'})
+                    
+                    set_files({...files, hover: new_file})
+                    set_default_urls({...default_urls, hover: new_name})
+    
+                    props.on_change({...files, hover: new_file})
+                    props.on_delete({...default_urls, hover: new_name})
+    
+                }
+    
+                if(type === "other" && pozition !== undefined){
+                    var old_other = [...default_urls.other]
+                    var old_files = [...files.other]
+    
+                    var asplit_ild_name = new_file_url.split(".")
+                    var extencion = asplit_ild_name[1]
+                    var name = fix_file_name(asplit_ild_name[0])
+    
+                    var new_file_name = name + "." + extencion
+                    var blob = file[0].slice(0, file[0].size, 'image/png'); 
+                    var new_file = new File([blob], new_file_name, {type: 'image/png'})
+    
+                    old_other[pozition] = new_name
+                    old_files[pozition] = new_file
+    
+                    set_files({...files, other: old_files})
+                    set_default_urls({...default_urls, other: old_other})
+    
+                    props.on_change({...files, other: old_files})
+                    props.on_delete({...default_urls, other: old_other})
+    
+            
             }
         }
     }
@@ -90,6 +235,7 @@ export default function Admin_image_add(props: {on_change: Function, default_url
         set_default_urls({...default_urls, other: old_urls})
 
         props.on_change({...files, other: old_files})
+        props.on_delete({...default_urls, other: old_urls})
 
     }
 
@@ -104,6 +250,7 @@ export default function Admin_image_add(props: {on_change: Function, default_url
         }
 
     }
+        
 
 
     var handle_special_type_change = (special_type_status: {product_show_case: boolean, detail_show_case: boolean}) => {

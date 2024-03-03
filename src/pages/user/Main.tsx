@@ -18,9 +18,9 @@ export default function Main(){
         var res_arr: Array<Product> = []
 
         for(var product of products){ 
-           var product_w_type: Product = product  // nemelo by byt potreba, ale haze error ze never
             if(search){
-                if(product_w_type.products[0].product_name.includes(search)){
+                var new_product: Product = product
+                if(new_product.products[0].product_name.includes(search)){
                     res_arr.push(product)
                 }
             }

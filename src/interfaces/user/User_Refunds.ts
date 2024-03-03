@@ -1,25 +1,27 @@
-export default interface User_Refunds {
-    refunds:         Refund[];
-    refund_products: RefundProduct[];
+export default interface User_refunds {
+    refunds:        Refund[];
+    order_products: OrderProduct[];
 }
 
-export interface RefundProduct {
-    id:     number;
-    name:   string;
-    amount: number;
-    reason: string;
-    prize:  number;
-    size:   string;
+export interface OrderProduct {
+    size:       string;
+    amount:     number;
+    prize:      number;
+    image_url:  string;
+    name:       string;
+    product_id: number;
+    id:         number;
 }
 
 export interface Refund {
-    status: string;
-    id:            number;
-    name:          string;
-    surname:       string;
-    email:         string;
-    adress:        string;
-    phone:         string;
-    postcode:      string;
-    add_date:      string;
+    id:       number;
+    order_id: number;
+    name:     string;
+    surname:  string;
+    email:    string;
+    adress:   string;
+    phone:    string;
+    postcode: string;
+    add_date: string;
+    status:   string;
 }
