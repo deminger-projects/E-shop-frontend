@@ -16,6 +16,7 @@ export default async function add_to_cart(product: Product, size: ProductSize){
         })
 
         console.log(responce)
+        console.log(await responce.json())
 
         return [await responce.json(), undefined]
 
