@@ -21,7 +21,6 @@ export default async function add_to_cart(product: Product, size: ProductSize){
 
     } catch(err) {
         console.log("🚀 ~ file: add_record.ts:40 ~ add_record ~ err:", err)
-        console.log("🚀 ~ file: add_record.ts:40 ~ add_record ~ err:", err.msg)
 
         return [undefined, err]
     }
