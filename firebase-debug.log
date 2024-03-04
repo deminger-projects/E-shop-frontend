@@ -1,0 +1,25 @@
+[debug] [2024-03-04T18:31:07.853Z] ----------------------------------------------------------------------
+[debug] [2024-03-04T18:31:07.855Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\domin\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2024-03-04T18:31:07.856Z] CLI Version:   13.4.0
+[debug] [2024-03-04T18:31:07.856Z] Platform:      win32
+[debug] [2024-03-04T18:31:07.856Z] Node Version:  v18.12.1
+[debug] [2024-03-04T18:31:07.857Z] Time:          Mon Mar 04 2024 19:31:07 GMT+0100 (Středoevropský standardní čas)
+[debug] [2024-03-04T18:31:07.857Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-03-04T18:31:07.865Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-03-04T18:31:07.866Z] > authorizing via signed-in user (dominikjan1@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\xampp\htdocs\eshop_2022\client
+
+Before we get started, keep in mind:
+
+  * You are currently outside your home directory
+
