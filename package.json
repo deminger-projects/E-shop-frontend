@@ -2,7 +2,7 @@
   "name": "my-app",
   "version": "0.1.0",
   "main": "index.tsx",
-  "proxy": "http://localhost:8001",
+  "proxy": "https://main.d1pwb11aremn00.amplifyapp.com",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
