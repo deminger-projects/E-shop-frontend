@@ -1,10 +1,11 @@
 import path from "path";
-import { Configuration } from "webpack";
 
 const config = {
   entry: "./src/index.js",
-  devServer: {
-    disableHostCheck: true
+  devServer: { //da se udelat i jinak
+    host: '0.0.0.0',
+    disableHostCheck: true,
+    allowedHosts: ['localhost', '.gitpod.io']
   },
   mode: "development",
   module: {
