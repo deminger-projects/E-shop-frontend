@@ -1,15 +1,17 @@
-import collctions from "../../data/collections.json"
-
 import Collections from "../../interfaces/Collections"
 
-export default function Admin_collection_select(){
+export default function Admin_collection_select(props: {collections: Array<Collections>|undefined}){
 
     return(
         <>
-            <option value={"null"}>NONE</option>
-            {collctions.map((collection: Collections) => 
-                <option key={collection.collections[0].id} value={collection.collections[0].id}>{collection.collections[0].name}</option> 
-            )}
+            {props.collections ? <>
+                <option value={"null"}>NONE</option>
+                
+                {props.collections.map((collection: Collections) => 
+                    <option key={collection.collections[0].id} value={collection.collections[0].id}>{collection.collections[0].name}</option> 
+                )}
+            </> : ""}
+            
         </>
     )
 }

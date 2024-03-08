@@ -3,14 +3,12 @@ import {Link, useLocation} from "react-router-dom";
 
 import Access_denied from '../../user/Access_denied';
 
-import login_data from "../../../data/login_data.json"
-import products from "../../../data/products.json"
-
 import Product from "../../../interfaces/Product";
 
 import change_status from "../../../apis/records/change_status";
 import Admin_collection_select from "../../../components/Admin/Admin_collection_select";
 import get_product_status_change_template from "../../../templates/admin/get_product_status_change_template";
+import { useCookies } from "react-cookie";
 
 export default function Admin_product_page(){ 
     
@@ -26,10 +24,16 @@ export default function Admin_product_page(){
 
     const [products_arr, set_products_arr] = useState<Array<Product>>([]);
 
+    const [cookies, setCookie] = useCookies(['user'])
+
+    const [fetch_collections, set_fetch_collections] = useState<any>();
+
+    const [update, set_update] = useState<any>(true);
+
     useEffect(() => {      // searches products based on user input, valid input: product name, product size
         var res_arr: Array<Product> = []
 
-        for(var product of products){ 
+        for(var product of products_arr){ 
             var new_product: Product = product
 
             if(search && search_collection){
@@ -69,7 +73,7 @@ export default function Admin_product_page(){
 
     useEffect(() => {
         fetchData()
-    }, [])
+    }, [update])
 
     const fetchData = async () => {
         try {
@@ -77,14 +81,23 @@ export default function Admin_product_page(){
             method: 'POST'  
         }); 
 
-          if (!response.ok) {
+        const response2 = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_admin_collections', {
+            method: 'POST'  
+        }); 
+
+          if (!response.ok && !response2.ok) {
             throw new Error('Network response was not ok.');
           }
-          const data = await response.json();
-          
-          set_products_arr(data)
-          set_loading(false);
+ 
+          const data1 = await response.json();
+          const data2 = await response2.json();
 
+
+          set_products_arr(data1)
+          set_fetch_collections(data2)
+
+          set_loading(false);
+          
         } catch (error) {
 
           console.log(error);
@@ -94,20 +107,26 @@ export default function Admin_product_page(){
       };
 
 
-    var handleSubmit = async (event: React.MouseEvent<HTMLElement>, record_id: number) =>{    
+    var handleSubmit = async (event: React.MouseEvent<HTMLElement>, record_id: number) =>{   
+
+        set_loading(true)
         
         event.preventDefault();
 
         const product_status_change_template = get_product_status_change_template()
 
-        const [api_responce, error] = await change_status(product_status_change_template, record_id, login_data[0].users[0].id)
+        const [api_responce, error] = await change_status(product_status_change_template, record_id, cookies.user[0].id)
 
         if(error){
             set_error_msg("error ocured")
         }else{
             set_responce_msg(api_responce.msg)
         }
+
+        set_update(!update)
+
     }
+
 
     return( 
         <>
@@ -120,10 +139,10 @@ export default function Admin_product_page(){
 
                 <select value={search_collection} onChange={(event) => set_search_collection(event.target.value)}>
                     <option value={""}>select collection</option>
-                    <Admin_collection_select></Admin_collection_select>
+                    <Admin_collection_select collections={fetch_collections}></Admin_collection_select>
                 </select>            
 
-                {login_data[0].users[0].login_status === "Active" && login_data[0].users[0].username === "Admin" ? products.length > 0 ?
+                {cookies.user[0].login_status === "Active" && cookies.user[0].username === "Admin" ? products_arr.length > 0 ?
                     <table>
                         <thead>
                             <tr>

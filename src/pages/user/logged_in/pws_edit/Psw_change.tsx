@@ -3,11 +3,9 @@ import { useNavigate } from 'react-router-dom';
 
 import Access_denied from "../../Access_denied";
 
-import user_data from "../../../../data/user_data.json"
-import login_data from "../../../../data/login_data.json"
-
 import edit_record from "../../../../apis/records/edit_record";
 import get_psw_template from "../../../../templates/other/ger_psw_template";
+import { useCookies } from "react-cookie";
 
 export default function Psw_change(){
 
@@ -18,21 +16,23 @@ export default function Psw_change(){
     const [psw_input2, setPsw_input2] = useState<string>("");
     const [error_msg, set_error_msg] = useState<string>("");
 
+    const [cookies, setCookie] = useCookies(['user'])
+
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
         event.preventDefault();
 
-        if(user_data[0].users[0].password !== current_psw){set_error_msg("current password is incorect")}
+        if(cookies.user[0].password !== current_psw){set_error_msg("current password is incorect")}
         if(!psw_input2){set_error_msg("new again password in empty")}
         if(!psw_input1){set_error_msg("new password in empty")}
         if(!current_psw){set_error_msg("current password in empty")}
         if(psw_input1 !== psw_input2){set_error_msg("passwords do not match")}
 
-        if(current_psw && psw_input1 && psw_input2 && user_data[0].users[0].password === current_psw && psw_input1 === psw_input2){
+        if(current_psw && psw_input1 && psw_input2 && cookies.user[0].password === current_psw && psw_input1 === psw_input2){
         
             const psw_template = get_psw_template(psw_input1)
 
-            const api_respocse = await edit_record(psw_template, user_data[0].users[0].id, login_data[0].users[0].id, undefined, undefined, undefined, true)
+            const api_respocse = await edit_record(psw_template, cookies.user[0].id, cookies.user[0].id, undefined, undefined, undefined, true)
 
             navigate("/main", {state: {msg: "password changed"}})
         }
@@ -40,7 +40,7 @@ export default function Psw_change(){
 
     return(
         <>
-            {login_data[0].users[0].login_status === "Active" ? 
+            {cookies.user[0].login_status === "Active" ? 
                 <><p>{error_msg}</p>
 
                 <div>

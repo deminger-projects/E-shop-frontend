@@ -5,8 +5,6 @@ import get_cart_data from '../../functions/getters/get_cart_data';
 
 import Cart_items from '../../components/Cart_items';
 
-import user_data from "../../data/user_data.json"
-import login_data from "../../data/login_data.json"
 import cart from "../../data/cart.json"
 
 import {DeliveryData} from "../../interfaces/user/User_data"
@@ -14,6 +12,7 @@ import {DeliveryData} from "../../interfaces/user/User_data"
 import add_record from '../../apis/records/add_record';
 import get_order_template from '../../templates/order/get_order_template';
 import Money_sum from '../../components/Money_sum';
+import { useCookies } from 'react-cookie';
 
 export default function Prepare_order(){
 
@@ -27,7 +26,9 @@ export default function Prepare_order(){
     const [city, setCity] = useState<string>("");
     const [PSC, setPSC] = useState<string>("");
 
-    const [error_msg, set_error_msg] = useState<string>("");
+    const [error_msg, set_error_msg] = useState<string>("");    
+    
+    const [cookies, setCookie] = useCookies(['user'])
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -46,9 +47,9 @@ export default function Prepare_order(){
 
             var cart_data = get_cart_data()
 
-            const order_template = get_order_template(login_data[0].users[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, login_data[0].users[0].login_status)
+            const order_template = get_order_template(cookies.user[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user[0].login_status)
 
-            const [api_responcem, error] = await add_record(order_template, login_data[0].users[0].id, undefined , undefined, true, login_data[0].users[0].login_status)       
+            const [api_responcem, error] = await add_record(order_template, cookies.user[0].id, undefined , undefined, true, cookies.user[0].login_status)       
 
             if(error){
                 set_error_msg(error.msg)
@@ -61,7 +62,7 @@ export default function Prepare_order(){
     }
 
     var handle_click = (pointer: number) => {
-        var user_info: DeliveryData = user_data[0].user_data[pointer]
+        var user_info: DeliveryData = cookies.user[0].user_data[pointer]
         
         setName(user_info.name)
         setSurname(user_info.surname)
@@ -80,7 +81,7 @@ export default function Prepare_order(){
 
             <p>{error_msg}</p>
 
-            {login_data[0].users[0].login_status === "Active" && user_data[0].user_data.length > 0 ?
+            {cookies.user[0].login_status === "Active" && cookies.user[0].user_data.length > 0 ?
                 <>
                     <table>
                         <thead>
@@ -96,7 +97,7 @@ export default function Prepare_order(){
 
                         <tbody>
             
-                {user_data[0].user_data.map((delivery_info: DeliveryData, index: number) => 
+                {cookies.user[0].user_data.map((delivery_info: DeliveryData, index: number) => 
                         <tr key={index.toString()} onClick={() => {handle_click(index)}}>
                             <td>{delivery_info.name}</td>
                             <td>{delivery_info.surname}</td>

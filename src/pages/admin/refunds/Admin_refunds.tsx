@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react"
 
-import refunds from "../../../data/refunds.json"
-import login_data from "../../../data/login_data.json"
-
 import Access_denied from "../../user/Access_denied"
 
 import Refund, { Refund_Product } from "../../../interfaces/Refunds"
 import change_status from "../../../apis/records/change_status"
 import get_refund_status_change_template from "../../../templates/admin/get_refund_status_change_template"
+import { useCookies } from "react-cookie"
 
 export default function Admin_refunds(){
 
@@ -24,7 +22,7 @@ export default function Admin_refunds(){
     const [search_gate_cancel, set_search_gate_cancel] = useState<boolean>(false)
     const [search_gate_done, set_search_gate_done] = useState<boolean>(false)
 
-    const [refund_arr, set_refund_arr] = useState<Array<Refund>>(refunds);
+    const [refund_arr, set_refund_arr] = useState<Array<Refund>>([]);
 
     const [search_order_id, set_search_order_id] = useState<string>("")
     const [search_name, set_search_name] = useState<string>("")
@@ -32,12 +30,14 @@ export default function Admin_refunds(){
     const [search_email, set_search_email] = useState<string>("")
     const [search_phone, set_search_phone] = useState<string>("")
 
+    const [cookies, setCookie] = useCookies(['user'])
+
     useEffect(() => {      // searches products based on user input, valid input: product name, product size
         var res_arr: Array<Refund> = []
 
         var filtred_refunds = []
 
-        for(let refund2 of refunds){
+        for(let refund2 of refund_arr){
 
             var refund: Refund = refund2
 
@@ -95,7 +95,7 @@ export default function Admin_refunds(){
         }
 
         if(!search_order_id && !search_name && !search_surname && !search_email && !search_phone && !search_gate_active && !search_gate_processing && !search_gate_cancel && !search_gate_done){
-            set_refund_arr(refunds)
+            set_refund_arr(refund_arr)
         }else{
             set_refund_arr(res_arr)
         }
@@ -108,7 +108,7 @@ export default function Admin_refunds(){
 
         const refund_status_change = get_refund_status_change_template(status)
 
-        const [api_responce, error] = await change_status(refund_status_change, record_id, login_data[0].users[0].id)
+        const [api_responce, error] = await change_status(refund_status_change, record_id, cookies.user[0].id)
 
         if(error){
             set_error_msg("error ocured")
@@ -166,7 +166,7 @@ export default function Admin_refunds(){
             <button onClick={() => {set_search_gate_active(false); set_search_gate_processing(false); set_search_gate_cancel(false); set_search_gate_done(!search_gate_done)}}>status Done</button>
 
 
-            {login_data[0].users[0].login_status === "Active" && login_data[0].users[0].username === "Admin" ? refunds.length > 0 ?
+            {cookies.user[0].login_status === "Active" && cookies.user[0].username === "Admin" ? refund_arr.length > 0 ?
                 <div>
                     <p>refunds</p>
                     {refund_arr.map((refund: Refund) => 

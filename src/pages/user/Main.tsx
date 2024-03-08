@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import Cart from "../../components/Cart";
 
 import Product from "../../interfaces/Product"
+import { useCookies } from "react-cookie";
 
 export default function Main(){
 

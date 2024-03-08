@@ -1,3 +1,4 @@
+import { useCookies } from "react-cookie"
 import login_template_interface from "../../interfaces/templates/login/login_template"
 
 export default async function login_reguest(login_template: login_template_interface){
@@ -12,7 +13,6 @@ export default async function login_reguest(login_template: login_template_inter
             body: form_data
         })
 
-        console.log(responce)
         return [await responce.json(), undefined]
 
     } catch(err) {

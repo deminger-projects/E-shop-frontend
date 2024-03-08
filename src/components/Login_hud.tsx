@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import login_data from "../data/login_data.json"
-
 import logoff from "../apis/login/logoff";
 import get_logoff_teplate from "../templates/login/get_logoff_teplate";
+import { useCookies } from "react-cookie";
 
 export default function Login_hud(){
 
@@ -12,17 +11,22 @@ export default function Login_hud(){
 
     const [err_msg, set_error_msg] = useState<string>("")
 
+    const [cookies, setCookie] = useCookies(['user', "user_data"])
+
     var handle_on_click = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         
         event.preventDefault();
 
         const logoff_template = get_logoff_teplate()
 
-        const [api_responce, err] = await logoff(logoff_template, login_data[0].users[0].id, login_data[0].users[0].id)
+        const [api_responce, err] = await logoff(logoff_template, cookies.user[0].id, cookies.user[0].id)
 
         if(err){
             set_error_msg(err)
         }else{
+            setCookie('user', "")
+            setCookie("user_data", api_responce.user_account_data)
+
             navigate("/login", {state: api_responce})
         }
     }
@@ -32,11 +36,11 @@ export default function Login_hud(){
             <p>{err_msg}</p>
 
             <div id={"login_data"}>
-                {login_data[0].users[0].login_status === "Active" ? 
-                    login_data[0].users[0].login_status === "Active" && login_data[0].users[0].username === "Admin" ? 
+                {cookies.user ? 
+                    cookies.user[0].login_status === "Active" && cookies.user[0].username === "Admin" ? 
                         <>
                             <div>
-                                <Link to="/user-menu">{login_data[0].users[0].username}</Link>
+                                <Link to="/user-menu">{cookies.user[0].username}</Link>
                                 <br></br>
                                 <button onClick={handle_on_click}>log out</button>
                                 <br></br>
@@ -46,7 +50,7 @@ export default function Login_hud(){
                     :    
                         <>
                             <div>
-                                <Link to="/user-menu">{login_data[0].users[0].username}</Link>
+                                <Link to="/user-menu">{cookies.user[0].username}</Link>
                                 <br></br>
                                 <button onClick={handle_on_click}>log out</button>
                             </div>  

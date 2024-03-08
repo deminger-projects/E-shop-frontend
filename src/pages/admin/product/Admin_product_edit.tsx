@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {useNavigate, useLocation } from 'react-router-dom';
 
 import Admin_size_checkboxes from '../../../components/Admin/Admin_size_checkboxes';
@@ -6,8 +6,6 @@ import Admin_collection_select from "../../../components/Admin/Admin_collection_
 import Admin_image_add from '../../../components/Admin/Admin_add_image_handler';
 
 import Access_denied from '../../user/Access_denied';
-
-import login_data from "../../../data/login_data.json"
 
 import edit_record from '../../../apis/records/edit_record';
 
@@ -19,6 +17,7 @@ import Size from "../../../interfaces/Size"
 import File from '../../../interfaces/Files';
 import get_filtred_data from '../../../functions/get_filtred_data';
 import get_product_template from '../../../templates/admin/get_product_template';
+import { useCookies } from 'react-cookie';
 
 export default function Admin_product_edit(){
 
@@ -39,7 +38,41 @@ export default function Admin_product_edit(){
 
     const [error_msg, set_error_msg] = useState<string>("")
 
+    const [cookies, setCookie] = useCookies(['user'])
+
+    const [fetch_collekec, set_fetch_collekec] = useState()
+    const [loading, set_loading] = useState(true)
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    const fetchData = async () => {
+        try {
+          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_admin_collections', {
+            method: 'POST'  
+        }); 
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok.');
+          }
+          const data = await response.json();
+          console.log("🚀 ~ fetchData ~ data:", data)
+          
+          set_fetch_collekec(data)
+          set_loading(false);
+
+        } catch (error) {
+
+          console.log(error);
+
+          set_loading(false);
+        }
+      };
+
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
+        set_loading(true)
 
         event.preventDefault();
 
@@ -61,7 +94,7 @@ export default function Admin_product_edit(){
 
             if(files){
                 if(((files.model_show_case?.status === true && filtred_data.model_show_case_status === true) || files.model_show_case?.status === false) && ((files.detail_show_case?.status === true && filtred_data.detail_show_case_status === true) || files.detail_show_case?.status === false)){
-                    const [api_responce, error] = await edit_record(product_template, location.state.products[0].id, login_data[0].users[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "products")
+                    const [api_responce, error] = await edit_record(product_template, location.state.products[0].id, cookies.user[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "products")
 
                     if(error){
                         set_error_msg("error ocured")
@@ -72,7 +105,7 @@ export default function Admin_product_edit(){
                     }
                 }
             }else{
-                const [api_responce, error] = await edit_record(product_template, location.state.products[0].id, login_data[0].users[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "products")
+                const [api_responce, error] = await edit_record(product_template, location.state.products[0].id, cookies.user[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "products")
 
                 if(error){
                     set_error_msg("error ocured")
@@ -83,51 +116,55 @@ export default function Admin_product_edit(){
                 }
             }
         }
+
+        set_loading(false)
     }
 
     return(
         <>
 
-            <p>{error_msg}</p>
-            
-            {login_data[0].users[0].login_status === "Active" && login_data[0].users[0].username === "Admin" ? <div>
-                <form onSubmit={handleSubmit} encType='multipart/form-data'>
+            {loading ? <p>loading</p> : <>
+                <p>{error_msg}</p>
+                
+                {cookies.user[0].login_status === "Active" && cookies.user[0].username === "Admin" ? <div>
+                    <form onSubmit={handleSubmit} encType='multipart/form-data'>
 
-                    <label htmlFor="product_name_edit">{"Product name"}</label>
-                    <input id="product_name_edit" type="text" name="product_name_edit" value={name} onChange={(e) => setName(e.target.value)}></input>
-                    <br></br>
-                    <br></br>
+                        <label htmlFor="product_name_edit">{"Product name"}</label>
+                        <input id="product_name_edit" type="text" name="product_name_edit" value={name} onChange={(e) => setName(e.target.value)}></input>
+                        <br></br>
+                        <br></br>
 
 
-                    <label htmlFor="product_collection_edit">{"Product collection"}</label>
-                    <select id="product_collection_edit" value={collection ? collection : ""} onChange={(e) => setCollection(e.target.value)}>
-                        <Admin_collection_select></Admin_collection_select>
-                    </select>
+                        <label htmlFor="product_collection_edit">{"Product collection"}</label>
+                        <select id="product_collection_edit" value={collection ? collection : ""} onChange={(e) => setCollection(e.target.value)}>
+                            <Admin_collection_select collections={fetch_collekec}></Admin_collection_select>
+                        </select>
 
-                    <br></br>
-                    <br></br>
+                        <br></br>
+                        <br></br>
 
-                    <label htmlFor="product_cost_edit">{"Product cost"}</label>
-                    <input id="product_cost_edit" type="number" name="product_cost_edit" value={cost} onChange={(e) => setCost(e.target.value)}></input>
-                    <br></br>
-                    <br></br>
+                        <label htmlFor="product_cost_edit">{"Product cost"}</label>
+                        <input id="product_cost_edit" type="number" name="product_cost_edit" value={cost} onChange={(e) => setCost(e.target.value)}></input>
+                        <br></br>
+                        <br></br>
 
-                    <label htmlFor="product_description_edit">{"Product description"}</label>
-                    <input id="product_description_edit" type="text" name="product_description_edit" value={description} onChange={(e) => setDescription(e.target.value)}></input>
-                    <br></br>
-                    <br></br>
+                        <label htmlFor="product_description_edit">{"Product description"}</label>
+                        <input id="product_description_edit" type="text" name="product_description_edit" value={description} onChange={(e) => setDescription(e.target.value)}></input>
+                        <br></br>
+                        <br></br>
 
-                    <Admin_size_checkboxes sizes={sizes} on_change={set_sizes}></Admin_size_checkboxes>
+                        <Admin_size_checkboxes sizes={sizes} on_change={set_sizes}></Admin_size_checkboxes>
 
-                    <br></br>
-                    <br></br>
+                        <br></br>
+                        <br></br>
 
-                    <Admin_image_add on_delete={set_urls} on_change={set_files} default_urls={file_set_up.ulrs} settings={{hover: true, model_show_case: true, detail_show_case: true}}></Admin_image_add>
+                        <Admin_image_add on_delete={set_urls} on_change={set_files} default_urls={file_set_up.ulrs} settings={{hover: true, model_show_case: true, detail_show_case: true}}></Admin_image_add>
 
-                    <button>save</button>
+                        <button>save</button>
 
-                </form>
-            </div> : <Access_denied></Access_denied>}
+                    </form>
+                </div> : <Access_denied></Access_denied>}
+            </>}
         </>
     )
 }

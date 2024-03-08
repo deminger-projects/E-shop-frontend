@@ -3,10 +3,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import Access_denied from "../../Access_denied";
 
-import login_data from "../../../../data/login_data.json"
-
 import edit_record from "../../../../apis/records/edit_record";
 import get_user_template from "../../../../templates/user/get_user_template";
+import { useCookies } from "react-cookie";
 
 export default function Edit_info(){
     
@@ -17,6 +16,8 @@ export default function Edit_info(){
     const [email, set_email] = useState<string>(user_data.email);
 
     const [error_msg, set_error_msg] = useState<string>();
+
+    const [cookies, setCookie] = useCookies(['user'])
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         
@@ -29,7 +30,7 @@ export default function Edit_info(){
 
             const user_template = get_user_template(username, email)
 
-            const api_responce = await edit_record(user_template, user_data.id, login_data[0].users[0].id)
+            const api_responce = await edit_record(user_template, user_data.id, cookies.user[0].id)
 
             navigate('/account-info', {state: {msg: "data changed"}})
 
@@ -40,7 +41,7 @@ export default function Edit_info(){
         <>
             <p>{error_msg}</p>
 
-            {login_data[0].users[0].login_status === "Active" ? 
+            {cookies.user[0].login_status === "Active" ? 
                 <>
                     <div>
                         <form onSubmit={handleSubmit}>

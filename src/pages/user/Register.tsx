@@ -5,6 +5,7 @@ import register_request from '../../apis/login/register_request';
 import get_register_template from '../../templates/login/get_register_template';
 import Error_display from '../../components/Error_display';
 import Admin_image_add from '../../components/Admin/Admin_add_image_handler';
+import { useCookies } from 'react-cookie';
 
 export default function Register(){
 
@@ -23,6 +24,8 @@ export default function Register(){
     const [psc, setPsc] = useState<string>("");
 
     const [err_msg, set_err_msg] = useState<string>("");
+
+    const [cookies, setCookie] = useCookies()
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -51,6 +54,9 @@ export default function Register(){
                 set_err_msg("error ocured")
             }else{
                 if(api_responce.next_status === true){
+                    setCookie('user', api_responce.user_data)
+                    setCookie("user_data", api_responce.user_account_data)
+
                     navigate("/main");
                 }else{
                     set_err_msg(api_responce.msg)

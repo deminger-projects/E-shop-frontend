@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
 
-import orders from "../../../data/orders.json"
-import login_data from "../../../data/login_data.json"
-
 import Access_denied from '../../user/Access_denied';
 
 import change_status from "../../../apis/records/change_status";
 
 import Order, {OrderProduct} from "../../../interfaces/Order"
 import get_order_status_change_template from "../../../templates/admin/get_order_status_change_template";
+import { useCookies } from "react-cookie";
 
 export default function Admin_order_page(){
 
     const [responce_msg, set_responce_msg] = useState<string>("")
     const [error_msg, set_error_msg] = useState<string>("")
 
+    const [loading, set_loading] = useState<boolean>(true)
+
+    const [cookies, setCookie] = useCookies(['user'])
+    
     const [search_gate_order_id, set_search_gate_order_id] = useState<boolean>(false)
     const [search_gate_name, set_search_gate_name] = useState<boolean>(false)
     const [search_gate_email, set_search_gate_email] = useState<boolean>(false)
@@ -33,14 +35,17 @@ export default function Admin_order_page(){
     const [search_email, set_search_email] = useState<string>("")
     const [search_phone, set_search_phone] = useState<string>("")
 
-    const [order_arr, set_order_arr] = useState<Array<Order>>(orders);
+    const [order_arr, set_order_arr] = useState<Array<Order>>([]);
 
     useEffect(() => {      // searches products based on user input, valid input: product name, product size
         var res_arr: Array<Order> = []
 
         var filtred_orders = []
 
-        for(let order of orders){
+        for(let order2 of order_arr){
+
+            var order: Order = order2
+
             if(search_gate_active){
                 if(order.orders[0].status === "Active"){
                     filtred_orders.push(order)
@@ -102,12 +107,39 @@ export default function Admin_order_page(){
         }
 
         if(!search_order_id && !search_name && !search_surname && !search_email && !search_phone && !search_gate_active && !search_gate_preparing && !search_gate_prepared && !search_gate_on_trave && !search_gate_delivered && !search_gate_cancled){
-            set_order_arr(orders)
+            set_order_arr(order_arr)
         }else{
             set_order_arr(res_arr)
         }
 
     },[search_order_id, search_name, search_surname, search_email, search_phone, search_gate_active, search_gate_preparing, search_gate_prepared, search_gate_on_trave, search_gate_delivered, search_gate_cancled])
+
+    
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    const fetchData = async () => {
+        try {
+          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_admin_orders', {
+            method: 'GET'  
+        }); 
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok.');
+          }
+          const data = await response.json();
+          
+          set_order_arr(data)
+          set_loading(false);
+
+        } catch (error) {
+
+          console.log(error);
+
+          set_loading(false);
+        }
+      };
 
     var handle_submit = async (event: React.MouseEvent<HTMLElement>, record_id: number, status: string) => {
 
@@ -115,7 +147,7 @@ export default function Admin_order_page(){
 
         const order_status_change_template = get_order_status_change_template(status)
 
-        const [api_responce, error] = await change_status(order_status_change_template, record_id ,login_data[0].users[0].id)
+        const [api_responce, error] = await change_status(order_status_change_template, record_id , cookies.user[0].id)
     
         if(error){
             set_error_msg("error ocured")
@@ -180,7 +212,7 @@ export default function Admin_order_page(){
             <br />
             <br />
 
-           {login_data[0].users[0].login_status === "Active" && login_data[0].users[0].username === "Admin" ? orders.length > 0 ? 
+           {cookies.user[0].login_status === "Active" && cookies.user[0].username === "Admin" ? order_arr.length > 0 ? 
                 <div>
                 {order_arr.map((order: Order) => 
                 

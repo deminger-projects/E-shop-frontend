@@ -1,4 +1,4 @@
-import { useState } from 'react';   
+import { useEffect, useState } from 'react';   
 import { useNavigate } from 'react-router-dom';
 
 import Admin_collection_select from '../../../components/Admin/Admin_collection_select';
@@ -6,8 +6,6 @@ import Admin_size_checkboxes from "../../../components/Admin/Admin_size_checkbox
 import Admin_image_add from '../../../components/Admin/Admin_add_image_handler';
 
 import Access_denied from '../../user/Access_denied';
-
-import login_data from "../../../data/login_data.json"
 
 import add_record from '../../../apis/records/add_record';
 
@@ -21,6 +19,7 @@ import set_up_sizes from '../../../functions/set_ups/set_up_sizes';
 import set_up_files from '../../../functions/set_ups/set_up_files';
 import get_filtred_data from '../../../functions/get_filtred_data';
 import get_product_template from '../../../templates/admin/get_product_template';
+import { useCookies } from 'react-cookie';
 
 export default function Admin_product_add(){
 
@@ -44,7 +43,41 @@ export default function Admin_product_add(){
     const [error_msg, set_error_msg] = useState<string>("");
     const [responce_msg, set_responce_msg] = useState<string>("");
 
+    const [cookies, setCookie] = useCookies(['user'])
+
+    const [loading, set_loading] = useState(true)
+
+    const [collections, set_collections] = useState()
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    const fetchData = async () => {
+        try {
+          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_collections', {
+            method: 'GET'  
+        }); 
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok.');
+          }
+          const data = await response.json();
+          
+          set_collections(data)
+          set_loading(false);
+
+        } catch (error) {
+
+          console.log(error);
+
+          set_loading(false);
+        }
+      };
+
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
+        set_loading(true)
         
         event.preventDefault();
 
@@ -68,7 +101,7 @@ export default function Admin_product_add(){
     
                 const product_template = get_product_template(Number(collection), name, Number(cost), description, filtred_sizes.sizes, null, filtred_sizes.amounts, filtred_data.file_names_for_table, files)
     
-                const [api_responce, error] = await add_record(product_template, login_data[0].users[0].id, "products", filtred_data.files_to_save)    
+                const [api_responce, error] = await add_record(product_template, cookies.user[0].id, "products", filtred_data.files_to_save)    
 
                 if(error){
                     set_error_msg("error ocured")
@@ -77,6 +110,8 @@ export default function Admin_product_add(){
                 }else{
                     set_responce_msg(api_responce.msg)
                 }
+
+                set_loading(false)
             }
         }else{
             set_error_msg("select files")
@@ -85,50 +120,54 @@ export default function Admin_product_add(){
 
     return(
         <>
-            <p>{error_msg}</p>
-            <p>{responce_msg}</p>
 
-            {login_data[0].users[0].login_status === "Active" && login_data[0].users[0].username === "Admin" ? <div className="admin_add_product">
-                <form onSubmit={handleSubmit} encType="multipart/form-data">
+            {loading ? <p>loading</p> : <>
+                <p>{error_msg}</p>
+                <p>{responce_msg}</p>
+
+                {cookies.user[0].login_status === "Active" && cookies.user[0].username === "Admin" ? <div className="admin_add_product">
+                    <form onSubmit={handleSubmit} encType="multipart/form-data">
+                        
+                        <label htmlFor="product_name">{"Product name"}</label>
+                        <input id="product_name" type="text" name="product_name" value={name} onChange={(e) => setName(e.target.value)}></input>
+                        <br></br>
+                        <br></br>
                     
-                    <label htmlFor="product_name">{"Product name"}</label>
-                    <input id="product_name" type="text" name="product_name" value={name} onChange={(e) => setName(e.target.value)}></input>
-                    <br></br>
-                    <br></br>
-                
-                    <label htmlFor="product_cost">{"Product prize"}</label>
-                    <input id="product_cost" type="number" name="product_cost" value={cost} onChange={(e) => setCost(e.target.value)} min="0"></input>
-                    <br></br>
-                    <br></br>
+                        <label htmlFor="product_cost">{"Product prize"}</label>
+                        <input id="product_cost" type="number" name="product_cost" value={cost} onChange={(e) => setCost(e.target.value)} min="0"></input>
+                        <br></br>
+                        <br></br>
 
-                    <label htmlFor="product_collection">Product collection</label>
+                        <label htmlFor="product_collection">Product collection</label>
 
-                    <select id="product_collection" name="product_collection" value={collection} onChange={(e) => setCollection (e.target.value)}>
-                        <Admin_collection_select></Admin_collection_select>
-                    </select>
-                    
-                    <br></br>
-                    <br></br>
+                        <select id="product_collection" name="product_collection" value={collection} onChange={(e) => setCollection (e.target.value)}>
+                            <Admin_collection_select collections={collections}></Admin_collection_select>
+                        </select>
+                        
+                        <br></br>
+                        <br></br>
 
-                    <label htmlFor="product_description">{"Product description"}</label>
-                    <input id="product_description" type="text" name="product_description" value={description} onChange={(e) => setDescription(e.target.value)}></input>
-                    <br></br>
-                    <br></br>
+                        <label htmlFor="product_description">{"Product description"}</label>
+                        <input id="product_description" type="text" name="product_description" value={description} onChange={(e) => setDescription(e.target.value)}></input>
+                        <br></br>
+                        <br></br>
 
-                    <div className="admin_add_sizes">
-                        <Admin_size_checkboxes sizes={sizes} on_change={set_sizes}></Admin_size_checkboxes>
-                    </div>
+                        <div className="admin_add_sizes">
+                            <Admin_size_checkboxes sizes={sizes} on_change={set_sizes}></Admin_size_checkboxes>
+                        </div>
 
-                    <br></br>
-                    
-                    <Admin_image_add settings={{hover: true, detail_show_case: true, model_show_case: true}} on_delete={set_urls} on_change={set_files}></Admin_image_add>
+                        <br></br>
+                        
+                        <Admin_image_add settings={{hover: true, detail_show_case: true, model_show_case: true}} on_delete={set_urls} on_change={set_files}></Admin_image_add>
 
-                    <br></br>
+                        <br></br>
 
-                    <button>add</button>
+                        <button>add</button>
 
-                </form>
-            </div> : <Access_denied></Access_denied>}
+                    </form>
+                </div> : <Access_denied></Access_denied>}
+            </>}
+            
         </>
     )
 }

@@ -2,25 +2,24 @@ import { Link, useLocation } from "react-router-dom";
 
 import Access_denied from "../../Access_denied";
 
-import login_data from "../../../../data/login_data.json"
-
-import avalible_refunds from "../../../../data/refund_test.json"
-
 import New_orders, {OrderProduct, Order}  from "../../../../interfaces/new_refunds";
 
 import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
 export default function Refunds(){
 
     const location = useLocation()
 
-    const [orders_arr, set_orders_arr] = useState<Array<New_orders>>(avalible_refunds)
+    const [orders_arr, set_orders_arr] = useState<Array<New_orders>>([])
     const [search_order_id, set_search_order_id] = useState<string>("")
+
+    const [cookies, setCookie] = useCookies(['user'])
 
     useEffect(() => {
         var res_arr: Array<New_orders> = []
 
-        for(var order of avalible_refunds){
+        for(var order of orders_arr){
 
             console.log(order)
 
@@ -36,7 +35,7 @@ export default function Refunds(){
         if(search_order_id){
             set_orders_arr(res_arr)
         }else{
-            set_orders_arr(avalible_refunds)
+            set_orders_arr(orders_arr)
         }
 
     }, [search_order_id])
@@ -50,7 +49,7 @@ export default function Refunds(){
 
             {location.state ? <p>{location.state.msg}</p> : <></>}
 
-            {login_data[0].users[0].login_status  === "Active" ? avalible_refunds.length !== 0 ? orders_arr.map((order: New_orders, index: number) => {
+            {cookies.user[0].login_status  === "Active" ? orders_arr.length !== 0 ? orders_arr.map((order: New_orders, index: number) => {
 
                 return <div key={index.toString()}>
                 <table>

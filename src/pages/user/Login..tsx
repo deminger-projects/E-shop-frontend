@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
+import Cookies from 'universal-cookie';
+
 import login_reguest from '../../apis/login/login_request';
 import get_login_template from '../../templates/login/get_login_template';
+import { useCookies } from 'react-cookie';
 
 export default function Login(){
 
@@ -13,6 +16,10 @@ export default function Login(){
     const [password, setPassword] = useState<string>("");
 
     const [error_msg, set_error_msg] = useState<string>(location.state ? location.state.msg : "");
+
+    const cookies = new Cookies();
+    const pes = new Cookies();
+
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         
@@ -28,11 +35,15 @@ export default function Login(){
             const login_template = get_login_template(email, password)
             
             const [api_responce, error] = await login_reguest(login_template)
+            console.log("🚀 ~ handleSubmit ~ api_responce.user_account_data:", api_responce.user_account_data)
 
             if(error){
                 set_error_msg("error ocured")
             }else{
                 if(api_responce.next_status){
+                    cookies.set('user', api_responce.user_data);
+                    pes.set('pes', api_responce.user_account_data);
+
                     navigate("/main");
                 }else{
                     set_error_msg(api_responce.msg)

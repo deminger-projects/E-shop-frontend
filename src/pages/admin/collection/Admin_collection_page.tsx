@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
 import {Link} from "react-router-dom";
 
-import login_data from "../../../data/login_data.json"
-import colletions from "../../../data/new_collections.json"
-import colletions2 from "../../../data/collections_NN.json"
-
 import Access_denied from '../../user/Access_denied';
 
 import Collections from "../../../interfaces/Collections";
 
 import change_status from "../../../apis/records/change_status";
 import get_change_collection_template from "../../../templates/admin/get_change_collection_template";
+import { useCookies } from "react-cookie";
 
 export default function Admin_collection_page(){
 
@@ -22,10 +19,12 @@ export default function Admin_collection_page(){
     const [search_value, set_search_value] = useState<string>("")
     const [search_collections, set_search_collections] = useState<Array<Collections>>([])
 
+    const [cookies, setCookie] = useCookies(['user'])
+
     useEffect(() => {
         var res_arr: Array<Collections> = []
 
-        for(var colletion of colletions){             
+        for(var colletion of search_collections){             
             if(search_value){
                 var new_collection: Collections = colletion
 
@@ -38,7 +37,7 @@ export default function Admin_collection_page(){
         if(search_value){
             set_search_collections(res_arr)
         }else{
-            set_search_collections(colletions)
+            set_search_collections(search_collections)
         }
 
     },[search_value])
@@ -94,7 +93,7 @@ export default function Admin_collection_page(){
                 <p>{responce_msg}</p>
                 <p>{error_msg}</p>
 
-                {login_data[0].users[0].login_status === "Active" && login_data[0].users[0].username === "Admin" ? colletions.length !== 0 ?
+                {cookies.user[0].login_status === "Active" && cookies.user[0].username === "Admin" ? search_collections.length !== 0 ?
                     <table>
                         <thead>
                             <tr>

@@ -2,13 +2,15 @@ import { Link } from "react-router-dom";
 
 import Access_denied from "../Access_denied";
 
-import login_data from "../../../data/login_data.json"
+import { useCookies } from "react-cookie";
 
 export default function User_options(){
 
+    const [cookies, setCookie] = useCookies(['user'])
+
     return(
         <>
-            {login_data[0].users[0].login_status === "Active" ? 
+            {cookies.user[0].login_status === "Active" ? 
                 <>
                     <Link to="/refunds"><p>make refunds</p></Link>
                     <Link to="/change-password"><p>change password</p></Link>
