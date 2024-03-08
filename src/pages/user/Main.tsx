@@ -61,7 +61,7 @@ export default function Main(){
         }
       };
 
-
+ 
     return( 
         <>
             {location.state ? <p>{location.state.msg}</p> : <></>}
