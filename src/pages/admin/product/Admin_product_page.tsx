@@ -115,7 +115,7 @@ export default function Admin_product_page(){
                             {product.products[0].collection_name === null ? <td><p>NONE</p></td> : <td><p>{product.products[0].collection_name}</p></td>}
                             
                             <td>
-                                <img src={"images/products/" + product.products[0].id + "/" + product.products[0].url} width={"100px"} height={"100px"}></img>
+                                <img src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products/" + product.products[0].id + "/" + product.products[0].url} width={"100px"} height={"100px"}></img>
                             </td>
 
                             <td><p>{product.products[0].add_date}</p></td>

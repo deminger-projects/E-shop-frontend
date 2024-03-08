@@ -71,7 +71,7 @@ export default function App(){
                   
           
           <Route path="/main" element={<Main />} />
-          <Route path="/item-info" element={<Item_info />} />
+          <Route path="/item-info/:id" element={<Item_info />} /> 
           <Route path="/prepare-order" element={<Prepare_order/>} />
 
           <Route path="/user-menu" element={<User_options />} />

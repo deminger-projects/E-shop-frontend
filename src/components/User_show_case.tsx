@@ -9,19 +9,19 @@ export default function User_show_case(props: {images: Array<ProductImage>, id: 
     return(
         <>
             {show_cases.model_show_case.map((image, index) => (
-                <img key={image + index.toString()} className="grid-item2" src={"images/" + props.folder + "/" + props.id + "/" + image} alt="" width={"100xp"} height={"100px"}/>
+                <img key={image + index.toString()} className="grid-item2" src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/" + props.folder + "/" + props.id + "/" + image} alt="" width={"100xp"} height={"100px"}/>
             ))}
 
             <br />
 
             {show_cases.detail_show_case.map((image, index) => (
-                <img key={image + index.toString()} className="grid-item2" src={"images/" + props.folder + "/" + props.id + "/" + image} alt="" width={"100xp"} height={"100px"}/>
+                <img key={image + index.toString()} className="grid-item2" src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/" + props.folder + "/" + props.id + "/" + image} alt="" width={"100xp"} height={"100px"}/>
             ))}
 
             <br />
 
             {show_cases.other.map((image, index) => (
-                <img key={image + index.toString()} className="grid-item2" src={"images/" + props.folder + "/" + props.id + "/" + image} alt="" width={"100xp"} height={"100px"}/>
+                <img key={image + index.toString()} className="grid-item2" src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/" + props.folder + "/" + props.id + "/" + image} alt="" width={"100xp"} height={"100px"}/>
             ))}
         </>
     )

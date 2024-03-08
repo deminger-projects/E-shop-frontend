@@ -37,7 +37,10 @@ export default function Admin_refunds(){
 
         var filtred_refunds = []
 
-        for(let refund of refunds){
+        for(let refund2 of refunds){
+
+            var refund: Refund = refund2
+
             if(search_gate_active){
                 if(refund.refunds[0].status === "Active"){
                     filtred_refunds.push(refund)

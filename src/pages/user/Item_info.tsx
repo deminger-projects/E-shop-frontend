@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import Cart from '../../components/Cart';
 import User_size_select from '../../components/User_size_select';
@@ -13,7 +13,11 @@ export default function Item_info(){
 
     const navigate = useNavigate();
 
-    const product_data = useLocation().state.product_data;
+    var url_data = useParams()
+    var id = Number(url_data.id)
+
+    const [data, set_data] = useState<any>()
+    const [loading, set_loading] = useState<boolean>(true)
 
     const [response, set_responce] = useState<string>("")
     const [size_select, set_size_select] = useState<ProductSize>()
@@ -25,54 +29,90 @@ export default function Item_info(){
         event.preventDefault();
 
         if(size_select){
-            const [api_responce, error] = await add_to_cart(product_data, size_select)
+            const [api_responce, error] = await add_to_cart(data[0], size_select)
 
             if(error){
                 set_error_msg("error ocured")
             }else{
                 set_responce(api_responce.msg)
 
-                if(move){navigate("/prepare-order", {state: {data: product_data}});}
+                if(move){navigate("/prepare-order", {state: {data: data[0]}});}
             }
         }
     }
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    const fetchData = async () => {
+        try {
+
+            const form = new FormData();
+
+            form.append("id", JSON.stringify(id))
+
+          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_product_by_id', {
+            method: 'POST',
+            body: form  
+        }); 
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok.');
+          }
+          const data = await response.json();
+
+           set_data(data);
+           set_loading(false);
+
+        } catch (error) {
+
+          console.log(error);
+
+           set_loading(false);
+        }
+      };
+
     
     return(
         <>
 
             <p>{error_msg}</p>
-            
-            <Cart></Cart>
 
-            <User_show_case images={product_data.product_images} id={product_data.products[0].id} folder={"products"}></User_show_case>
+            {loading ? <p>loading</p> : <>
+                <Cart></Cart>
 
-            <p id='description'>{product_data.products[0].description}</p>
-            
-            <div id='buy_hud'>
-                <p>{"name: " +  product_data.products[0].product_name}</p>
-                <p>{"price: " + product_data.products[0].price}</p>
+                <User_show_case images={data[0].product_images} id={data[0].products[0].id} folder={"products"}></User_show_case>
 
-                <p>{response}</p>
-
-                <User_size_select sizes={product_data.product_sizes} on_change={set_size_select}></User_size_select>
-        
-                {size_select ?       
-                    <>
-                        <button onClick={(event) => handle_cart_change(event)}>add_to_cart</button>
-
-                        <button onClick={(event) => handle_cart_change(event, true)}>buy</button>
-                        
-                    </>          
-               
-                : <></> }
-
-                <p>popis produktu</p>
-                <p>material</p>
-                <p>prani</p>
-                <p>qr kod mozna</p>
-                <p>a tak</p>
+                <p id='description'>{data[0].products[0].description}</p>
                 
-            </div>
+                <div id='buy_hud'>
+                    <p>{"name: " +  data[0].products[0].product_name}</p>
+                    <p>{"price: " + data[0].products[0].price}</p>
+
+                    <p>{response}</p>
+
+                    <User_size_select sizes={data[0].product_sizes} on_change={set_size_select}></User_size_select>
+            
+                    {size_select ?       
+                        <>
+                            <button onClick={(event) => handle_cart_change(event)}>add_to_cart</button>
+
+                            <button onClick={(event) => handle_cart_change(event, true)}>buy</button>
+                            
+                        </>          
+                
+                    : <></> }
+
+                    <p>popis produktu</p>
+                    <p>material</p>
+                    <p>prani</p>
+                    <p>qr kod mozna</p>
+                    <p>a tak</p>
+                    
+                </div>
+            </>}
+            
         </>
     )
 }
