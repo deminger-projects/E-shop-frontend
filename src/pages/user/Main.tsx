@@ -42,7 +42,7 @@ export default function Main(){
     const fetchData = async () => {
         try {
           const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/test_request', {
-            method: 'POST'  
+            method: 'GET'  
         }); 
 
           if (!response.ok) {
