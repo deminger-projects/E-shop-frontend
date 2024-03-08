@@ -8,7 +8,7 @@ export default function Cart(){
         <>
           <div id="cart">
                 <Link to="/prepare-order">
-                    <img src="images/others/cart_image.jpg" width={"80px"} height={"80px"}></img>
+                    <img src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/others/cart_image.jpg"} width={"80px"} height={"80px"}></img>
                     <p id="cart_item_number">{cart.length}</p>
                 </Link>
             </div>

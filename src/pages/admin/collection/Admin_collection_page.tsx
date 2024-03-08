@@ -14,15 +14,13 @@ import get_change_collection_template from "../../../templates/admin/get_change_
 
 export default function Admin_collection_page(){
 
-    console.log("🚀 ~ colletions:", colletions)
-
-    console.log("🚀 ~ colletions2:", colletions2)
-
     const [responce_msg, set_responce_msg] = useState<string>("")
     const [error_msg, set_error_msg] = useState<string>("")
 
+    const [loading, set_loading] = useState<boolean>(true)
+
     const [search_value, set_search_value] = useState<string>("")
-    const [search_collections, set_search_collections] = useState<Array<Collections>>(colletions)
+    const [search_collections, set_search_collections] = useState<Array<Collections>>([])
 
     useEffect(() => {
         var res_arr: Array<Collections> = []
@@ -45,6 +43,33 @@ export default function Admin_collection_page(){
 
     },[search_value])
 
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    const fetchData = async () => {
+        try {
+          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_admin_collections', {
+            method: 'POST'  
+        }); 
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok.');
+          }
+          const data = await response.json();
+          
+          set_search_collections(data)
+          set_loading(false);
+
+        } catch (error) {
+
+          console.log(error);
+
+          set_loading(false);
+        }
+      };
+
+
     var handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>, record_id: number) =>{
 
         event.preventDefault();
@@ -63,47 +88,49 @@ export default function Admin_collection_page(){
     return( 
         <>
 
-            <input type="text" value={search_value} onChange={(event) => set_search_value(event.target.value)}/>
+            {loading ? <p>loading</p> : <>
+                <input type="text" value={search_value} onChange={(event) => set_search_value(event.target.value)}/>
 
-            <p>{responce_msg}</p>
-            <p>{error_msg}</p>
+                <p>{responce_msg}</p>
+                <p>{error_msg}</p>
 
-            {login_data[0].users[0].login_status === "Active" && login_data[0].users[0].username === "Admin" ? colletions.length !== 0 ?
-                <table>
-                    <thead>
-                        <tr>
-                            <th>collection name</th>
-                            <th>image</th>
-                            <th>add date</th>
-                        </tr>
-                    </thead>
-                    
-                    <tbody>
+                {login_data[0].users[0].login_status === "Active" && login_data[0].users[0].username === "Admin" ? colletions.length !== 0 ?
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>collection name</th>
+                                <th>image</th>
+                                <th>add date</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
 
-                {search_collections.map((collection: Collections) => 
-                        <tr key={collection.collections[0].id}>
-                            <td><p>{collection.collections[0].name}</p></td>
-                            <td>                            
-                                <img src={"images/collections/" + collection.collections[0].id + "/" + collection.collections[0].image_url} width={"100px"} height={"100px"}></img>
-                            </td>    
+                    {search_collections.map((collection: Collections) => 
+                            <tr key={collection.collections[0].id}>
+                                <td><p>{collection.collections[0].name}</p></td>
+                                <td>                            
+                                    <img src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/collections/" + collection.collections[0].id + "/" + collection.collections[0].image_url} width={"100px"} height={"100px"}></img>
+                                </td>    
 
-                            <td><p>{collection.collections[0].add_date}</p></td>
+                                <td><p>{collection.collections[0].add_date}</p></td>
 
-                            <td>
-                                <Link to="/admin_collection_edit" state={collection}>
-                                        <button>EDIT</button>
-                                </Link>
-                            </td>
-                            <td>                           
-                                <button onClick={(event) => handleSubmit(event, collection.collections[0].id)}>DELETE</button>
-                            </td>
-                        </tr>
-                )}
-                    </tbody>
-                </table>
-            : <p>no records</p>
-            : <Access_denied></Access_denied>
-            }
+                                <td>
+                                    <Link to="/admin_collection_edit" state={collection}>
+                                            <button>EDIT</button>
+                                    </Link>
+                                </td>
+                                <td>                           
+                                    <button onClick={(event) => handleSubmit(event, collection.collections[0].id)}>DELETE</button>
+                                </td>
+                            </tr>
+                    )}
+                        </tbody>
+                    </table>
+                : <p>no records</p>
+                : <Access_denied></Access_denied>
+                }
+            </>}
         </>
     )
 }
