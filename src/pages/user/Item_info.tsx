@@ -45,7 +45,7 @@ export default function Item_info(){
         //     }
         // }
 
-        if(cookies.cart_data !== undefined){
+        if(cookies.cart_data != undefined){
             var clone = cookies.cart_data
 
             console.log(clone)
