@@ -11,15 +11,15 @@ export default function Login_hud(){
 
     const [err_msg, set_error_msg] = useState<string>("")
 
+    const [loading, set_loading] = useState<boolean>(false)
+
     const [cookies, set_cookies] = useCookies(['user_data', 'user_account_data']);
     console.log("🚀 ~ Login_hud ~ cookies:", cookies)
 
-    if(cookies.user_data === ""){
-        console.log("test pes")
-    }
-
     var handle_on_click = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         
+        set_loading(true)
+
         event.preventDefault();
 
         const logoff_template = get_logoff_teplate()
@@ -33,42 +33,46 @@ export default function Login_hud(){
 
             navigate("/login", {state: api_responce})
         }
+
+        set_loading(false)
     }
 
     return(
-        <>
-            <p>{err_msg}</p>
+        <> 
+            {loading ? <p>loading</p> : <>
+                <p>{err_msg}</p>
 
-            <div id={"login_data"}>
-                {cookies.user_data ? 
-                    cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? 
+                <div id={"login_data"}>
+                    {true ? 
+                        cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? 
+                            <>
+                                <div>
+                                    <Link to="/user-menu">{cookies.user_data[0].username}</Link>
+                                    <br></br>
+                                    <button onClick={handle_on_click}>log out</button>
+                                    <br></br>
+                                    <Link to="/admin_page">{"admin page"}</Link>
+                                </div>  
+                            </>
+                        :    
+                            <>
+                                <div>
+                                    <Link to="/user-menu">{cookies.user_data[0].username}</Link>
+                                    <br></br>
+                                    <button onClick={handle_on_click}>log out</button>
+                                </div>  
+                            </>
+                    :
                         <>
                             <div>
-                                <Link to="/user-menu">{cookies.user_data[0].username}</Link>
-                                <br></br>
-                                <button onClick={handle_on_click}>log out</button>
-                                <br></br>
-                                <Link to="/admin_page">{"admin page"}</Link>
-                            </div>  
+                                <Link to="/login">{"login"}</Link>
+                                <p>--------</p>
+                                <Link to="/register">{"register"}</Link>
+                            </div>
                         </>
-                    :    
-                        <>
-                            <div>
-                                <Link to="/user-menu">{cookies.user_data[0].username}</Link>
-                                <br></br>
-                                <button onClick={handle_on_click}>log out</button>
-                            </div>  
-                        </>
-                :
-                    <>
-                        <div>
-                            <Link to="/login">{"login"}</Link>
-                            <p>--------</p>
-                            <Link to="/register">{"register"}</Link>
-                        </div>
-                    </>
-                    }
-            </div>
+                        }
+                </div>
+            </>}
         </>
     )
 }
