@@ -2,11 +2,11 @@ import {OrderProduct} from "../interfaces/user/User_orders"
 import Reasons from "../interfaces/Refund_reasons"
 import Refund from "../interfaces/Refund_table"
 
-import reasons_data from "../data/reasons.json"
-
 import num_to_arr from "../functions/sub_functions/num_to_arr";
+import { useCookies } from "react-cookie";
+import { useEffect, useState } from "react";
 
-export default function Refund_row(props: {product_data: OrderProduct, pozition: number, on_change: Function, table_data: Array<Refund>}){
+export default function Refund_row(props: {product_data: OrderProduct, pozition: number, on_change: Function, table_data: Array<Refund> , reasons: Array<Reasons>}){   
 
     var handle_amount = (pozition: number, value: string) =>{
 
@@ -62,7 +62,7 @@ export default function Refund_row(props: {product_data: OrderProduct, pozition:
                             
                             <option value={"no_data"}>select reason</option>
                             
-                            {reasons_data.map((reason: Reasons, index: number) =>  
+                            {props.reasons.map((reason: Reasons, index: number) =>  
                                 <option key={index.toString()} value={reason.refund_reasons[0].id}>{reason.refund_reasons[0].reason}</option>  
                             )}
                     </select>

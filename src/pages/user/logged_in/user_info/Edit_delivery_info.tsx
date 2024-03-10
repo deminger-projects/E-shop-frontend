@@ -47,7 +47,7 @@ export default function Edit_delivery_info(){
             if(err){
                 set_error_msg("error ocured")
             }else{
-                if(api_responce.duplicit_value !== true){
+                if(api_responce.next_status === true){
                     navigate('/account-info', {state: {msg: "data edited"}})
                 }else{
                     set_error_msg("duplicit value")

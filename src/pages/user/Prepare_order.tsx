@@ -5,8 +5,6 @@ import get_cart_data from '../../functions/getters/get_cart_data';
 
 import Cart_items from '../../components/Cart_items';
 
-import cart from "../../data/cart.json"
-
 import UserData, {User_data} from "../../interfaces/user/User_data"
 
 import add_record from '../../apis/records/add_record';

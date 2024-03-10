@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {OrderProduct} from "../../../../interfaces/user/User_orders"
 import Refund from "../../../../interfaces/Refund_table"
@@ -13,6 +13,7 @@ import filter_refund_data from "../../../../functions/filters/filter_refund_data
 
 import get_refund_template from "../../../../templates/refund/get_refund_template";
 import { useCookies } from "react-cookie";
+import Reasons from "../../../../interfaces/Refund_reasons";
 
 export default function Order_refund(){
 
@@ -27,8 +28,37 @@ export default function Order_refund(){
     const [error_msg, set_error_msg] = useState<string>("");
 
     const [loading, set_loading] = useState<boolean>(false);
+    const [reasons, set_reasons] = useState<Array<Reasons>>([])
+
 
     const [cookies, setCookie] = useCookies(['user_data'])
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    const fetchData = async () => {
+        try {
+
+          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_refund_reasons', {
+            method: 'POST'
+        }); 
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok.');
+          }
+          const data = await response.json();
+
+          set_reasons(data);
+           set_loading(false);
+
+        } catch (error) {
+
+          console.log(error);
+
+           set_loading(false);
+        }
+      };
     
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -80,7 +110,7 @@ export default function Order_refund(){
 
                         <tbody>
                             {location.state.data.order_products.map((product_data: OrderProduct, index: number) =>
-                                <Refund_row key={index.toString()} product_data={product_data} pozition={index} on_change={set_refund_data} table_data={refund_data}></Refund_row>
+                                <Refund_row reasons={reasons} key={index.toString()} product_data={product_data} pozition={index} on_change={set_refund_data} table_data={refund_data}></Refund_row>
                             )}
                         </tbody>
 
