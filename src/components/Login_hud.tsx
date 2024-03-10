@@ -40,7 +40,7 @@ export default function Login_hud(){
             <p>{err_msg}</p>
 
             <div id={"login_data"}>
-                {cookies.user_data !== "" && cookies.user_data && cookies.user_data.lenght > 0 ? 
+                {cookies.user_data ? 
                     cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? 
                         <>
                             <div>
