@@ -38,7 +38,7 @@ export default function Admin_product_edit(){
 
     const [error_msg, set_error_msg] = useState<string>("")
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user_data'])
 
     const [fetch_collekec, set_fetch_collekec] = useState()
     const [loading, set_loading] = useState(true)
@@ -94,7 +94,7 @@ export default function Admin_product_edit(){
 
             if(files){
                 if(((files.model_show_case?.status === true && filtred_data.model_show_case_status === true) || files.model_show_case?.status === false) && ((files.detail_show_case?.status === true && filtred_data.detail_show_case_status === true) || files.detail_show_case?.status === false)){
-                    const [api_responce, error] = await edit_record(product_template, location.state.products[0].id, cookies.user[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "products")
+                    const [api_responce, error] = await edit_record(product_template, location.state.products[0].id, cookies.user_data[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "products")
 
                     if(error){
                         set_error_msg("error ocured")
@@ -105,7 +105,7 @@ export default function Admin_product_edit(){
                     }
                 }
             }else{
-                const [api_responce, error] = await edit_record(product_template, location.state.products[0].id, cookies.user[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "products")
+                const [api_responce, error] = await edit_record(product_template, location.state.products[0].id, cookies.user_data[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "products")
 
                 if(error){
                     set_error_msg("error ocured")
@@ -126,7 +126,7 @@ export default function Admin_product_edit(){
             {loading ? <p>loading</p> : <>
                 <p>{error_msg}</p>
                 
-                {cookies.user[0].login_status === "Active" && cookies.user[0].username === "Admin" ? <div>
+                {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? <div>
                     <form onSubmit={handleSubmit} encType='multipart/form-data'>
 
                         <label htmlFor="product_name_edit">{"Product name"}</label>

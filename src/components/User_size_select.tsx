@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import {ProductSize} from "../interfaces/Product"
 
@@ -14,6 +14,9 @@ export default function User_size_select(props: {sizes: Array<ProductSize>, on_c
         for (let index = 1; index <= size_data.current_amount; index++) {
             amouts.push(index)   
         }
+        console.log("🚀 ~ User_size_select ~ size_data:", size_data)
+
+        
 
         set_size({size: size_data.size, current_amount: size_data.current_amount})
         set_options(amouts)

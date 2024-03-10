@@ -2,6 +2,8 @@ import Tables from "../../interfaces/Tables"
 import logoff_template_interface from "../../interfaces/templates/login/logoff_template"
 
 export default async function logoff(logoff_template: logoff_template_interface, record_id: number, user_id?: number){
+console.log("🚀 ~ logoff ~ user_id:", user_id)
+console.log("🚀 ~ logoff ~ record_id:", record_id)
 
     const form_data = new FormData()
 

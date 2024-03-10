@@ -6,11 +6,11 @@ import { useCookies } from "react-cookie";
 
 export default function User_options(){
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user_data'])
 
     return(
         <>
-            {cookies.user[0].login_status === "Active" ? 
+            {cookies.user_data[0].login_status === "Active" ? 
                 <>
                     <Link to="/refunds"><p>make refunds</p></Link>
                     <Link to="/change-password"><p>change password</p></Link>

@@ -15,10 +15,10 @@ export default function Login(){
     const [email, setName] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
+    const [cookies, set_cookies] = useCookies();
+
     const [error_msg, set_error_msg] = useState<string>(location.state ? location.state.msg : "");
 
-    const cookies = new Cookies();
-    const pes = new Cookies();
 
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -35,14 +35,14 @@ export default function Login(){
             const login_template = get_login_template(email, password)
             
             const [api_responce, error] = await login_reguest(login_template)
-            console.log("🚀 ~ handleSubmit ~ api_responce.user_account_data:", api_responce.user_account_data)
+            console.log("🚀 ~ handleSubmit ~ api_responce:", api_responce)
 
             if(error){
                 set_error_msg("error ocured")
             }else{
                 if(api_responce.next_status){
-                    cookies.set('user', api_responce.user_data);
-                    pes.set('pes', api_responce.user_account_data);
+                    set_cookies("user_data", api_responce.user_data, {path: "/"})
+                    set_cookies("user_account_data", api_responce.user_account_data, {path: "/"})
 
                     navigate("/main");
                 }else{

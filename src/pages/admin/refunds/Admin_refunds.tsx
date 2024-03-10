@@ -30,7 +30,7 @@ export default function Admin_refunds(){
     const [search_email, set_search_email] = useState<string>("")
     const [search_phone, set_search_phone] = useState<string>("")
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user_data'])
 
     useEffect(() => {      // searches products based on user input, valid input: product name, product size
         var res_arr: Array<Refund> = []
@@ -108,7 +108,7 @@ export default function Admin_refunds(){
 
         const refund_status_change = get_refund_status_change_template(status)
 
-        const [api_responce, error] = await change_status(refund_status_change, record_id, cookies.user[0].id)
+        const [api_responce, error] = await change_status(refund_status_change, record_id, cookies.user_data[0].id)
 
         if(error){
             set_error_msg("error ocured")
@@ -166,7 +166,7 @@ export default function Admin_refunds(){
             <button onClick={() => {set_search_gate_active(false); set_search_gate_processing(false); set_search_gate_cancel(false); set_search_gate_done(!search_gate_done)}}>status Done</button>
 
 
-            {cookies.user[0].login_status === "Active" && cookies.user[0].username === "Admin" ? refund_arr.length > 0 ?
+            {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? refund_arr.length > 0 ?
                 <div>
                     <p>refunds</p>
                     {refund_arr.map((refund: Refund) => 

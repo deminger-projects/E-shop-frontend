@@ -28,7 +28,7 @@ export default function Admin_collection_edit(){
 
     const [err_msg, set_err_msg] = useState<string>("")
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user_data'])
 
     const [loading, set_loading] = useState<boolean>(false);  
 
@@ -46,7 +46,7 @@ export default function Admin_collection_edit(){
 
             const edit_collection_template = get_edit_collection_template(collection_name, location.state.collections[0].id, filtred_data.file_names_for_table)
 
-            const [api_responce, error] = await edit_record(edit_collection_template, location.state.collections[0].id, cookies.user[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "collections")
+            const [api_responce, error] = await edit_record(edit_collection_template, location.state.collections[0].id, cookies.user_data[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "collections")
 
             if(error){
                 set_err_msg("error ocured")
@@ -64,7 +64,7 @@ export default function Admin_collection_edit(){
             {loading ? <p>loading</p> : <>
                 <p>{err_msg}</p>
 
-                {cookies.user[0].login_status === "Active" && cookies.user[0].username === "Admin" ? <div>
+                {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? <div>
                     <form onSubmit={handleSubmit} encType="multipart/form-data">
 
                         <label htmlFor="collection_edit">{"Collection name"}</label>

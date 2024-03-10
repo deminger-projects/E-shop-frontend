@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import get_cart_data from '../functions/getters/get_cart_data';
+import { useCookies } from 'react-cookie';
 
 export default function Money_sum() {
   
-    const cart_data = get_cart_data()
+  const [cookies, set_cookies] = useCookies(['cart_data']);
 
     var products_cost = 0
     var delivery_cost = 15
 
-    for(let item of cart_data.cart_products){
+    for(let item of cookies.cart_data){
         var price = item.product.products[0].price
         var discount = Number(item.product.products[0].discount)
 

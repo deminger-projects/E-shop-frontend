@@ -21,7 +21,7 @@ export default function Add_delivery_info(){
 
     const [error_msg, set_error_msg] = useState<string>("");
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user_data'])
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -37,9 +37,9 @@ export default function Add_delivery_info(){
 
         if(name && surname && email && telephone && adress && city && PSC){
 
-            const user_data_template = get_user_data_template(cookies.user[0].id, name, surname, telephone, adress, city, PSC)
+            const user_data_template = get_user_data_template(cookies.user_data[0].id, name, surname, telephone, adress, city, PSC)
 
-            const [api_responce, error] = await add_record(user_data_template, cookies.user[0].id, undefined, undefined, undefined, cookies.user[0].login_status)
+            const [api_responce, error] = await add_record(user_data_template, cookies.user_data[0].id, undefined, undefined, undefined, cookies.user_data[0].login_status)
             
             if(error){
                 set_error_msg("error ocured")
@@ -57,7 +57,7 @@ export default function Add_delivery_info(){
         <>
             <p>{error_msg}</p>
 
-            {cookies.user[0].login_status  === "Active" ? 
+            {cookies.user_data[0].login_status  === "Active" ? 
                 <>
                     <p>Add_delivery_info</p>
 

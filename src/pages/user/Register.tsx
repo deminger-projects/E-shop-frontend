@@ -25,7 +25,7 @@ export default function Register(){
 
     const [err_msg, set_err_msg] = useState<string>("");
 
-    const [cookies, setCookie] = useCookies()
+    const [cookies, set_cookies] = useCookies()
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -54,8 +54,7 @@ export default function Register(){
                 set_err_msg("error ocured")
             }else{
                 if(api_responce.next_status === true){
-                    setCookie('user', api_responce.user_data)
-                    setCookie("user_data", api_responce.user_account_data)
+                    set_cookies("user_data", api_responce.user_data, {path: "/"})
 
                     navigate("/main");
                 }else{

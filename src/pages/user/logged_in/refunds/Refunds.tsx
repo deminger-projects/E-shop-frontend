@@ -14,7 +14,7 @@ export default function Refunds(){
     const [orders_arr, set_orders_arr] = useState<Array<New_orders>>([])
     const [search_order_id, set_search_order_id] = useState<string>("")
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user_data'])
 
     useEffect(() => {
         var res_arr: Array<New_orders> = []
@@ -49,7 +49,7 @@ export default function Refunds(){
 
             {location.state ? <p>{location.state.msg}</p> : <></>}
 
-            {cookies.user[0].login_status  === "Active" ? orders_arr.length !== 0 ? orders_arr.map((order: New_orders, index: number) => {
+            {cookies.user_data[0].login_status  === "Active" ? orders_arr.length !== 0 ? orders_arr.map((order: New_orders, index: number) => {
 
                 return <div key={index.toString()}>
                 <table>

@@ -2,26 +2,36 @@ import React, { useState } from "react";
 
 import delete_from_cart from "../apis/cart/delete_from_cart";
 
-import cart from "../data/cart.json"
-
 import Cart from "../interfaces/Cart";
+import { useCookies } from "react-cookie";
 
 export default function Cart_items(){
 
     const [responce_msg, set_responce_msg] = useState<string>()
     const [error_msg, set_error_msg] = useState<string>()
 
+    const [cookies, set_cookies] = useCookies(['cart_data']);
+
+    var cart = cookies.cart_data
+
     var handle_on_click = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, pozition: number) =>{
 
         event.preventDefault();
 
-        const [api_responce, error] = await delete_from_cart(pozition)
+        // const [api_responce, error] = await delete_from_cart(pozition)
 
-        if(error){
-            set_error_msg("error ocured")
-        }else{
-            set_responce_msg(api_responce.msg)
-        }
+        // if(error){
+        //     set_error_msg("error ocured")
+        // }else{
+        //     set_responce_msg(api_responce.msg)
+        // }
+
+        var clone = cookies.cart_data
+        console.log("🚀 ~ varhandle_on_click= ~ clone:", clone)
+
+        clone.splice(pozition, 1)
+
+        set_cookies("cart_data", clone)
     }
 
     return(

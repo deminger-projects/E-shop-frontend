@@ -16,23 +16,23 @@ export default function Psw_change(){
     const [psw_input2, setPsw_input2] = useState<string>("");
     const [error_msg, set_error_msg] = useState<string>("");
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user_data'])
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
         event.preventDefault();
 
-        if(cookies.user[0].password !== current_psw){set_error_msg("current password is incorect")}
+        if(cookies.user_data[0].password !== current_psw){set_error_msg("current password is incorect")}
         if(!psw_input2){set_error_msg("new again password in empty")}
         if(!psw_input1){set_error_msg("new password in empty")}
         if(!current_psw){set_error_msg("current password in empty")}
         if(psw_input1 !== psw_input2){set_error_msg("passwords do not match")}
 
-        if(current_psw && psw_input1 && psw_input2 && cookies.user[0].password === current_psw && psw_input1 === psw_input2){
+        if(current_psw && psw_input1 && psw_input2 && cookies.user_data[0].password === current_psw && psw_input1 === psw_input2){
         
             const psw_template = get_psw_template(psw_input1)
 
-            const api_respocse = await edit_record(psw_template, cookies.user[0].id, cookies.user[0].id, undefined, undefined, undefined, true)
+            const api_respocse = await edit_record(psw_template, cookies.user_data[0].id, cookies.user_data[0].id, undefined, undefined, undefined, true)
 
             navigate("/main", {state: {msg: "password changed"}})
         }
@@ -40,7 +40,7 @@ export default function Psw_change(){
 
     return(
         <>
-            {cookies.user[0].login_status === "Active" ? 
+            {cookies.user_data[0].login_status === "Active" ? 
                 <><p>{error_msg}</p>
 
                 <div>

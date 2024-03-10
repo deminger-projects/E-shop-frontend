@@ -18,7 +18,7 @@ export default function Account_info(){
     const [responce_msg, set_responce_msg] = useState<string>(location.state ? location.state.msg : "");
     const [error_msg, set_error_msg] = useState<string>("")
 
-    const [cookies, setCookie] = useCookies(['user', "user_data"])
+    const [cookies, setCookie] = useCookies(["user_data"])
 
     const [cookie_user_data, set_cookie_user_data] = useCookies(["user_data"])
 
@@ -32,7 +32,7 @@ export default function Account_info(){
 
         const account_info_template = get_account_info_template()
 
-        const [api_responce, error] = await change_status(account_info_template, user_data.id, cookies.user[0].id)
+        const [api_responce, error] = await change_status(account_info_template, user_data.id, cookies.user_data[0].id)
 
         if(error){
             set_error_msg("error ocured")
@@ -46,7 +46,7 @@ export default function Account_info(){
             <p>{responce_msg}</p>
             <p>{error_msg}</p>
 
-            {cookies.user[0].login_status === "Active" ?
+            {cookies.user_data[0].login_status === "Active" ?
 
                 <>
                     <table>
@@ -59,9 +59,9 @@ export default function Account_info(){
 
                             <tbody>
                                 <tr>
-                                    <td><p>{cookies.user[0].username}</p></td>
-                                    <td><p>{cookies.user[0].email}</p></td>
-                                    <td><button><Link to={"/edit-user-info"} state={{data: cookies.user[0]}}>edit</Link></button></td>
+                                    <td><p>{cookies.user_data[0].username}</p></td>
+                                    <td><p>{cookies.user_data[0].email}</p></td>
+                                    <td><button><Link to={"/edit-user-info"} state={{data: cookies.user_data[0]}}>edit</Link></button></td>
                                 </tr>
                             </tbody>      
                     </table>
@@ -82,7 +82,7 @@ export default function Account_info(){
                         <tbody>
                         
                 {cookies.user_data.length === 0 ? <p>no delivery_data</p> :                           
-                    cookies.user_data.user_data.map((user_data: DeliveryData, index: number) =>                     
+                    cookies.user_data.map((user_data: DeliveryData, index: number) =>                     
                         
                             <tr key={index.toString()}>
                                 <td><p>{user_data.name}</p></td>

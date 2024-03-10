@@ -24,7 +24,7 @@ export default function Admin_product_page(){
 
     const [products_arr, set_products_arr] = useState<Array<Product>>([]);
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user_data'])
 
     const [fetch_collections, set_fetch_collections] = useState<any>();
 
@@ -115,7 +115,7 @@ export default function Admin_product_page(){
 
         const product_status_change_template = get_product_status_change_template()
 
-        const [api_responce, error] = await change_status(product_status_change_template, record_id, cookies.user[0].id)
+        const [api_responce, error] = await change_status(product_status_change_template, record_id, cookies.user_data[0].id)
 
         if(error){
             set_error_msg("error ocured")
@@ -142,7 +142,7 @@ export default function Admin_product_page(){
                     <Admin_collection_select collections={fetch_collections}></Admin_collection_select>
                 </select>            
 
-                {cookies.user[0].login_status === "Active" && cookies.user[0].username === "Admin" ? products_arr.length > 0 ?
+                {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? products_arr.length > 0 ?
                     <table>
                         <thead>
                             <tr>

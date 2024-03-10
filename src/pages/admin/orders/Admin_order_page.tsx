@@ -15,7 +15,7 @@ export default function Admin_order_page(){
 
     const [loading, set_loading] = useState<boolean>(true)
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user_data'])
     
     const [search_gate_order_id, set_search_gate_order_id] = useState<boolean>(false)
     const [search_gate_name, set_search_gate_name] = useState<boolean>(false)
@@ -147,7 +147,7 @@ export default function Admin_order_page(){
 
         const order_status_change_template = get_order_status_change_template(status)
 
-        const [api_responce, error] = await change_status(order_status_change_template, record_id , cookies.user[0].id)
+        const [api_responce, error] = await change_status(order_status_change_template, record_id , cookies.user_data[0].id)
     
         if(error){
             set_error_msg("error ocured")
@@ -212,7 +212,7 @@ export default function Admin_order_page(){
             <br />
             <br />
 
-           {cookies.user[0].login_status === "Active" && cookies.user[0].username === "Admin" ? order_arr.length > 0 ? 
+           {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? order_arr.length > 0 ? 
                 <div>
                 {order_arr.map((order: Order) => 
                 

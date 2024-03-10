@@ -7,9 +7,10 @@ import { useCookies } from "react-cookie";
 export default function Orders(){
 
     const [orders_arr, set_orders_arr] = useState<Array<Order>>([])
+    console.log("🚀 ~ Orders ~ orders_arr:", orders_arr)
     const [search_order_id, set_search_order_id] = useState<string>("")
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user_data'])
     const [loading, set_loading] = useState(true)
 
     useEffect(() => {
@@ -20,7 +21,7 @@ export default function Orders(){
             var order_fix: Order = order
 
             if(search_order_id){
-                if(order_fix.refunds[0] .id.toString().includes(search_order_id)){
+                if(order_fix.orders[0] .id.toString().includes(search_order_id)){
                     res_arr.push(order)
                 }
             }
@@ -68,7 +69,7 @@ export default function Orders(){
                 <label htmlFor="">order id</label>
                 <input type="text" value={search_order_id} onChange={(event) => set_search_order_id(event.target.value)}/>
 
-                {cookies.user[0].login_status === "Active" ? orders_arr.length > 0 ? 
+                {cookies.user_data[0].login_status === "Active" ? orders_arr.length > 0 ? 
                     <>
                         {orders_arr.map((order: Order, index1: number) => 
                             <div key={index1.toString()}>
@@ -89,15 +90,15 @@ export default function Orders(){
                                     
                                     <tbody>
                                         <tr>
-                                            <td><p>{order.refunds[0].id}</p></td>
-                                            <td><p>{order.refunds[0].name}</p></td>
-                                            <td><p>{order.refunds[0].surname}</p></td>
-                                            <td><p>{order.refunds[0].email}</p></td>
-                                            <td><p>{order.refunds[0].phone}</p></td>
-                                            <td><p>{order.refunds[0].adress}</p></td>
-                                            <td><p>{order.refunds[0].postcode}</p></td>
-                                            <td><p>{order.refunds[0].add_date}</p></td>
-                                            <td><p>{order.refunds[0].status}</p></td>
+                                            <td><p>{order.orders[0].id}</p></td>
+                                            <td><p>{order.orders[0].name}</p></td>
+                                            <td><p>{order.orders[0].surname}</p></td>
+                                            <td><p>{order.orders[0].email}</p></td>
+                                            <td><p>{order.orders[0].phone}</p></td>
+                                            <td><p>{order.orders[0].adress}</p></td>
+                                            <td><p>{order.orders[0].postcode}</p></td>
+                                            <td><p>{order.orders[0].add_date}</p></td>
+                                            <td><p>{order.orders[0].status}</p></td>
                                         </tr>
                                     </tbody>
 

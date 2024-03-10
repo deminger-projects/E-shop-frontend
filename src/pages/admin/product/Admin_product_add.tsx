@@ -43,7 +43,7 @@ export default function Admin_product_add(){
     const [error_msg, set_error_msg] = useState<string>("");
     const [responce_msg, set_responce_msg] = useState<string>("");
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user_data'])
 
     const [loading, set_loading] = useState(true)
 
@@ -101,7 +101,7 @@ export default function Admin_product_add(){
     
                 const product_template = get_product_template(Number(collection), name, Number(cost), description, filtred_sizes.sizes, null, filtred_sizes.amounts, filtred_data.file_names_for_table, files)
     
-                const [api_responce, error] = await add_record(product_template, cookies.user[0].id, "products", filtred_data.files_to_save)    
+                const [api_responce, error] = await add_record(product_template, cookies.user_data[0].id, "products", filtred_data.files_to_save)    
 
                 if(error){
                     set_error_msg("error ocured")
@@ -125,7 +125,7 @@ export default function Admin_product_add(){
                 <p>{error_msg}</p>
                 <p>{responce_msg}</p>
 
-                {cookies.user[0].login_status === "Active" && cookies.user[0].username === "Admin" ? <div className="admin_add_product">
+                {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? <div className="admin_add_product">
                     <form onSubmit={handleSubmit} encType="multipart/form-data">
                         
                         <label htmlFor="product_name">{"Product name"}</label>

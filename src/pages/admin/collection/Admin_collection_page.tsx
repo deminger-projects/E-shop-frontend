@@ -19,7 +19,7 @@ export default function Admin_collection_page(){
     const [search_value, set_search_value] = useState<string>("")
     const [search_collections, set_search_collections] = useState<Array<Collections>>([])
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user_data'])
 
     useEffect(() => {
         var res_arr: Array<Collections> = []
@@ -93,7 +93,7 @@ export default function Admin_collection_page(){
                 <p>{responce_msg}</p>
                 <p>{error_msg}</p>
 
-                {cookies.user[0].login_status === "Active" && cookies.user[0].username === "Admin" ? search_collections.length !== 0 ?
+                {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? search_collections.length !== 0 ?
                     <table>
                         <thead>
                             <tr>

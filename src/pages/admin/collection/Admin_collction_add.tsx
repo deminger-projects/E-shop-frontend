@@ -23,7 +23,7 @@ export default function Admin_collection_add(){
 
     const [loading, set_loading] = useState<boolean>(false);  
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user_data'])
 
     var file_set_up = set_up_files(undefined, undefined, undefined)
 
@@ -51,7 +51,7 @@ export default function Admin_collection_add(){
 
                 const collection_edit_template = get_edit_collection_template(collection_name, null, filtred_data.file_names_for_table)
                 
-                const [api_responce, error] = await add_record(collection_edit_template, cookies.user[0].id, "collections", filtred_data.files_to_save)
+                const [api_responce, error] = await add_record(collection_edit_template, cookies.user_data[0].id, "collections", filtred_data.files_to_save)
     
                 if(api_responce.duplicit_value === true){
                     set_error_msg("duplicit name")
@@ -81,7 +81,7 @@ export default function Admin_collection_add(){
             {loading ? <p>loading</p> : <>
                 <p>{error_msg}</p>
 
-                {cookies.user[0].login_status === "Active" && cookies.user[0].username === "Admin" ? <div className="admin_add_collection">
+                {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? <div className="admin_add_collection">
                     <form onSubmit={handleSubmit} encType="multipart/form-data">
                         
                         <label htmlFor="collection_name_add">{"Collection name"}</label>

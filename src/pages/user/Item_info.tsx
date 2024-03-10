@@ -8,6 +8,7 @@ import {ProductSize} from "../../interfaces/Product"
 
 import add_to_cart from '../../apis/cart/add_to_cart';
 import User_show_case from '../../components/User_show_case';
+import { useCookies } from 'react-cookie';
 
 export default function Item_info(){
 
@@ -24,21 +25,45 @@ export default function Item_info(){
 
     const [error_msg, set_error_msg] = useState<string>("")
 
+    const [cookies, set_cookies] = useCookies(['cart_data', 'user_data']);
+    console.log("🚀 ~ Item_info ~ cookies:", cookies.user_data)
+    console.log("🚀 ~ Item_info ~ cookies:", cookies.cart_data)
+
+
     var handle_cart_change = async (event: React.MouseEvent<HTMLButtonElement>, move?: boolean) => {
 
         event.preventDefault();
 
-        if(size_select){
-            const [api_responce, error] = await add_to_cart(data[0], size_select)
+        var my_arr = []
 
-            if(error){
-                set_error_msg("error ocured")
-            }else{
-                set_responce(api_responce.msg)
+        // if(size_select){
+        //     const [api_responce, error] = await add_to_cart(data[0], size_select)
+            
+        //     if(error){
+        //         set_error_msg("error ocured")
+        //     }else{
+        //         set_responce(api_responce.msg)
+        //         set_cookies("cart_data", data[0], {path: "/"})
+        //         if(move){navigate("/prepare-order", {state: {data: data[0]}});}
+        //     }
+        // }
 
-                if(move){navigate("/prepare-order", {state: {data: data[0]}});}
-            }
+        if(cookies.cart_data !== ""){
+            var clone = cookies.cart_data
+            console.log("🚀 ~ varhandle_cart_change= ~ clone:", clone)
+
+            clone.push({size_data: size_select, product: data[0]})
+    
+            set_cookies("cart_data", clone, {path: "/"})
+        }else{    
+            set_cookies("cart_data", [] , {path: "/"})
         }
+        
+
+        // if(move){
+        //     navigate("/")
+        // }
+
     }
 
     useEffect(() => {

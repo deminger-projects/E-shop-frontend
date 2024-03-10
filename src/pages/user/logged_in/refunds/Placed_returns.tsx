@@ -10,7 +10,7 @@ export default function Placed_returns(){
     const [refunds_arr, set_refunds_arr] = useState<Array<User_refunds>>([])
     const [search_refund_id, set_search_refund_id] = useState<string>("")
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user_data'])
 
     const [loading, set_loading] = useState<boolean>(true)
 
@@ -70,7 +70,7 @@ export default function Placed_returns(){
                 <label htmlFor="">order id</label>
                 <input type="text" value={search_refund_id} onChange={(event) => set_search_refund_id(event.target.value)}/>
 
-                {cookies.user[0].login_status  === "Active" ? refunds_arr.length !== 0 ?
+                {cookies.user_data[0].login_status  === "Active" ? refunds_arr.length !== 0 ?
                     
                         refunds_arr.map((refund: User_refunds) => (
                             

@@ -6,11 +6,11 @@ import { useCookies } from 'react-cookie';
 
 export default function Admin_page(){
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user_data'])
 
     return(
         <>
-            {cookies.user[0].login_status === "Active" && cookies.user[0].username === "Admin" ? 
+            {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? 
                 <div>
                     <Link to="/admin_collection_page"><button>collections page</button></Link>
                     <Link to="/admin_product_page"><button>products page</button></Link>
