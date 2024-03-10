@@ -12,7 +12,11 @@ export default function Forgot_psw(){
 
     const [error_msg, set_error_msg] = useState<string>("");
 
+    const [loading, set_loading] = useState<boolean>(false);
+
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
+        set_loading(true)
 
         event.preventDefault();
 
@@ -34,22 +38,25 @@ export default function Forgot_psw(){
                 }
             }
         }
+
+        set_loading(false)
     }
 
     return(
         <>
-            <p>{error_msg}</p>
+            {loading ? <p>loading</p> : <>
+                <p>{error_msg}</p>
 
-            <div>
-                <form onSubmit={handleSubmit}>
+                <div>
+                    <form onSubmit={handleSubmit}>
 
-                    <label htmlFor={"forgot"}>email</label>
-                    <input id={"forgot"} type="email" value={email} onChange={(e) => setEmail(e.target.value)}></input>
-                    <button>send</button>
+                        <label htmlFor={"forgot"}>email</label>
+                        <input id={"forgot"} type="email" value={email} onChange={(e) => setEmail(e.target.value)}></input>
+                        <button>send</button>
 
-                </form>
-            </div>
-           
+                    </form>
+                </div>
+            </>}
         </>
     )
 }

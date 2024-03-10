@@ -1,9 +1,10 @@
 export default interface UserData {
     users:     User[];
-    user_data: DeliveryData[];
+    user_data: User_data[];
 }
 
-export interface DeliveryData {
+export interface User_data {
+    pes: string;
     id:       number;
     user_id:  number;
     name:     string;

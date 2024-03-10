@@ -16,9 +16,13 @@ export default function Psw_change(){
     const [psw_input2, setPsw_input2] = useState<string>("");
     const [error_msg, set_error_msg] = useState<string>("");
 
+    const [loading, set_loading] = useState<boolean>(false);
+
     const [cookies, setCookie] = useCookies(['user_data'])
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
+        set_loading(true)
 
         event.preventDefault();
 
@@ -36,31 +40,35 @@ export default function Psw_change(){
 
             navigate("/main", {state: {msg: "password changed"}})
         }
+
+        set_loading(false)
     }
 
     return(
         <>
-            {cookies.user_data[0].login_status === "Active" ? 
-                <><p>{error_msg}</p>
+            {loading ? <p>loading</p> : <>
+                {cookies.user_data[0].login_status === "Active" ? 
+                    <><p>{error_msg}</p>
 
-                <div>
-                    <form onSubmit={handleSubmit}>
-                        <label htmlFor="current_psw">Current password</label>
-                        <input type="text" id="current_psw" value={current_psw} onChange={(e) => set_current_psw(e.target.value)}></input>
+                    <div>
+                        <form onSubmit={handleSubmit}>
+                            <label htmlFor="current_psw">Current password</label>
+                            <input type="text" id="current_psw" value={current_psw} onChange={(e) => set_current_psw(e.target.value)}></input>
 
 
-                        <label htmlFor="first_psw">new password</label>
-                        <input type="text" id="first_psw" value={psw_input1} onChange={(e) => setPsw_input1(e.target.value)}></input>
+                            <label htmlFor="first_psw">new password</label>
+                            <input type="text" id="first_psw" value={psw_input1} onChange={(e) => setPsw_input1(e.target.value)}></input>
 
-                        <label htmlFor="second_psw">new again password</label>
-                        <input type="text" id="second_psw" value={psw_input2} onChange={(e) => setPsw_input2(e.target.value)}></input>
+                            <label htmlFor="second_psw">new again password</label>
+                            <input type="text" id="second_psw" value={psw_input2} onChange={(e) => setPsw_input2(e.target.value)}></input>
 
-                        <button>send</button>
-                    </form>
-                    
-                </div>
-                </> : <Access_denied></Access_denied>
-            }
+                            <button>send</button>
+                        </form>
+                        
+                    </div>
+                    </> : <Access_denied></Access_denied>
+                }
+            </>}
         </>
     )
 }

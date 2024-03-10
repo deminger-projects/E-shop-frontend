@@ -1,5 +1,5 @@
 export default interface User_orders {
-    orders:        Order[];
+    refunds:        Order[];
     order_products: OrderProduct[];
 }
 

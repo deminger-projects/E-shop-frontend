@@ -43,8 +43,16 @@ export default function Placed_returns(){
 
     const fetchData = async () => {
         try {
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_placed_returns', {
-            method: 'POST'  
+          
+            const id = cookies.user_data[0].id
+
+            const form_data = new FormData()
+
+            form_data.append("id", JSON.stringify(id))
+
+          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_avaible_returns', {
+            method: 'POST',
+            body: form_data
         }); 
 
           if (!response.ok) {

@@ -21,9 +21,13 @@ export default function Edit_delivery_info(){
 
     const [error_msg, set_error_msg] = useState<string>("");
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [loading, set_loading] = useState<boolean>(false);
+
+    const [cookies, setCookie] = useCookies(['user_data'])
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
+        set_loading(true)
 
         event.preventDefault();
         
@@ -36,9 +40,9 @@ export default function Edit_delivery_info(){
 
         if(name && surname && adress && city && phone && psc){
 
-            const user_data_template = get_user_data_template(cookies.user[0].id, name, surname, phone, adress, city, psc)
+            const user_data_template = get_user_data_template(cookies.user_data[0].id, name, surname, phone, adress, city, psc)
             
-            const [api_responce, err] = await edit_record(user_data_template, user_data.id, cookies.user[0].id)
+            const [api_responce, err] = await edit_record(user_data_template, user_data.id, cookies.user_data[0].id)
 
             if(err){
                 set_error_msg("error ocured")
@@ -50,13 +54,15 @@ export default function Edit_delivery_info(){
                 }
             }
         }
+
+        set_loading(false)
     }
 
     return(
         <>
             <p>{error_msg}</p>
 
-            {cookies.user[0].login_status === "Active" ? 
+            {cookies.user_data[0].login_status === "Active" ? 
                 <>
                     <div>
                         <form onSubmit={handleSubmit}>

@@ -36,6 +36,7 @@ export default function Admin_order_page(){
     const [search_phone, set_search_phone] = useState<string>("")
 
     const [order_arr, set_order_arr] = useState<Array<Order>>([]);
+    const [update, set_update] = useState<boolean>(true);
 
     useEffect(() => {      // searches products based on user input, valid input: product name, product size
         var res_arr: Array<Order> = []
@@ -117,12 +118,12 @@ export default function Admin_order_page(){
     
     useEffect(() => {
         fetchData()
-    }, [])
+    }, [update])
 
     const fetchData = async () => {
         try {
           const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_admin_orders', {
-            method: 'GET'  
+            method: 'POST'  
         }); 
 
           if (!response.ok) {
@@ -143,6 +144,8 @@ export default function Admin_order_page(){
 
     var handle_submit = async (event: React.MouseEvent<HTMLElement>, record_id: number, status: string) => {
 
+        set_loading(true)
+    
         event.preventDefault();
 
         const order_status_change_template = get_order_status_change_template(status)
@@ -154,10 +157,14 @@ export default function Admin_order_page(){
         }else{
             set_responce_msg(api_responce.msg)
         }
+
+        set_update(!update)
+        set_loading(false)
     }
 
     return(
         <>
+            {loading ? <p>loading</p> : <>
             <p>{responce_msg}</p>
             <p>{error_msg}</p>
 
@@ -214,73 +221,75 @@ export default function Admin_order_page(){
 
            {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? order_arr.length > 0 ? 
                 <div>
-                {order_arr.map((order: Order) => 
-                
-                    <table key={order.orders[0].id.toString()}>
-                        <thead>
-                            <tr>
-                                <th>order id</th>
-                                <th>name</th>
-                                <th>surname</th>
-                                <th>adress</th>
-                                <th>email</th>
-                                <th>phone</th>
-                                <th>psc</th>
-                                <th>order_date</th>
-                                <th>status</th>
-                            </tr>
-                        </thead>
-                        
-                        <tbody>
-                            <tr>
-                                <td>{order.orders[0].id}</td>
-                                <td>{order.orders[0].name}</td>
-                                <td>{order.orders[0].surname}</td>
-                                <td>{order.orders[0].adress}</td>
-                                <td>{order.orders[0].email}</td>
-                                <td>{order.orders[0].phone}</td>
-                                <td>{order.orders[0].postcode}</td>
-                                <td>{order.orders[0].add_date}</td>
-                                <td>{order.orders[0].status}</td>
-                            </tr>
-                        </tbody>
-                        
-                        <thead>
-                            <tr>
-                                <th>product_name</th>
-                                <th>size</th>
-                                <th>quntity</th>
-                            </tr>
-                        </thead>
-                        
-                        <tbody>
+                    {order_arr.map((order: Order) => 
+                    
+                        <table key={order.orders[0].id.toString()}>
+                            <thead>
+                                <tr>
+                                    <th>order id</th>
+                                    <th>name</th>
+                                    <th>surname</th>
+                                    <th>adress</th>
+                                    <th>email</th>
+                                    <th>phone</th>
+                                    <th>psc</th>
+                                    <th>order_date</th>
+                                    <th>status</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody>
+                                <tr>
+                                    <td>{order.orders[0].id}</td>
+                                    <td>{order.orders[0].name}</td>
+                                    <td>{order.orders[0].surname}</td>
+                                    <td>{order.orders[0].adress}</td>
+                                    <td>{order.orders[0].email}</td>
+                                    <td>{order.orders[0].phone}</td>
+                                    <td>{order.orders[0].postcode}</td>
+                                    <td>{order.orders[0].add_date}</td>
+                                    <td>{order.orders[0].status}</td>
+                                </tr>
+                            </tbody>
+                            
+                            <thead>
+                                <tr>
+                                    <th>product_name</th>
+                                    <th>size</th>
+                                    <th>quntity</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody>
 
-                {order.order_products.map((item: OrderProduct) => 
-                            <tr key={item.id}>
-                                <td>{item.name}</td>
-                                <td>{item.size}</td>
-                                <td>{item.amount}</td>
-                            </tr>
+                    {order.order_products.map((item: OrderProduct) => 
+                                <tr key={item.id}>
+                                    <td>{item.name}</td>
+                                    <td>{item.size}</td>
+                                    <td>{item.amount}</td>
+                                </tr>
+                    )}
+                                <tr>
+                                    <td>
+                                        <button onClick={(event) => handle_submit(event, order.orders[0].id, "Preparing")}>preparing</button>
+                                        <button onClick={(event) => handle_submit(event, order.orders[0].id, "Prepared")}>prepared</button>
+                                        <button onClick={(event) => handle_submit(event, order.orders[0].id, "On travel")}>on travel</button>
+                                        <button onClick={(event) => handle_submit(event, order.orders[0].id, "Delivered")}>delivered</button>
+                                        <button onClick={(event) => handle_submit(event, order.orders[0].id, "Cancled")}>cancled</button>
+
+                                    </td>
+                                </tr>
+                            
+                            </tbody>
+                    
+                        </table>
                 )}
-                            <tr>
-                                <td>
-                                    <button onClick={(event) => handle_submit(event, order.orders[0].id, "Preparing")}>preparing</button>
-                                    <button onClick={(event) => handle_submit(event, order.orders[0].id, "Prepared")}>prepared</button>
-                                    <button onClick={(event) => handle_submit(event, order.orders[0].id, "On travel")}>on travel</button>
-                                    <button onClick={(event) => handle_submit(event, order.orders[0].id, "Delivered")}>delivered</button>
-                                    <button onClick={(event) => handle_submit(event, order.orders[0].id, "Cancled")}>cancled</button>
-
-                                </td>
-                            </tr>
-                        
-                        </tbody>
-                   
-                    </table>
-            )}
-            </div>
-            : <p>no records</p>
-            : <Access_denied></Access_denied>
-            }
+                </div>
+                : <p>no records</p>
+                : <Access_denied></Access_denied>
+                }
+            </>}
+            
         </>
     )
 }

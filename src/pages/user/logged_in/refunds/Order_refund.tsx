@@ -18,6 +18,7 @@ export default function Order_refund(){
 
     const navigate = useNavigate();
     const location = useLocation();
+    console.log("🚀 ~ Order_refund ~ location:", location.state.data)
 
     const refund_data_set_up = set_up_refund_products(location.state.data)
 
@@ -25,13 +26,18 @@ export default function Order_refund(){
 
     const [error_msg, set_error_msg] = useState<string>("");
 
-    const [cookies, setCookie] = useCookies(['user'])
+    const [loading, set_loading] = useState<boolean>(false);
+
+    const [cookies, setCookie] = useCookies(['user_data'])
     
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
+        set_loading(true)
 
         event.preventDefault(); 
 
         const filtred_refund_data = filter_refund_data(refund_data)
+        console.log("🚀 ~ handleSubmit ~ filtred_refund_data:", filtred_refund_data)
 
         if(filtred_refund_data.ids.length <= 0){set_error_msg("selelct value")}
 
@@ -39,7 +45,7 @@ export default function Order_refund(){
 
             const refund_template = get_refund_template(location.state.data.refunds[0].id, null, filtred_refund_data.ids, filtred_refund_data.reasons, filtred_refund_data.amounts, filtred_refund_data.sizes, "Proccesing")
            
-            const [api_responce, error] = await add_record(refund_template, cookies.user[0].id, undefined, undefined, undefined, cookies.user[0].login_status)
+            const [api_responce, error] = await add_record(refund_template, cookies.user_data[0].id, undefined, undefined, undefined, cookies.user_data[0].login_status)
            
             if(error){
                 set_error_msg("error ocured")
@@ -49,6 +55,9 @@ export default function Order_refund(){
                 set_error_msg(api_responce.msg)
             }
         }
+
+        set_loading(false)
+
     }
 
     return(

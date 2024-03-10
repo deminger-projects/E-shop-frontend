@@ -11,10 +11,14 @@ export default function Refund(){
     const [order_code, set_order_code] = useState<string>("");
     const [email, set_email] = useState<string>("");
 
+    const [loading, set_loading] = useState<boolean>(false);
+
     const [error_msg, set_error_msg] = useState<string>("");
 
     var handleSubmit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         
+        set_loading(true)
+
         event.preventDefault();        
 
             if(!order_code){set_error_msg("order code is empty")}
@@ -36,19 +40,24 @@ export default function Refund(){
                     }
                 }
             }
+
+            set_loading(false)
         }       
 
     return(
         <>  
-            <p>{error_msg}</p>
+            {loading ? <p>loading</p> : <>
+                <p>{error_msg}</p>
 
-            <label htmlFor="order_code">Order code</label>
-            <input id="order_code" value={order_code} onChange={(event) => set_order_code(event.target.value)} type="text"></input>
+                <label htmlFor="order_code">Order code</label>
+                <input id="order_code" value={order_code} onChange={(event) => set_order_code(event.target.value)} type="text"></input>
 
-            <label htmlFor="email">Email</label>
-            <input id="email" value={email} onChange={(event) => set_email(event.target.value)} type="email"></input>
+                <label htmlFor="email">Email</label>
+                <input id="email" value={email} onChange={(event) => set_email(event.target.value)} type="email"></input>
+                
+                <button onClick={handleSubmit}>proceed</button>
+            </>}
             
-            <button onClick={handleSubmit}>proceed</button>
         </>
     )
 }

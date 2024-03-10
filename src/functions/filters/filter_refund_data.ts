@@ -4,6 +4,7 @@ interface refund {
     amount: string | undefined
     size: string
     status: boolean
+    product_id?: number
 }
 
 export default function filter_refund_data(refund_data: Array<refund>){

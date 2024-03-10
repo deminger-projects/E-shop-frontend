@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';  
 
 import get_cart_data from '../../functions/getters/get_cart_data';
@@ -7,7 +7,7 @@ import Cart_items from '../../components/Cart_items';
 
 import cart from "../../data/cart.json"
 
-import {DeliveryData} from "../../interfaces/user/User_data"
+import UserData, {User_data} from "../../interfaces/user/User_data"
 
 import add_record from '../../apis/records/add_record';
 import get_order_template from '../../templates/order/get_order_template';
@@ -30,9 +30,50 @@ export default function Prepare_order(){
     
     const [loading, set_loading] = useState<boolean>(false);    
 
-    const [cookies, setCookie] = useCookies(['user', 'cart_data'])
-    console.log("🚀 ~ Prepare_order ~ cookies:", cookies)
+    const [delivery_data, set_delivery_data] = useState<Array<UserData>>();    
 
+    const [cookies, setCookie] = useCookies(['user_data', 'cart_data', 'user_account_data'])
+    
+    useEffect(() => {
+        if(delivery_data){
+            console.log(delivery_data[0].user_data)
+        }
+    }, [delivery_data])
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    const fetchData = async () => {
+        try {
+
+            const id = cookies.user_data[0].id
+
+            const form_data = new FormData()
+
+            form_data.append("id", JSON.stringify(id))
+
+          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_acccount_data', {
+            method: 'POST',
+            body: form_data
+        }); 
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok.');
+          }
+          const data = await response.json();
+          
+          set_delivery_data(data)
+          set_loading(false);
+
+        } catch (error) {
+
+          console.log(error);
+
+          set_loading(false);
+        }
+      };
+      
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
         set_loading(true)
@@ -52,9 +93,9 @@ export default function Prepare_order(){
 
             var cart_data = get_cart_data(cookies.cart_data)
 
-            const order_template = get_order_template(cookies.user[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user[0].login_status)
+            const order_template = get_order_template(cookies.user_data[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user_data[0].login_status)
 
-            const [api_responcem, error] = await add_record(order_template, cookies.user[0].id, undefined , undefined, true, cookies.user[0].login_status)       
+            const [api_responcem, error] = await add_record(order_template, cookies.user_data[0].id, undefined , undefined, true, cookies.user_data[0].login_status)       
 
             if(error){
                 set_error_msg(error.msg)
@@ -70,15 +111,17 @@ export default function Prepare_order(){
     }
 
     var handle_click = (pointer: number) => {
-        var user_info: DeliveryData = cookies.user[0].user_data[pointer]
+        if(delivery_data){
+            var user_info: User_data = delivery_data[0].user_data[pointer]
         
-        setName(user_info.name)
-        setSurname(user_info.surname)
-        setEmail(user_info.email)
-        setTelephone(user_info.phone)
-        setAdress(user_info.adress)
-        setCity(user_info.city)
-        setPSC(user_info.postcode)
+            setName(user_info.name)
+            setSurname(user_info.surname)
+            setEmail(user_info.email)
+            setTelephone(user_info.phone)
+            setAdress(user_info.adress)
+            setCity(user_info.city)
+            setPSC(user_info.postcode)
+        }
     }
     
     return(
@@ -91,7 +134,7 @@ export default function Prepare_order(){
 
                 <p>{error_msg}</p>
 
-                {cookies.user[0].login_status === "Active" && cookies.user[0].user_data.length > 0 ?
+                {cookies.user_data[0].login_status === "Active" && delivery_data ?
                     <>
                         <table>
                             <thead>
@@ -107,7 +150,7 @@ export default function Prepare_order(){
 
                             <tbody>
                 
-                    {cookies.user[0].user_data.map((delivery_info: DeliveryData, index: number) => 
+                    {delivery_data[0].user_data.map((delivery_info: User_data, index: number) => 
                             <tr key={index.toString()} onClick={() => {handle_click(index)}}>
                                 <td>{delivery_info.name}</td>
                                 <td>{delivery_info.surname}</td>
@@ -117,7 +160,7 @@ export default function Prepare_order(){
                                 <td>{delivery_info.postcode}</td>
                             </tr>
                     )}
-                            </tbody>
+                            </tbody> 
                         </table>
                     </>
                 : <></>}

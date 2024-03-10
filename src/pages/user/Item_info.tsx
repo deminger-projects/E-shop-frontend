@@ -48,21 +48,23 @@ export default function Item_info(){
         //     }
         // }
 
-        if(cookies.cart_data !== ""){
+        if(cookies.cart_data){
             var clone = cookies.cart_data
-            console.log("🚀 ~ varhandle_cart_change= ~ clone:", clone)
 
             clone.push({size_data: size_select, product: data[0]})
     
             set_cookies("cart_data", clone, {path: "/"})
         }else{    
             set_cookies("cart_data", [] , {path: "/"})
+            
+            set_cookies("cart_data", clone, {path: "/"})
+            
         }
         
 
-        // if(move){
-        //     navigate("/")
-        // }
+        if(move){
+            navigate("/prepare-order")
+        }
 
     }
 
@@ -98,6 +100,7 @@ export default function Item_info(){
         }
       };
 
+      console.log(data)
     
     return(
         <>

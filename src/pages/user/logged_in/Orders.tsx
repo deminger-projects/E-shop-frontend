@@ -3,11 +3,13 @@ import Access_denied from "../Access_denied";
 import Order, {OrderProduct} from "../../../interfaces/user/User_orders"
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { Form } from "react-router-dom";
 
 export default function Orders(){
 
+    const storedValue = sessionStorage.getItem('user_account_data');
+
     const [orders_arr, set_orders_arr] = useState<Array<Order>>([])
-    console.log("🚀 ~ Orders ~ orders_arr:", orders_arr)
     const [search_order_id, set_search_order_id] = useState<string>("")
 
     const [cookies, setCookie] = useCookies(['user_data'])
@@ -21,7 +23,7 @@ export default function Orders(){
             var order_fix: Order = order
 
             if(search_order_id){
-                if(order_fix.orders[0] .id.toString().includes(search_order_id)){
+                if(order_fix.refunds[0] .id.toString().includes(search_order_id)){
                     res_arr.push(order)
                 }
             }
@@ -41,14 +43,23 @@ export default function Orders(){
 
     const fetchData = async () => {
         try {
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_admin_orders', {
-            method: 'POST'  
+
+            const id = cookies.user_data[0].id
+
+            const form_data = new FormData()
+
+            form_data.append("id", JSON.stringify(id))
+
+          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_placed_orders', {
+            method: 'POST',
+            body: form_data
         }); 
 
           if (!response.ok) {
             throw new Error('Network response was not ok.');
           }
           const data = await response.json();
+          console.log("🚀 ~ fetchData ~ data:", data)
           
           set_orders_arr(data)
           set_loading(false);
@@ -90,15 +101,15 @@ export default function Orders(){
                                     
                                     <tbody>
                                         <tr>
-                                            <td><p>{order.orders[0].id}</p></td>
-                                            <td><p>{order.orders[0].name}</p></td>
-                                            <td><p>{order.orders[0].surname}</p></td>
-                                            <td><p>{order.orders[0].email}</p></td>
-                                            <td><p>{order.orders[0].phone}</p></td>
-                                            <td><p>{order.orders[0].adress}</p></td>
-                                            <td><p>{order.orders[0].postcode}</p></td>
-                                            <td><p>{order.orders[0].add_date}</p></td>
-                                            <td><p>{order.orders[0].status}</p></td>
+                                            <td><p>{order.refunds[0].id}</p></td>
+                                            <td><p>{order.refunds[0].name}</p></td>
+                                            <td><p>{order.refunds[0].surname}</p></td>
+                                            <td><p>{order.refunds[0].email}</p></td>
+                                            <td><p>{order.refunds[0].phone}</p></td>
+                                            <td><p>{order.refunds[0].adress}</p></td>
+                                            <td><p>{order.refunds[0].postcode}</p></td>
+                                            <td><p>{order.refunds[0].add_date}</p></td>
+                                            <td><p>{order.refunds[0].status}</p></td>
                                         </tr>
                                     </tbody>
 
@@ -123,7 +134,7 @@ export default function Orders(){
                                                 <td><p>{product.size}</p></td>
                                                 <td><p>{product.prize}</p></td>
                                                 <td><p>{product.amount}</p></td>
-                                                <td><img src={"images/products" + "/" + product.product_id + "/" + product.image_url} width={"100px"} height={"100px"}/></td>
+                                                <td><img src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products" + "/" + product.product_id + "/" + product.image_url} width={"100px"} height={"100px"}/></td>
                                             </tr>
                             )}
                                         </tbody>

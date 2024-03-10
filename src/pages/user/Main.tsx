@@ -15,6 +15,8 @@ export default function Main(){
     const [search, set_search] = useState<string>("")
     const [products_arr, set_products_arr] = useState<Array<Product>>([]);
 
+    const [cookies, set_cookies] = useCookies(["user_data", "user_account_data"]);
+
     useEffect(() => {      // searches products based on user input, valid input: product name, product size
         var res_arr: Array<Product> = []
 

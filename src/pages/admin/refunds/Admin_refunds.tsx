@@ -32,6 +32,35 @@ export default function Admin_refunds(){
 
     const [cookies, setCookie] = useCookies(['user_data'])
 
+    const [loading, set_loading] = useState<boolean>(true)
+    const [update, set_update] = useState<boolean>(true)
+
+    useEffect(() => {
+        fetchData()
+    }, [update])
+
+    const fetchData = async () => {
+        try {
+          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_admin_refunds', {
+            method: 'POST'  
+        }); 
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok.');
+          }
+          const data = await response.json();
+          
+          set_refund_arr(data)
+          set_loading(false);
+
+        } catch (error) {
+
+          console.log(error);
+
+          set_loading(false);
+        }
+      };
+
     useEffect(() => {      // searches products based on user input, valid input: product name, product size
         var res_arr: Array<Refund> = []
 
@@ -104,6 +133,8 @@ export default function Admin_refunds(){
 
     var handle_submit = async (event: React.MouseEvent<HTMLElement>, record_id: number, status: string) => {
 
+        set_loading(true)
+
         event.preventDefault();
 
         const refund_status_change = get_refund_status_change_template(status)
@@ -115,10 +146,15 @@ export default function Admin_refunds(){
         }else{
             set_api_responce_msg(api_responce.msg)
         }
+
+        set_update(!update)
+        set_loading(false)
+
     }
 
     return(
         <>
+            {loading ? <p>loading</p> : <>
             <p>{api_responce_msg}</p>
             <p>{error_msg}</p>
 
@@ -238,6 +274,8 @@ export default function Admin_refunds(){
             
             : <p>no records</p> 
             : <Access_denied></Access_denied>}
+            </>}
+            
         </>
     )
 }    

@@ -42,7 +42,7 @@ export default function Login(){
             }else{
                 if(api_responce.next_status){
                     set_cookies("user_data", api_responce.user_data, {path: "/"})
-                    set_cookies("user_account_data", api_responce.user_account_data, {path: "/"})
+                    sessionStorage.setItem('user_account_data', JSON.stringify(api_responce.user_account_data));
 
                     navigate("/main");
                 }else{

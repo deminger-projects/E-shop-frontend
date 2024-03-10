@@ -10,6 +10,7 @@ export default function New_psw(){
     
     const navigate = useNavigate();
     const location = useLocation();
+    console.log("🚀 ~ New_psw ~ location:", location)
 
     var is_valid = JSON.stringify(location.state) !== "null" ? location.state.status === true ? true : false : false
 
@@ -17,7 +18,11 @@ export default function New_psw(){
     const [psw_input2, setPsw_input2] = useState<string>("");
     const [error_msg, set_error_msg] = useState<string>("");
 
+    const [loading, set_loading] = useState<boolean>(false);
+
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
+        set_loading(true)
 
         event.preventDefault();
 
@@ -30,6 +35,7 @@ export default function New_psw(){
             const psw_template = get_psw_template(psw_input1)
 
             const [api_respocse, error] = await edit_record(psw_template, location.state.record_id, location.state.record_id, undefined, undefined, undefined, true)
+            console.log("🚀 ~ handleSubmit ~ api_respocse:", api_respocse)
             
             if(error){
                 set_error_msg("error ocured")
@@ -37,28 +43,33 @@ export default function New_psw(){
                 navigate('/login',{state: {msg: api_respocse.msg}})
             }
         }    
+
+        set_loading(false)
     }
 
     return(
         <>
-            {is_valid ? 
-                <>
-                    <p>{error_msg}</p>
+            {loading ? <p>loading</p> : <>
+                {is_valid ? 
+                    <>
+                        <p>{error_msg}</p>
 
-                    <div>
-                        <form onSubmit={handleSubmit}>
-                            <label htmlFor="first_psw">new password</label>
-                            <input type="password" id="first_psw" value={psw_input1} onChange={(e) => setPsw_input1(e.target.value)}></input>
+                        <div>
+                            <form onSubmit={handleSubmit}>
+                                <label htmlFor="first_psw">new password</label>
+                                <input type="password" id="first_psw" value={psw_input1} onChange={(e) => setPsw_input1(e.target.value)}></input>
 
-                            <label htmlFor="second_psw">new again password</label>
-                            <input type="password" id="second_psw" value={psw_input2} onChange={(e) => setPsw_input2(e.target.value)}></input>
+                                <label htmlFor="second_psw">new again password</label>
+                                <input type="password" id="second_psw" value={psw_input2} onChange={(e) => setPsw_input2(e.target.value)}></input>
 
-                            <button>send</button>
-                        </form>
-                        
-                    </div>
-                </> : <Access_denied></Access_denied>
-            }
+                                <button>send</button>
+                            </form>
+                            
+                        </div>
+                    </> : <Access_denied></Access_denied>
+                }
+            </>}
+            
         </>
     )
 }
