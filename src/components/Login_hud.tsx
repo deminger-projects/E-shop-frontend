@@ -12,6 +12,11 @@ export default function Login_hud(){
     const [err_msg, set_error_msg] = useState<string>("")
 
     const [cookies, set_cookies] = useCookies(['user_data', 'user_account_data']);
+    console.log("🚀 ~ Login_hud ~ cookies:", cookies)
+
+    if(cookies.user_data === ""){
+        console.log("test pes")
+    }
 
     var handle_on_click = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         
@@ -35,7 +40,7 @@ export default function Login_hud(){
             <p>{err_msg}</p>
 
             <div id={"login_data"}>
-                {cookies.user_data !== undefined ? 
+                {cookies.user_data !== "" ? 
                     cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? 
                         <>
                             <div>
