@@ -282,7 +282,7 @@ export default function Admin_image_add(props: {on_change: Function, on_delete: 
 
             {default_urls.other.map((url: string, index: number) => 
                 <div key={index.toString()} id={index.toString()}>
-                    <img src={process.env.REACT_APP_SECRET_SERVER_URL + "/" + url} width={"100px"} height={"100px"} alt="img"></img>
+                    <img src={url} width={"100px"} height={"100px"} alt="img"></img>
                     <input type="file" id={"other_" + index.toString()} onChange={(event) => {handle_input_change(event.target.files, "other", index)}}></input>
                     <label htmlFor={"other_" + index.toString()}></label>
 
