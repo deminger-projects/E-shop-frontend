@@ -15,7 +15,7 @@ export default function set_up_files(images?: Array<ProductImage>, product?: Pro
             var suffix = undefined
             var type = undefined
 
-            var path = "images/" +  folder + "/" + product.id + "/"
+            var path = process.env.REACT_APP_SECRET_SERVER_URL + "/images/" +  folder + "/" + product.id + "/"
     
             if(name_split[0].includes("_")){
                 var suffix_split = name_split[0].split("_")
