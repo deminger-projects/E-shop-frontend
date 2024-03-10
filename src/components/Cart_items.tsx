@@ -26,12 +26,15 @@ export default function Cart_items(){
         //     set_responce_msg(api_responce.msg)
         // }
 
-        var clone = cookies.cart_data
-        console.log("🚀 ~ varhandle_on_click= ~ clone:", clone)
+        let clone = cookies.cart_data
 
-        clone.splice(pozition, 1)
+        if(clone !== 'undefined'){
+            clone.splice(pozition, 1)
 
-        set_cookies("cart_data", clone)
+            set_cookies("cart_data", clone, {path: "/"})
+        }else{
+            set_cookies("cart_data", [], {path: "/"})
+        }
     }
 
     return(
