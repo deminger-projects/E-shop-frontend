@@ -45,6 +45,8 @@ export default function Item_info(){
         //     }
         // }
 
+
+
         if(cookies.cart_data && cookies.cart_data !== "undefined"){
             var clone = cookies.cart_data
 
@@ -58,7 +60,6 @@ export default function Item_info(){
             set_cookies("cart_data", clone, {path: "/"})
             
         }
-        
 
         if(move){navigate("/prepare-order", {state: {data: data[0]}});}
 

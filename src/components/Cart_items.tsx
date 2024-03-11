@@ -11,8 +11,8 @@ export default function Cart_items(){
     const [error_msg, set_error_msg] = useState<string>()
 
     const [cookies, set_cookies] = useCookies(['cart_data']);
+    console.log("🚀 ~ Cart_items ~ cookies:", cookies)
 
-    var cart = cookies.cart_data
 
     var handle_on_click = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, pozition: number) =>{
 
@@ -42,7 +42,7 @@ export default function Cart_items(){
             <p>{responce_msg}</p>
             <p>{error_msg}</p>
 
-            {cart ? cart.length !== 0 ? 
+            {cookies.cart_data !== 'undefined' ? cookies.cart_data[0] ? 
 
             <table>
                 <thead>
@@ -57,7 +57,7 @@ export default function Cart_items(){
                 
                 <tbody >
 
-            {cart.map((item: Cart, index: number) =>              
+            {cookies.cart_data.map((item: Cart, index: number) =>              
                     <tr key={index.toString()}>
                         <td>{item.product.products[0].product_name}</td>
                         <td>{item.size_data.size}</td>

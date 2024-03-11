@@ -14,7 +14,7 @@ export default function Money_sum() {
 
   useEffect(() => {
 
-    if(cookies.cart_data){
+    if(cookies.cart_data !== 'undefined'){
       var sum_product_cost = 0
 
       for(let item of cookies.cart_data){
