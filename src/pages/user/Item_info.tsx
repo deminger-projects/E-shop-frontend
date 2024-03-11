@@ -25,6 +25,7 @@ export default function Item_info(){
     const [error_msg, set_error_msg] = useState<string>("")
 
     const [cookies, set_cookies] = useCookies(['cart_data', 'user_data']);
+    console.log("🚀 ~ Item_info ~ cookies:", cookies)
 
     var handle_cart_change = async (event: React.MouseEvent<HTMLButtonElement>, move?: boolean) => {
 
