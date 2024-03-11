@@ -13,10 +13,7 @@ export default function User_size_select(props: {sizes: Array<ProductSize>, on_c
 
         for (let index = 1; index <= size_data.current_amount; index++) {
             amouts.push(index)   
-        }
-        console.log("🚀 ~ User_size_select ~ size_data:", size_data)
-
-        
+        }        
 
         set_size({size: size_data.size, current_amount: size_data.current_amount})
         set_options(amouts)
@@ -34,7 +31,7 @@ export default function User_size_select(props: {sizes: Array<ProductSize>, on_c
             )}
 
             {size && options ? 
-                <select id={"size_count_select"} onChange={() => props.on_change({size: size.size, current_amount: size.current_amount})}>
+                <select id={"size_count_select"} onChange={(event) => props.on_change({size: size.size, current_amount: event.target.value})}>
                         {options.map((num: number) => 
                             <option key={num.toString()} value={num}>{num}</option>
                         )}

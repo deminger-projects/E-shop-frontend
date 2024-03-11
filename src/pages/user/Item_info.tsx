@@ -26,6 +26,10 @@ export default function Item_info(){
 
     const [cookies, set_cookies] = useCookies(['cart_data', 'user_data']);
 
+    useEffect(() => {
+        console.log(size_select)
+    },[size_select])
+
     var handle_cart_change = async (event: React.MouseEvent<HTMLButtonElement>, move?: boolean) => {
 
         set_loading(true)
@@ -33,10 +37,6 @@ export default function Item_info(){
         event.preventDefault();
 
         var clone = cookies.cart_data
-
-        console.log("🚀 ~ varhandle_cart_change= ~ clone:", clone)
-        console.log("🚀 ~ varhandle_cart_change= ~ data[0]:", data[0])
-        console.log("🚀 ~ varhandle_cart_change= ~ size_select:", size_select)
 
         if(cookies.cart_data !== "undefined" && cookies.cart_data != ""){
 

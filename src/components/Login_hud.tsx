@@ -14,7 +14,6 @@ export default function Login_hud(){
     const [loading, set_loading] = useState<boolean>(false)
 
     const [cookies, set_cookies] = useCookies(['user_data', 'user_account_data']);
-    console.log("🚀 ~ Login_hud ~ cookies:", cookies.user_data)
 
     var handle_on_click = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         
