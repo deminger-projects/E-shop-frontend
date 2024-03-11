@@ -35,13 +35,15 @@ export default function Item_info(){
 
         var clone = cookies.cart_data
 
-        if(cookies.cart_data && cookies.cart_data !== "undefined"){
+        if(cookies.cart_data !== "undefined"){
 
             clone.push({size_data: size_select, product: data[0]})
     
             set_cookies("cart_data", clone, {path: "/"})
         }else{    
             set_cookies("cart_data", [] , {path: "/"})
+
+            clone.push({size_data: size_select, product: data[0]})
             
             set_cookies("cart_data", clone, {path: "/"})
             
