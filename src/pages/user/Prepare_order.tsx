@@ -160,7 +160,7 @@ export default function Prepare_order(){
                     )}
                             </tbody> 
                         </table>
-                    </>: ""
+                    </>: "  "
                 : <></>}
 
                     
