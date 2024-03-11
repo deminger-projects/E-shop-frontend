@@ -27,6 +27,7 @@ export default function Cart_items(){
         // }
 
         let clone = cookies.cart_data
+        console.log("🚀 ~ varhandle_on_click= ~ clone:", clone)
 
         if(clone !== 'undefined'){
             clone.splice(pozition, 1)
