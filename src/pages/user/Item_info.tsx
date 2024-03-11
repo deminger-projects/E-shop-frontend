@@ -6,7 +6,6 @@ import User_size_select from '../../components/User_size_select';
 
 import {ProductSize} from "../../interfaces/Product"
 
-import add_to_cart from '../../apis/cart/add_to_cart';
 import User_show_case from '../../components/User_show_case';
 import { useCookies } from 'react-cookie';
 
@@ -29,28 +28,13 @@ export default function Item_info(){
 
     var handle_cart_change = async (event: React.MouseEvent<HTMLButtonElement>, move?: boolean) => {
 
+        set_loading(true)
+
         event.preventDefault();
-
-        var my_arr = []
-
-        // if(size_select){
-        //     const [api_responce, error] = await add_to_cart(data[0], size_select)
-            
-        //     if(error){
-        //         set_error_msg("error ocured")
-        //     }else{
-        //         set_responce(api_responce.msg)
-        //         set_cookies("cart_data", data[0], {path: "/"})
-        //         if(move){navigate("/prepare-order", {state: {data: data[0]}});}
-        //     }
-        // }
-
-
 
         if(cookies.cart_data && cookies.cart_data !== "undefined"){
             var clone = cookies.cart_data
 
-            console.log(clone)
             clone.push({size_data: size_select, product: data[0]})
     
             set_cookies("cart_data", clone, {path: "/"})
@@ -62,6 +46,8 @@ export default function Item_info(){
         }
 
         if(move){navigate("/prepare-order", {state: {data: data[0]}});}
+
+        set_loading(false)
 
     }
 
@@ -96,8 +82,6 @@ export default function Item_info(){
            set_loading(false);
         }
       };
-
-      console.log(data)
     
     return(
         <>
