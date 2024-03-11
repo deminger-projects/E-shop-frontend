@@ -25,7 +25,6 @@ export default function Item_info(){
     const [error_msg, set_error_msg] = useState<string>("")
 
     const [cookies, set_cookies] = useCookies(['cart_data', 'user_data']);
-    console.log("🚀 ~ Item_info ~ cookies:", cookies)
 
     var handle_cart_change = async (event: React.MouseEvent<HTMLButtonElement>, move?: boolean) => {
 
@@ -39,17 +38,13 @@ export default function Item_info(){
         console.log("🚀 ~ varhandle_cart_change= ~ data[0]:", data[0])
         console.log("🚀 ~ varhandle_cart_change= ~ size_select:", size_select)
 
-        if(cookies.cart_data !== "undefined"){
+        if(cookies.cart_data !== "undefined" && cookies.cart_data != ""){
 
             clone.push({size_data: size_select, product: data[0]})
     
             set_cookies("cart_data", clone, {path: "/"})
         }else{    
-            set_cookies("cart_data", [] , {path: "/"})
-
-            clone.push({size_data: size_select, product: data[0]})
-            
-            set_cookies("cart_data", clone, {path: "/"})
+            set_cookies("cart_data", [{size_data: size_select, product: data[0]}], {path: "/"})
             
         }
 
