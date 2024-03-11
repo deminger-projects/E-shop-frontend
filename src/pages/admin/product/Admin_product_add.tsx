@@ -56,13 +56,14 @@ export default function Admin_product_add(){
     const fetchData = async () => {
         try {
           const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_collections', {
-            method: 'GET'  
+            method: 'POST'  
         }); 
 
           if (!response.ok) {
             throw new Error('Network response was not ok.');
           }
           const data = await response.json();
+          console.log("🚀 ~ fetchData ~ data:", data)
           
           set_collections(data)
           set_loading(false);
