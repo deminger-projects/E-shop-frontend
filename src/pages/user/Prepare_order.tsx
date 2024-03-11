@@ -132,7 +132,7 @@ export default function Prepare_order(){
 
                 <p>{error_msg}</p>
 
-                {cookies.user_data[0].login_status === "Active" && delivery_data ?
+                {delivery_data && cookies.user_data ? cookies.user_data[0].login_status === "Active" ?
                     <>
                         <table>
                             <thead>
@@ -160,7 +160,7 @@ export default function Prepare_order(){
                     )}
                             </tbody> 
                         </table>
-                    </>
+                    </>: ""
                 : <></>}
 
                     

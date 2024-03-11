@@ -42,7 +42,7 @@ export default function Cart_items(){
             <p>{responce_msg}</p>
             <p>{error_msg}</p>
 
-            {cart.length !== 0 ? 
+            {cart ? cart.length !== 0 ? 
 
             <table>
                 <thead>
@@ -71,7 +71,7 @@ export default function Cart_items(){
 
             </table>
             
-            : <p>epmty cart</p> }
+            : <p>epmty cart</p> : ""}
         </>
     )
 }
