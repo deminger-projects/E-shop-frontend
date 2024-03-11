@@ -19,7 +19,6 @@ export default function Order_refund(){
 
     const navigate = useNavigate();
     const location = useLocation();
-    console.log("🚀 ~ Order_refund ~ location:", location.state.data)
 
     const refund_data_set_up = set_up_refund_products(location.state.data)
 
@@ -48,6 +47,7 @@ export default function Order_refund(){
             throw new Error('Network response was not ok.');
           }
           const data = await response.json();
+          console.log("🚀 ~ fetchData ~ data:", data)
 
           set_reasons(data);
            set_loading(false);
@@ -67,7 +67,6 @@ export default function Order_refund(){
         event.preventDefault(); 
 
         const filtred_refund_data = filter_refund_data(refund_data)
-        console.log("🚀 ~ handleSubmit ~ filtred_refund_data:", filtred_refund_data)
 
         if(filtred_refund_data.ids.length <= 0){set_error_msg("selelct value")}
 
