@@ -35,6 +35,10 @@ export default function Item_info(){
 
         var clone = cookies.cart_data
 
+        console.log("🚀 ~ varhandle_cart_change= ~ clone:", clone)
+        console.log("🚀 ~ varhandle_cart_change= ~ data[0]:", data[0])
+        console.log("🚀 ~ varhandle_cart_change= ~ size_select:", size_select)
+
         if(cookies.cart_data !== "undefined"){
 
             clone.push({size_data: size_select, product: data[0]})
