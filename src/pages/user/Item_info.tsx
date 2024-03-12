@@ -26,10 +26,6 @@ export default function Item_info(){
 
     const [cookies, set_cookies] = useCookies(['cart_data', 'user_data']);
 
-    useEffect(() => {
-        console.log(size_select)
-    },[size_select])
-
     var handle_cart_change = async (event: React.MouseEvent<HTMLButtonElement>, move?: boolean) => {
 
         set_loading(true)
@@ -38,14 +34,13 @@ export default function Item_info(){
 
         var clone = cookies.cart_data
 
-        if(cookies.cart_data !== "undefined" && cookies.cart_data != ""){
+        if(clone !== "undefined" && clone != "" && clone){
 
             clone.push({size_data: size_select, product: data[0]})
     
             set_cookies("cart_data", clone, {path: "/"})
         }else{    
             set_cookies("cart_data", [{size_data: size_select, product: data[0]}], {path: "/"})
-            
         }
 
         if(move){navigate("/prepare-order", {state: {data: data[0]}});}
