@@ -32,6 +32,8 @@ export default function Money_sum() {
   
         set_products_cost(sum_product_cost)
     }
+
+    set_loading(false)
     
   },[])
     
@@ -39,29 +41,31 @@ export default function Money_sum() {
     
     
   return (
-    <>{loading ? <p>loading</p> : <>
-      <div>
-        <table>
-              <tr>
-                  <th>Item</th>
-                  <th>Cost</th>
-                  <th>Sum</th>
-              </tr>
+    <>
+      {loading ? <p>loading</p> : <>
+        <div>
+          <table>
+                <tr>
+                    <th>Item</th>
+                    <th>Cost</th>
+                    <th>Sum</th>
+                </tr>
 
-              <tr>
-                  <th>Products:</th>
-                  <th>Delivery:</th>
-              </tr>
+                <tr>
+                    <th>Products:</th>
+                    <th>Delivery:</th>
+                </tr>
 
-              <tr>
-                  <td>{products_cost}</td>
-                  <td>{delivery_cost}</td>
-                  <td>{products_cost + delivery_cost}</td>
-              </tr>
-              
-        </table>
-      </div>
-    </>}</>
+                <tr>
+                    <td>{products_cost}</td>
+                    <td>{delivery_cost}</td>
+                    <td>{products_cost + delivery_cost}</td>
+                </tr>
+                
+          </table>
+        </div>
+      </>}
+    </>
     
   );
 }

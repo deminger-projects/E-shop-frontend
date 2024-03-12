@@ -11,6 +11,7 @@ import add_record from '../../apis/records/add_record';
 import get_order_template from '../../templates/order/get_order_template';
 import Money_sum from '../../components/Money_sum';
 import { useCookies } from 'react-cookie';
+import { url } from 'inspector';
 
 export default function Prepare_order(){
 
@@ -31,12 +32,6 @@ export default function Prepare_order(){
     const [delivery_data, set_delivery_data] = useState<Array<UserData>>();    
 
     const [cookies, setCookie] = useCookies(['user_data', 'cart_data', 'user_account_data'])
-    
-    useEffect(() => {
-        if(delivery_data){
-            console.log(delivery_data[0].user_data)
-        }
-    }, [delivery_data])
 
     useEffect(() => {
         fetchData()
@@ -90,19 +85,45 @@ export default function Prepare_order(){
         if(name && surname && email && telephone && adress && city && PSC && cookies.cart_data.length > 0){
 
             var cart_data = get_cart_data(cookies.cart_data)
+            console.log("🚀 ~ handleSubmit ~ cart_data:", cart_data)
 
-            const order_template = get_order_template(cookies.user_data[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user_data[0].login_status)
+            try{
 
-            const [api_responcem, error] = await add_record(order_template, cookies.user_data[0].id, undefined , undefined, true, cookies.user_data[0].login_status)       
+                const form_data = new FormData()
 
-            if(error){
-                set_error_msg(error.msg)
-            }else{
-                if(api_responcem.next_status === true){
-                    setCookie("cart_data", [], {path: "/"})
-                    navigate("/order-completed", {state: {data: cart_data.cart_products}});
+                form_data.append('items', JSON.stringify({
+                    products: cart_data.cart_items_for_stripe_paywall
+                }))
+
+                const responce = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/stripe_create_session', {
+                    method: 'POST',
+                    body: form_data
+                })
+
+                const data = await responce.json()
+
+                if(data.url){
+    
+                     window.location = data.url
                 }
+
+                        
+            } catch (err){
+                console.log("🚀 ~ file: add_record.ts:40 ~ add_record ~ err:", err)
             }
+
+            // const order_template = get_order_template(cookies.user_data[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user_data[0].login_status)
+
+            // const [api_responcem, error] = await add_record(order_template, cookies.user_data[0].id, undefined , undefined, true, cookies.user_data[0].login_status)       
+
+            // if(error){
+            //     set_error_msg(error.msg)
+            // }else{
+            //     if(api_responcem.next_status === true){
+            //         setCookie("cart_data", [], {path: "/"})
+            //         navigate("/order-completed", {state: {data: cart_data.cart_products}});
+            //     }
+            // }
         }
 
         set_loading(false)
@@ -132,7 +153,7 @@ export default function Prepare_order(){
 
                 <p>{error_msg}</p>
 
-                {delivery_data && cookies.user_data ? cookies.user_data[0].login_status === "Active" ?
+                {delivery_data && cookies.user_data ? cookies.user_data[0].login_status === "Active" && delivery_data[0].user_data.length > 0 ?
                     <>
                         <table>
                             <thead>
@@ -160,8 +181,8 @@ export default function Prepare_order(){
                     )}
                             </tbody> 
                         </table>
-                    </>: "  "
-                : <></>}
+                    </>: <p>no delivery info</p>
+                : ""}
 
                     
 

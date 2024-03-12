@@ -11,23 +11,12 @@ export default function Cart_items(){
     const [error_msg, set_error_msg] = useState<string>()
 
     const [cookies, set_cookies] = useCookies(['cart_data']);
-    console.log("🚀 ~ Cart_items ~ cookies:", cookies)
-
 
     var handle_on_click = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, pozition: number) =>{
 
         event.preventDefault();
 
-        // const [api_responce, error] = await delete_from_cart(pozition)
-
-        // if(error){
-        //     set_error_msg("error ocured")
-        // }else{
-        //     set_responce_msg(api_responce.msg)
-        // }
-
         let clone = cookies.cart_data
-        console.log("🚀 ~ varhandle_on_click= ~ clone:", clone)
 
         if(clone !== 'undefined'){
             clone.splice(pozition, 1)

@@ -1,7 +1,7 @@
 
 const product_change_template = () => {
     
-    return {products: {status: "Inactive"}}
+    return {products: {status: "Deleted"}}
     
 }
 
