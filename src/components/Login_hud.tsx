@@ -23,7 +23,7 @@ export default function Login_hud(){
 
         const logoff_template = get_logoff_teplate()
 
-        const [api_responce, err] = await logoff(logoff_template, cookies.user_data[0].id, cookies.user_data[0].id)
+        const [api_responce, err] = await logoff(logoff_template, cookies.user_data[0].email, cookies.user_data[0].password)
 
         if(err){
             set_error_msg(err)

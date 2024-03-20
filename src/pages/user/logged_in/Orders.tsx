@@ -44,13 +44,15 @@ export default function Orders(){
     const fetchData = async () => {
         try {
 
-            const id = cookies.user_data[0].id
+            const email = cookies.user_data[0].email
+            const password = cookies.user_data[0].password
 
             const form_data = new FormData()
 
-            form_data.append("id", JSON.stringify(id))
+            form_data.append("email", JSON.stringify(email))
+            form_data.append("password", JSON.stringify(password))
 
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_placed_orders', {
+          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_placed_orders', {
             method: 'POST',
             body: form_data
         }); 

@@ -26,6 +26,8 @@ export default function Item_info(){
 
     const [cookies, set_cookies] = useCookies(['cart_data', 'user_data']);
 
+    console.log(cookies.user_data)
+
     var handle_cart_change = async (event: React.MouseEvent<HTMLButtonElement>, move?: boolean) => {
 
         set_loading(true)

@@ -1,7 +1,7 @@
 import { json } from "stream/consumers";
 import Tables from "../../interfaces/Tables"
 
-export default async function add_record(tables: any, user_id?: number, folder?: string, files?: Array<File>, is_order?: boolean, user_status?: string){
+export default async function add_record(tables: any, user_id?: number, folder?: string, files?: Array<File>, is_order?: boolean, user_status?: string, cart?: any){
 
     const form = new FormData();
 
@@ -27,6 +27,10 @@ export default async function add_record(tables: any, user_id?: number, folder?:
                 form.append("single_file", file)
             }
         }
+    }
+
+    if(cart){
+        form.append("cart", JSON.stringify(cart))
     }
 
     form.append("tables", JSON.stringify(tables))

@@ -1,18 +1,14 @@
-import Tables from "../../interfaces/Tables"
 import logoff_template_interface from "../../interfaces/templates/login/logoff_template"
 
-export default async function logoff(logoff_template: logoff_template_interface, record_id: number, user_id?: number){
-console.log("🚀 ~ logoff ~ user_id:", user_id)
-console.log("🚀 ~ logoff ~ record_id:", record_id)
+export default async function logoff(logoff_template: logoff_template_interface, email: string, password: string){
 
     const form_data = new FormData()
 
     form_data.append("tables", JSON.stringify(logoff_template))
-    form_data.append("record_id", JSON.stringify(record_id))
 
-    if(user_id){
-        form_data.append("user_id", JSON.stringify(user_id))
-    }
+    form_data.append("email", JSON.stringify(email))
+    form_data.append("password", JSON.stringify(password))
+
 
     try{
         const responce = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/logoff_request', {

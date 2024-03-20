@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
-import Cookies from 'universal-cookie';
-
 import login_reguest from '../../apis/login/login_request';
 import get_login_template from '../../templates/login/get_login_template';
 import { useCookies } from 'react-cookie';
@@ -35,7 +33,6 @@ export default function Login(){
             const login_template = get_login_template(email, password)
             
             const [api_responce, error] = await login_reguest(login_template)
-            console.log("🚀 ~ handleSubmit ~ api_responce:", api_responce)
 
             if(error){
                 set_error_msg("error ocured")
