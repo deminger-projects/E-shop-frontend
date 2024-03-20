@@ -88,43 +88,42 @@ export default function Prepare_order(){
 
             var cart_data = get_cart_data(cookies.cart_data)
 
-            // try{
+            try{
 
-            //     const form_data = new FormData()
+                const order_template = get_order_template(delivery_data[0].users[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user_data[0].login_status)
 
-            //     form_data.append('items', JSON.stringify({
-            //         products: cart_data.cart_items_for_stripe_paywall
-            //     }))
+                const form_data = new FormData()
 
-            //     const responce = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/stripe_create_session', {
-            //         method: 'POST',
-            //         body: form_data
-            //     })
+                form_data.append('items', JSON.stringify({products: cart_data.cart_items_for_stripe_paywall}))
+                form_data.append('tables', JSON.stringify(order_template))
+                form_data.append('cart', JSON.stringify(cart_data.items_for_validation))
 
-            //     const data = await responce.json()
+                const responce = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/stripe_create_session', {
+                    method: 'POST',
+                    body: form_data
+                })
 
-            //     if(data.url){
-    
-            //          window.location = data.url
-            //     }
+                const data = await responce.json()
 
-                        
-            // } catch (err){
-            //     console.log("🚀 ~ file: add_record.ts:40 ~ add_record ~ err:", err)
-            // }
-
-            const order_template = get_order_template(delivery_data[0].users[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user_data[0].login_status)
-
-            const [api_responcem, error] = await add_record(order_template, delivery_data[0].users[0].id, undefined , undefined, true, cookies.user_data[0].login_status, cart_data.items_for_validation)       
-
-            if(error){
-                set_error_msg(error.msg)
-            }else{
-                if(api_responcem.next_status === true){
-                    setCookie("cart_data", [], {path: "/"})
-                    navigate("/order-completed", {state: {data: cart_data.cart_products}});
+                if(data.url){
+                    window.location = data.url
                 }
+                        
+            } catch (err){
+                console.log("🚀 ~ file: add_record.ts:40 ~ add_record ~ err:", err)
             }
+
+
+            //const [api_responcem, error] = await add_record(order_template, delivery_data[0].users[0].id, undefined , undefined, true, cookies.user_data[0].login_status, cart_data.items_for_validation)       
+
+            // if(error){
+            //     set_error_msg(error.msg)
+            // }else{
+            //     if(api_responcem.next_status === true){
+            //         setCookie("cart_data", [], {path: "/"})
+            //         navigate("/order-completed", {state: {data: cart_data.cart_products}});
+            //     }
+            // }
         }
 
         set_loading(false)
