@@ -89,9 +89,15 @@ export default function Prepare_order(){
 
             try{
 
+                var order_template;
+
                 console.log(delivery_data)
 
-                const order_template = get_order_template(delivery_data[0].users[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user_data[0].login_status)
+                if(delivery_data.length <= 0){
+                    order_template = get_order_template(null, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user_data[0].login_status)
+                }else{
+                    order_template = get_order_template(delivery_data[0].users[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user_data[0].login_status)
+                }
 
                 const form_data = new FormData()
 

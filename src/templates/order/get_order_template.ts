@@ -1,4 +1,4 @@
-const get_order_template = (user_id: number, name: string, surname: string, email: string, adress: string, phone: string, postcode: string, product_id: Array<number>, size: Array<string>, amount: Array<number>, prize: Array<number>, user_status: string) => {
+const get_order_template = (user_id: number|null, name: string, surname: string, email: string, adress: string, phone: string, postcode: string, product_id: Array<number>, size: Array<string>, amount: Array<number>, prize: Array<number>, user_status: string) => {
 
     if(user_status === "Active"){
         return {
