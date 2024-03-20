@@ -80,7 +80,7 @@ export default function Main(){
                             <div key={product.products[0].id.toString()} className="grid-item">
                                 <Link to={"/item-info/" + product.products[0].id} state={{product_data: product}}>
                                     <p>{product.products[0].product_name}</p>
-                                    <img className="images" src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products/" + product.products[0].id + "/" + "/" + product.products[0].url} width={"100px"} height={"100px"}></img>
+                                    <img className="images" src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products/" + product.products[0].id + "/" + product.products[0].url} width={"100px"} height={"100px"}></img>
                                     <p>{product.products[0].price}</p>
                                 </Link>
                                                 
