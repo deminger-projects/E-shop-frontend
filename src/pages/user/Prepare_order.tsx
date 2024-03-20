@@ -94,7 +94,7 @@ export default function Prepare_order(){
                 console.log(delivery_data)
 
                 if(delivery_data.length <= 0){
-                    order_template = get_order_template(null, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user_data[0].login_status)
+                    order_template = get_order_template(null, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, "Inactive")
                 }else{
                     order_template = get_order_template(delivery_data[0].users[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user_data[0].login_status)
                 }
@@ -114,6 +114,7 @@ export default function Prepare_order(){
 
                 if(data.url){
                     window.location = data.url
+                    setCookie('cart_data', [])
                 }
                         
             } catch (err){
