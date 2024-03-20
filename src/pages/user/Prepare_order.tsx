@@ -7,7 +7,6 @@ import Cart_items from '../../components/Cart_items';
 
 import UserData, {User_data} from "../../interfaces/user/User_data"
 
-import add_record from '../../apis/records/add_record';
 import get_order_template from '../../templates/order/get_order_template';
 import Money_sum from '../../components/Money_sum';
 import { useCookies } from 'react-cookie';
@@ -112,18 +111,6 @@ export default function Prepare_order(){
             } catch (err){
                 console.log("🚀 ~ file: add_record.ts:40 ~ add_record ~ err:", err)
             }
-
-
-            //const [api_responcem, error] = await add_record(order_template, delivery_data[0].users[0].id, undefined , undefined, true, cookies.user_data[0].login_status, cart_data.items_for_validation)       
-
-            // if(error){
-            //     set_error_msg(error.msg)
-            // }else{
-            //     if(api_responcem.next_status === true){
-            //         setCookie("cart_data", [], {path: "/"})
-            //         navigate("/order-completed", {state: {data: cart_data.cart_products}});
-            //     }
-            // }
         }
 
         set_loading(false)
