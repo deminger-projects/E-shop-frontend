@@ -4,7 +4,6 @@ import { Link } from "react-router-dom"
 export default function Cart(){
 
     const [cookies, set_cookies] = useCookies(['cart_data']);
-    console.log("🚀 ~ Cart ~ cookies:", typeof cookies.cart_data)
 
     return(
         <>

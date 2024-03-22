@@ -28,7 +28,7 @@ export default function Admin_product_page(){
 
     const [fetch_collections, set_fetch_collections] = useState<any>();
 
-    const [update, set_update] = useState<any>(true);
+    const [update, set_update] = useState<boolean>(true);
 
     useEffect(() => {      // searches products based on user input, valid input: product name, product size
         var res_arr: Array<Product> = []
@@ -124,7 +124,6 @@ export default function Admin_product_page(){
         }
 
         set_update(!update)
-
     }
 
 

@@ -32,7 +32,7 @@ export default function Admin_product_edit(){
     const [cost, setCost] = useState<string>(location.state.products[0].price);
     const [description, setDescription] = useState<string>(location.state.products[0].description);
 
-    const [files, set_files] = useState<File>()
+    const [files, set_files] = useState<any>({main: undefined, hover: undefined, other: [], model_show_case: {status: file_set_up.model_status, data: []}, detail_show_case: {status: file_set_up.detail_status, data: []}})
     const [sizes, set_sizes] = useState<Array<Size>>(size_set_up)
     const [urls, set_urls] = useState<{main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}>(file_set_up.ulrs)
 
@@ -42,6 +42,10 @@ export default function Admin_product_edit(){
 
     const [fetch_collekec, set_fetch_collekec] = useState()
     const [loading, set_loading] = useState(true)
+
+    useEffect(() => {
+        //console.log(files)
+    }, [files])
 
     useEffect(() => {
         fetchData()
@@ -57,7 +61,6 @@ export default function Admin_product_edit(){
             throw new Error('Network response was not ok.');
           }
           const data = await response.json();
-          console.log("🚀 ~ fetchData ~ data:", data)
           
           set_fetch_collekec(data)
           set_loading(false);
@@ -158,7 +161,7 @@ export default function Admin_product_edit(){
                         <br></br>
                         <br></br>
 
-                        <Admin_image_add on_delete={set_urls} on_change={set_files} default_urls={file_set_up.ulrs} settings={{hover: true, model_show_case: true, detail_show_case: true}}></Admin_image_add>
+                        <Admin_image_add on_delete={set_urls} on_change={set_files} default_files={files} default_urls={file_set_up.ulrs} settings={{hover: true, model_show_case: true, detail_show_case: true}}></Admin_image_add>
 
                         <button>save</button>
 

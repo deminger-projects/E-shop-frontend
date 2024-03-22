@@ -9,12 +9,10 @@ import Access_denied from '../../user/Access_denied';
 
 import add_record from '../../../apis/records/add_record';
 
-import Tables from "../../../interfaces/Tables"
 import Size from "../../../interfaces/Size"
 import Files from '../../../interfaces/Files';
 
 import filter_sizes from '../../../functions/filters/filter_sizes';
-import filter_files from '../../../functions/filters/filter_files';
 import set_up_sizes from '../../../functions/set_ups/set_up_sizes';
 import set_up_files from '../../../functions/set_ups/set_up_files';
 import get_filtred_data from '../../../functions/get_filtred_data';
@@ -63,7 +61,6 @@ export default function Admin_product_add(){
             throw new Error('Network response was not ok.');
           }
           const data = await response.json();
-          console.log("🚀 ~ fetchData ~ data:", data)
           
           set_collections(data)
           set_loading(false);
@@ -112,11 +109,12 @@ export default function Admin_product_add(){
                     set_responce_msg(api_responce.msg)
                 }
 
-                set_loading(false)
             }
         }else{
             set_error_msg("select files")
         }
+
+        set_loading(false)
     }
 
     return(

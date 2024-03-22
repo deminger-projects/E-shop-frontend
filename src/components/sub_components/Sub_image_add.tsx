@@ -11,7 +11,7 @@ export default function Sub_image_add(props: {get_check_box_status: Function, se
 
     var handle_input_change = (file: FileList|null, type: string, pozition: number) => {
 
-        if(file !== null){
+        if(file !== null && file[0] !== undefined){
 
             var new_url = URL.createObjectURL(file[0])    
 

@@ -8,6 +8,9 @@ export default function set_up_files(images?: Array<ProductImage>, product?: Pro
     var default_files_without_path: Url = {main: undefined, hover: undefined, other: [], model_show_case: [], detail_show_case: []}
     var files_to_keep: Array<string> = []
 
+    var is_model = false
+    var is_detail = false
+
     if(images && product && folder){
         for (let index = 0; index < images.length; index++) {
             var name_split = images[index].image_url.split(".")
@@ -40,9 +43,13 @@ export default function set_up_files(images?: Array<ProductImage>, product?: Pro
                 if(type === "model"){
                     default_files.model_show_case.push(path + images[index].image_url)
                     default_files_without_path.model_show_case.push(images[index].image_url)
+
+                    is_model = true
                 }else if(type === "detail"){
                     default_files.detail_show_case.push(path + images[index].image_url)
                     default_files_without_path.detail_show_case.push(images[index].image_url)
+
+                    is_detail = true
                 }
             }
 
@@ -50,7 +57,6 @@ export default function set_up_files(images?: Array<ProductImage>, product?: Pro
 
         }
     }
-
-    return {ulrs: default_files, files_to_keep: files_to_keep, urls_without_path: default_files_without_path}
-
+    
+    return {ulrs: default_files, files_to_keep: files_to_keep, urls_without_path: default_files_without_path, model_status: is_model, detail_status: is_detail}
 }

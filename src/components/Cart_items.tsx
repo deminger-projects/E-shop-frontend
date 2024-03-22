@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-import delete_from_cart from "../apis/cart/delete_from_cart";
-
 import Cart from "../interfaces/Cart";
 import { useCookies } from "react-cookie";
 

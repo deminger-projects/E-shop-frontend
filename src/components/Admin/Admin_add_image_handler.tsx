@@ -1,17 +1,17 @@
 import { useState } from "react"
 
 import Sub_image_add from "../sub_components/Sub_image_add"
-import corrent_file_name from "../../functions/sub_functions/fix_file_name"
 import fix_file_name from "../../functions/sub_functions/fix_file_name"
-import Url from "../../interfaces/Url"
 
-export default function Admin_image_add(props: {on_change: Function, on_delete: Function, default_urls?: {main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}, settings?: {hover: boolean, model_show_case?: boolean, detail_show_case?: boolean}}){
+import Files from "../../interfaces/Files"
+
+export default function Admin_image_add(props: {on_change: Function, on_delete: Function, default_files?: {main: File|undefined, hover: File|undefined, other: Array<File>, model_show_case: {status: Boolean, data: Array<{file: File, url: string}>}, detail_show_case: {status: Boolean, data: Array<{file: File, url: string}>}}, default_urls?: {main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}, settings?: {hover: boolean, model_show_case?: boolean, detail_show_case?: boolean}}){
 
     const settings = props.settings ? {main: true, hover: props.settings.hover, model_show_case: props.settings.model_show_case, detail_show_case: props.settings.detail_show_case} : {main: true, hover: false, model_show_case: false, detail_show_case: false}
 
     const [default_urls, set_default_urls] = useState<{main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}>(props.default_urls ? props.default_urls : {main: undefined, hover: undefined, other: [], model_show_case: [], detail_show_case: []})
 
-    const [files, set_files] = useState<{main: File|undefined, hover: File|undefined, other: Array<File>, model_show_case: {status: Boolean, data: Array<{file: File, url: string}>}, detail_show_case: {status: Boolean, data: Array<{file: File, url: string}>}}>({main: undefined, hover: undefined, other: [], model_show_case: {status: false, data: []}, detail_show_case: {status: false, data: []}})
+    const [files, set_files] = useState<{main: File|undefined, hover: File|undefined, other: Array<File>, model_show_case: {status: Boolean, data: Array<{file: File, url: string}>}, detail_show_case: {status: Boolean, data: Array<{file: File, url: string}>}}>(props.default_files ? props.default_files : {main: undefined, hover: undefined, other: [], model_show_case: {status: false, data: []}, detail_show_case: {status: false, data: []}})
 
     var handle_add_img = () => {
 
@@ -23,11 +23,11 @@ export default function Admin_image_add(props: {on_change: Function, on_delete: 
 
     var handle_input_change = (file: FileList|null, type: string, pozition?: number, special_type?: string) => {
 
-        if(file){
+        if(file && file[0] !== undefined){
 
             var all_file_names = []
     
-            var new_file_url =  file[0].name
+            var new_file_url = file[0].name
 
             var split1_main = default_urls.main?.split(".")
     

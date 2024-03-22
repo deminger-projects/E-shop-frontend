@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 
 import Access_denied from '../../user/Access_denied';
 
@@ -11,7 +11,9 @@ import { useCookies } from "react-cookie";
 
 export default function Admin_collection_page(){
 
-    const [responce_msg, set_responce_msg] = useState<string>("")
+    const location = useLocation();
+
+    const [responce_msg, set_responce_msg] = useState<string>(location.state ? location.state.msg : "")
     const [error_msg, set_error_msg] = useState<string>("")
 
     const [loading, set_loading] = useState<boolean>(true)
@@ -20,6 +22,8 @@ export default function Admin_collection_page(){
     const [search_collections, set_search_collections] = useState<Array<Collections>>([])
 
     const [cookies, setCookie] = useCookies(['user_data'])
+
+    const [update, set_update] = useState<boolean>(true);
 
     useEffect(() => {
         var res_arr: Array<Collections> = []
@@ -44,7 +48,7 @@ export default function Admin_collection_page(){
 
     useEffect(() => {
         fetchData()
-    }, [])
+    }, [update])
 
     const fetchData = async () => {
         try {
@@ -71,6 +75,8 @@ export default function Admin_collection_page(){
 
     var handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>, record_id: number) =>{
 
+        set_loading(true)
+
         event.preventDefault();
 
         const change_collection_status_template = get_change_collection_template()
@@ -82,6 +88,8 @@ export default function Admin_collection_page(){
         }else{
             set_responce_msg(api_responce.msg)
         }
+
+        set_update(!update)
     }
 
     return( 

@@ -14,7 +14,7 @@ export default function Item_info(){
     const navigate = useNavigate();
 
     var url_data = useParams()
-    var id = Number(url_data.id)
+    const id = Number(url_data.id)
 
     const [data, set_data] = useState<any>()
     const [loading, set_loading] = useState<boolean>(true)
@@ -25,8 +25,6 @@ export default function Item_info(){
     const [error_msg, set_error_msg] = useState<string>("")
 
     const [cookies, set_cookies] = useCookies(['cart_data', 'user_data']);
-
-    console.log(cookies.user_data)
 
     var handle_cart_change = async (event: React.MouseEvent<HTMLButtonElement>, move?: boolean) => {
 
