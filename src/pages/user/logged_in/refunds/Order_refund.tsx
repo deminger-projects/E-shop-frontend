@@ -93,32 +93,34 @@ export default function Order_refund(){
     return(
 
         <>
-            <p>{error_msg}</p>
+            {loading ? <p>loading</p> : <>
+                <p>{error_msg}</p>
 
-                <form onSubmit={handleSubmit}>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>product name</th>
-                                <th>product size</th>
-                                <th>product prize</th>
-                                <th>product quntity</th>
-                                <th>reason</th>
-                                <th>refund/yes-no</th>
-                            </tr>
-                        </thead>
+                    <form onSubmit={handleSubmit}>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>product name</th>
+                                    <th>product size</th>
+                                    <th>product prize</th>
+                                    <th>product quntity</th>
+                                    <th>reason</th>
+                                    <th>refund/yes-no</th>
+                                </tr>
+                            </thead>
 
-                        <tbody>
-                            {location.state.data.order_products.map((product_data: OrderProduct, index: number) =>
-                                <Refund_row reasons={reasons} key={index.toString()} product_data={product_data} pozition={index} on_change={set_refund_data} table_data={refund_data}></Refund_row>
-                            )}
-                        </tbody>
+                            <tbody>
+                                {location.state.data.order_products.map((product_data: OrderProduct, index: number) =>
+                                    <Refund_row reasons={reasons} key={index.toString()} product_data={product_data} pozition={index} on_change={set_refund_data} table_data={refund_data}></Refund_row>
+                                )}
+                            </tbody>
 
-                    </table>
+                        </table>
 
-                    <button>submit</button>
+                        <button>submit</button>
 
-                </form> 
+                    </form> 
+            </>}
         </>
     )
 }

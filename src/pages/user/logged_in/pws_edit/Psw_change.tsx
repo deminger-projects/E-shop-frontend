@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
 import Access_denied from "../../Access_denied";
@@ -16,9 +16,48 @@ export default function Psw_change(){
     const [psw_input2, setPsw_input2] = useState<string>("");
     const [error_msg, set_error_msg] = useState<string>("");
 
-    const [loading, set_loading] = useState<boolean>(false);
+    const [loading, set_loading] = useState<boolean>(true);
+
+    const [user_id, set_user_id] = useState<string>("");
 
     const [cookies, setCookie] = useCookies(['user_data'])
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    const fetchData = async () => {
+        try {
+
+            const email = cookies.user_data[0].email
+            const password = cookies.user_data[0].password
+
+            const form_data = new FormData()
+
+            form_data.append("email", JSON.stringify(email))
+            form_data.append("password", JSON.stringify(password))
+
+          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_id', {
+            method: 'POST',
+            body: form_data
+        }); 
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok.');
+          }
+          const data = await response.json();
+
+          set_user_id(data);
+           set_loading(false);
+
+        } catch (error) {
+
+          console.log(error);
+
+           set_loading(false);
+        }
+      };
+
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -26,17 +65,17 @@ export default function Psw_change(){
 
         event.preventDefault();
 
-        if(cookies.user_data[0].password !== current_psw){set_error_msg("current password is incorect")}
+        if(cookies.user_data[0].password.toUpperCase() !== current_psw.toUpperCase()){set_error_msg("current password is incorect")}
         if(!psw_input2){set_error_msg("new again password in empty")}
         if(!psw_input1){set_error_msg("new password in empty")}
         if(!current_psw){set_error_msg("current password in empty")}
         if(psw_input1 !== psw_input2){set_error_msg("passwords do not match")}
 
-        if(current_psw && psw_input1 && psw_input2 && cookies.user_data[0].password === current_psw && psw_input1 === psw_input2){
+        if(current_psw && psw_input1 && psw_input2 && cookies.user_data[0].password.toUpperCase() === current_psw.toUpperCase() && psw_input1 === psw_input2){
         
             const psw_template = get_psw_template(psw_input1)
 
-            const api_respocse = await edit_record(psw_template, cookies.user_data[0].id, cookies.user_data[0].id, undefined, undefined, undefined, true)
+            const api_respocse = await edit_record(psw_template, Number(user_id), Number(user_id), undefined, undefined, undefined, true)
 
             navigate("/main", {state: {msg: "password changed"}})
         }

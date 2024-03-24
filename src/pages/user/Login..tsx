@@ -15,11 +15,13 @@ export default function Login(){
 
     const [cookies, set_cookies] = useCookies();
 
+    const [loading, set_loading] = useState<boolean>(false);
+
     const [error_msg, set_error_msg] = useState<string>(location.state ? location.state.msg : "");
 
-
-
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
+        set_loading(true)
         
         event.preventDefault();
 
@@ -41,35 +43,39 @@ export default function Login(){
                     set_cookies("user_data", api_responce.user_data, {path: "/"})
                     sessionStorage.setItem('user_account_data', JSON.stringify(api_responce.user_account_data));
 
-                    navigate("/main");
+                    navigate("/user-menu");
                 }else{
                     set_error_msg(api_responce.msg)
                 }
             }
         }
+
+        set_loading(false)
     }
 
     return(
-        <>            
-            <p>{error_msg}</p>
+        <>      
+            {loading ? <p>loading</p> : <>
+                <p>{error_msg}</p>
 
-            <div className='login_register_div'>
-                <form onSubmit={(event) => handleSubmit(event)} encType="multipart/form-data">
+                <div className='login_register_div'>
+                    <form onSubmit={(event) => handleSubmit(event)} encType="multipart/form-data">
 
-                    <label htmlFor="login_emain">{"Emain"}</label>
-                    <input id="login_emain" type="email" value={email} onChange={(e) => setName(e.target.value)}></input>
-                    <br></br>
+                        <label htmlFor="login_emain">{"Emain"}</label>
+                        <input id="login_emain" type="email" value={email} onChange={(e) => setName(e.target.value)}></input>
+                        <br></br>
 
-                    <label htmlFor="login_password">{"Password"}</label>
-                    <input id="login_password" type="text" value={password} onChange={(e) => setPassword(e.target.value)}></input>
-                    <br></br>
+                        <label htmlFor="login_password">{"Password"}</label>
+                        <input id="login_password" type="text" value={password} onChange={(e) => setPassword(e.target.value)}></input>
+                        <br></br>
 
-                    <button>Login</button>
-                    
-                </form>
-            </div>
+                        <button>Login</button>
+                        
+                    </form>
+                </div>
 
-            <Link to={"/forgoten-password"}>forgot password</Link>
+                <Link to={"/forgoten-password"}>forgot password</Link>
+            </>}      
         </>
     )
 }

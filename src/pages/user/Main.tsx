@@ -62,6 +62,8 @@ export default function Main(){
 
           set_loading(false);
         }
+
+        console.log("fetch")
       };
 
  
