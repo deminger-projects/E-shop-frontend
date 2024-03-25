@@ -7,6 +7,10 @@ import edit_record from "../../../../apis/records/edit_record";
 import get_psw_template from "../../../../templates/other/ger_psw_template";
 import { useCookies } from "react-cookie";
 
+import UserData from "../../../../interfaces/user/User_data";
+import logoff_template from "../../../../templates/login/get_logoff_teplate";
+import logoff from "../../../../apis/login/logoff";
+
 export default function Psw_change(){
 
     const navigate = useNavigate();
@@ -18,13 +22,14 @@ export default function Psw_change(){
 
     const [loading, set_loading] = useState<boolean>(true);
 
-    const [user_id, set_user_id] = useState<string>("");
+    const [data, set_data] = useState<any>();
+    const [update, set_update] = useState<boolean>(true);
 
     const [cookies, setCookie] = useCookies(['user_data'])
 
     useEffect(() => {
         fetchData()
-    }, [])
+    }, [update])
 
     const fetchData = async () => {
         try {
@@ -37,7 +42,7 @@ export default function Psw_change(){
             form_data.append("email", JSON.stringify(email))
             form_data.append("password", JSON.stringify(password))
 
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_id', {
+          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_data', {
             method: 'POST',
             body: form_data
         }); 
@@ -47,7 +52,7 @@ export default function Psw_change(){
           }
           const data = await response.json();
 
-          set_user_id(data);
+          set_data(data);
            set_loading(false);
 
         } catch (error) {
@@ -58,14 +63,13 @@ export default function Psw_change(){
         }
       };
 
-
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
         set_loading(true)
 
         event.preventDefault();
 
-        if(cookies.user_data[0].password.toUpperCase() !== current_psw.toUpperCase()){set_error_msg("current password is incorect")}
+        if(data.password.toUpperCase() !== current_psw.toUpperCase()){set_error_msg("current password is incorect")}
         if(!psw_input2){set_error_msg("new again password in empty")}
         if(!psw_input1){set_error_msg("new password in empty")}
         if(!current_psw){set_error_msg("current password in empty")}
@@ -75,12 +79,20 @@ export default function Psw_change(){
         
             const psw_template = get_psw_template(psw_input1)
 
-            const api_respocse = await edit_record(psw_template, Number(user_id), Number(user_id), undefined, undefined, undefined, true)
+            await edit_record(psw_template, Number(data.id), Number(data.id), undefined, undefined, undefined, true)
 
-            navigate("/main", {state: {msg: "password changed"}})
+            const temp = logoff_template()
+
+            await logoff(temp, data.email, data.password)
+
+            setCookie("user_data", "")
+
+            navigate("/login", {state: {msg: "password changed"}})
         }
 
         set_loading(false)
+        set_update(!update)
+
     }
 
     return(

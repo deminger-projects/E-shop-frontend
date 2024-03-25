@@ -53,7 +53,7 @@ export default function Placed_returns(){
             form_data.append("password", JSON.stringify(password))
 
 
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_avaible_returns', {
+          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_place_returns', {
             method: 'POST',
             body: form_data
         }); 
@@ -62,6 +62,7 @@ export default function Placed_returns(){
             throw new Error('Network response was not ok.');
           }
           const data = await response.json();
+          console.log("🚀 ~ fetchData ~ data:", data)
           
           set_refunds_arr(data)
           set_loading(false);
@@ -102,7 +103,7 @@ export default function Placed_returns(){
 
                                 <tbody>
                                     <tr>
-                                        <td><p>{refund.refunds[0].order_id}</p></td>
+                                        <td><p>{refund.refunds[0].id}</p></td>
                                         <td><p>{refund.refunds[0].name}</p></td>
                                         <td><p>{refund.refunds[0].surname}</p></td>
                                         <td><p>{refund.refunds[0].email}</p></td>

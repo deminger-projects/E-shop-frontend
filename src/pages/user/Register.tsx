@@ -56,7 +56,7 @@ export default function Register(){
                 if(api_responce.next_status === true){
                     set_cookies("user_data", api_responce.user_data, {path: "/"})
 
-                    navigate("/main");
+                    navigate("/main", {state: {msg: api_responce.msg}});
                 }else{
                     set_err_msg(api_responce.msg)
                 }

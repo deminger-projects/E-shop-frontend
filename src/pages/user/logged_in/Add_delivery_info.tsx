@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Access_denied from "../Access_denied";
@@ -22,8 +22,45 @@ export default function Add_delivery_info(){
     const [error_msg, set_error_msg] = useState<string>("");
 
     const [loading, set_loading] = useState<boolean>(false);
+    const [user_id, set_user_id] = useState<any>("");
 
     const [cookies, setCookie] = useCookies(['user_data'])
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    const fetchData = async () => {
+        try {
+
+            const email = cookies.user_data[0].email
+            const password = cookies.user_data[0].password
+
+            const form_data = new FormData()
+
+            form_data.append("email", JSON.stringify(email))
+            form_data.append("password", JSON.stringify(password))
+
+          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_data', {
+            method: 'POST',
+            body: form_data
+        }); 
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok.');
+          }
+          const data = await response.json();
+          
+          set_user_id(data)
+          set_loading(false);
+
+        } catch (error) {
+
+          console.log(error);
+
+          set_loading(false);
+        }
+      };
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -41,9 +78,9 @@ export default function Add_delivery_info(){
 
         if(name && surname && email && telephone && adress && city && PSC){
 
-            const user_data_template = get_user_data_template(cookies.user_data[0].id, name, surname, telephone, adress, city, PSC)
+            const user_data_template = get_user_data_template(Number(user_id.id), name, surname, telephone, adress, city, PSC)
 
-            const [api_responce, error] = await add_record(user_data_template, cookies.user_data[0].id, undefined, undefined, undefined, cookies.user_data[0].login_status)
+            const [api_responce, error] = await add_record(user_data_template, Number(user_id.id), undefined, undefined, undefined, cookies.user_data[0].login_status)
             
             if(error){
                 set_error_msg("error ocured")

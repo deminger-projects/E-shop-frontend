@@ -18,7 +18,7 @@ export default function Account_info(){
     const [responce_msg, set_responce_msg] = useState<string>(location.state ? location.state.msg : "");
     const [error_msg, set_error_msg] = useState<string>("")
 
-    const [delivery_data, set_delivery_data] = useState<Array<UserData>>()
+    const [delivery_data, set_delivery_data] = useState<Array<UserData>>([])
 
     const [loading, set_loading] = useState<boolean>(true)
 
@@ -70,7 +70,7 @@ export default function Account_info(){
 
         const account_info_template = get_account_info_template()
 
-        const [api_responce, error] = await change_status(account_info_template, user_data.id, cookies.user_data[0].id)
+        const [api_responce, error] = await change_status(account_info_template, user_data.id, delivery_data[0].users[0].id)
 
         if(error){
             set_error_msg("error ocured")

@@ -3,7 +3,7 @@ import logoff_template_interface from "../../interfaces/templates/login/logoff_t
 export default async function logoff(logoff_template: logoff_template_interface, email: string, password: string){
 
     const form_data = new FormData()
-
+ 
     form_data.append("tables", JSON.stringify(logoff_template))
 
     form_data.append("email", JSON.stringify(email))

@@ -58,7 +58,7 @@ export default function Refunds(){
             form_data.append("password", JSON.stringify(password))
 
 
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_place_returns', {
+          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_avaible_returns', {
             method: 'POST',
             body: form_data
         }); 
@@ -67,6 +67,7 @@ export default function Refunds(){
             throw new Error('Network response was not ok.');
           }
           const data = await response.json();
+          console.log("🚀 ~ fetchData ~ data:", data)
           
           set_orders_arr(data)
           set_loading(false);
