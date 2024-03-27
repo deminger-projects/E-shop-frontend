@@ -7,6 +7,7 @@ import change_status from "../../../apis/records/change_status";
 import Order, {OrderProduct} from "../../../interfaces/Order"
 import get_order_status_change_template from "../../../templates/admin/get_order_status_change_template";
 import { useCookies } from "react-cookie";
+import check_for_admin from "../../../functions/sub_functions/check_for_admin";
 
 export default function Admin_order_page(){
 
@@ -36,7 +37,25 @@ export default function Admin_order_page(){
     const [search_phone, set_search_phone] = useState<string>("")
 
     const [order_arr, set_order_arr] = useState<Array<Order>>([]);
+    const [order_arr_display, set_order_arr_display] = useState<Array<Order>>([]);
+
     const [update, set_update] = useState<boolean>(true);
+
+    const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
+
+    const [is_admin, set_is_admin] = useState<boolean>(false)
+
+    useEffect(() => {
+        const temp = async() => {
+            var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
+
+            if(is_admin.next_status === true){
+                set_is_admin(true)
+            }
+        }
+
+        temp()
+    }, [])
 
     useEffect(() => {      // searches products based on user input, valid input: product name, product size
         var res_arr: Array<Order> = []
@@ -79,27 +98,27 @@ export default function Admin_order_page(){
         for(var order of filtred_orders){ 
             var new_order: Order = order
             if(search_name && search_surname){
-                if(new_order.orders[0].name.toString().includes(search_name) && new_order.orders[0].surname.toString().includes(search_surname)){
+                if(new_order.orders[0].name.toString().toLocaleLowerCase().includes(search_name.toLocaleLowerCase()) && new_order.orders[0].surname.toString().toLocaleLowerCase().includes(search_surname.toLocaleLowerCase())){
                     res_arr.push(order)
                 }   
             }else if(search_order_id){
-                if(new_order.orders[0].id.toString().includes(search_order_id)){
+                if(new_order.orders[0].id.toString().toLocaleLowerCase().includes(search_order_id.toLocaleLowerCase())){
                     res_arr.push(order)
                 }            
             }else if(search_name){
-                if(new_order.orders[0].name.toString().includes(search_name)){
+                if(new_order.orders[0].name.toString().toLocaleLowerCase().includes(search_name.toLocaleLowerCase())){
                     res_arr.push(order)    
                 }
             }else if(search_surname){
-                if(new_order.orders[0].surname.toString().includes(search_surname)){
+                if(new_order.orders[0].surname.toString().toLocaleLowerCase().includes(search_surname.toLocaleLowerCase())){
                     res_arr.push(order)    
                 }
             }else if(search_email){
-                if(new_order.orders[0].email.toString().includes(search_email)){
+                if(new_order.orders[0].email.toString().toLocaleLowerCase().includes(search_email.toLocaleLowerCase())){
                     res_arr.push(order)    
                 }
             }else if(search_phone){
-                if(new_order.orders[0].phone.toString().includes(search_phone)){
+                if(new_order.orders[0].phone.toString().toLocaleLowerCase().includes(search_phone.toLocaleLowerCase())){
                     res_arr.push(order)
                 }
             }else{
@@ -108,9 +127,9 @@ export default function Admin_order_page(){
         }
 
         if(!search_order_id && !search_name && !search_surname && !search_email && !search_phone && !search_gate_active && !search_gate_preparing && !search_gate_prepared && !search_gate_on_trave && !search_gate_delivered && !search_gate_cancled){
-            set_order_arr(order_arr)
+            set_order_arr_display(order_arr)
         }else{
-            set_order_arr(res_arr)
+            set_order_arr_display(res_arr)
         }
 
     },[search_order_id, search_name, search_surname, search_email, search_phone, search_gate_active, search_gate_preparing, search_gate_prepared, search_gate_on_trave, search_gate_delivered, search_gate_cancled])
@@ -132,6 +151,7 @@ export default function Admin_order_page(){
           const data = await response.json();
           
           set_order_arr(data)
+          set_order_arr_display(data)
           set_loading(false);
 
         } catch (error) {
@@ -219,9 +239,9 @@ export default function Admin_order_page(){
             <br />
             <br />
 
-           {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? order_arr.length > 0 ? 
+           {is_admin ? order_arr_display.length > 0 ? 
                 <div>
-                    {order_arr.map((order: Order) => 
+                    {order_arr_display.map((order: Order) => 
                     
                         <table key={order.orders[0].id.toString()}>
                             <thead>

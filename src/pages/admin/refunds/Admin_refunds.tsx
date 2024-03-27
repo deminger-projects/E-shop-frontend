@@ -6,6 +6,7 @@ import Refund, { Refund_Product } from "../../../interfaces/Refunds"
 import change_status from "../../../apis/records/change_status"
 import get_refund_status_change_template from "../../../templates/admin/get_refund_status_change_template"
 import { useCookies } from "react-cookie"
+import check_for_admin from "../../../functions/sub_functions/check_for_admin"
 
 export default function Admin_refunds(){
 
@@ -23,6 +24,7 @@ export default function Admin_refunds(){
     const [search_gate_done, set_search_gate_done] = useState<boolean>(false)
 
     const [refund_arr, set_refund_arr] = useState<Array<Refund>>([]);
+    const [refund_arr_display, set_refund_arr_display] = useState<Array<Refund>>([]);
 
     const [search_order_id, set_search_order_id] = useState<string>("")
     const [search_name, set_search_name] = useState<string>("")
@@ -34,6 +36,22 @@ export default function Admin_refunds(){
 
     const [loading, set_loading] = useState<boolean>(true)
     const [update, set_update] = useState<boolean>(true)
+
+    const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
+
+    const [is_admin, set_is_admin] = useState<boolean>(false)
+
+    useEffect(() => {
+        const temp = async() => {
+            var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
+
+            if(is_admin.next_status === true){
+                set_is_admin(true)
+            }
+        }
+
+        temp()
+    }, [])
 
     useEffect(() => {
         fetchData()
@@ -51,6 +69,8 @@ export default function Admin_refunds(){
           const data = await response.json();
           
           set_refund_arr(data)
+          set_refund_arr_display(data)
+
           set_loading(false);
 
         } catch (error) {
@@ -95,27 +115,27 @@ export default function Admin_refunds(){
             var new_refund: Refund = refund
 
             if(search_name && search_surname){
-                if(new_refund.refunds[0].name.toString().includes(search_name) && new_refund.refunds[0].surname.toString().includes(search_surname)){
+                if(new_refund.refunds[0].name.toString().toLocaleLowerCase().includes(search_name.toLocaleLowerCase()) && new_refund.refunds[0].surname.toString().includes(search_surname.toLocaleLowerCase())){
                     res_arr.push(refund)
                 }   
             }else if(search_order_id){
-                if(new_refund.refunds[0].order_id.toString().includes(search_order_id)){
+                if(new_refund.refunds[0].order_id.toString().toLocaleLowerCase().includes(search_order_id.toLocaleLowerCase())){
                     res_arr.push(refund)
                 }            
             }else if(search_name){
-                if(new_refund.refunds[0].name.toString().includes(search_name)){
+                if(new_refund.refunds[0].name.toString().toLocaleLowerCase().includes(search_name.toLocaleLowerCase())){
                     res_arr.push(refund)    
                 }
             }else if(search_surname){
-                if(new_refund.refunds[0].surname.toString().includes(search_surname)){
+                if(new_refund.refunds[0].surname.toString().toLocaleLowerCase().includes(search_surname.toLocaleLowerCase())){
                     res_arr.push(refund)    
                 }
             }else if(search_email){
-                if(new_refund.refunds[0].email.toString().includes(search_email)){
+                if(new_refund.refunds[0].email.toString().toLocaleLowerCase().includes(search_email.toLocaleLowerCase())){
                     res_arr.push(refund)    
                 }
             }else if(search_phone){
-                if(new_refund.refunds[0].phone.toString().includes(search_phone)){
+                if(new_refund.refunds[0].phone.toString().toLocaleLowerCase().includes(search_phone.toLocaleLowerCase())){
                     res_arr.push(refund)
                 }
             }else{
@@ -124,9 +144,9 @@ export default function Admin_refunds(){
         }
 
         if(!search_order_id && !search_name && !search_surname && !search_email && !search_phone && !search_gate_active && !search_gate_processing && !search_gate_cancel && !search_gate_done){
-            set_refund_arr(refund_arr)
+            set_refund_arr_display(refund_arr)
         }else{
-            set_refund_arr(res_arr)
+            set_refund_arr_display(res_arr)
         }
 
     },[search_order_id, search_name, search_surname, search_email, search_phone, search_gate_active, search_gate_processing, search_gate_cancel, search_gate_done])
@@ -166,7 +186,7 @@ export default function Admin_refunds(){
 
             <button onClick={() => {set_search_gate_phone(!search_gate_phone); set_search_gate_name(false); set_search_gate_email(false); set_search_gate_order_id(false)}}>search by phone number</button>
 
-
+            
             {search_gate_order_id ? <>
                 <label htmlFor="">order id</label>
                 <input type="string" value={search_order_id} onChange={(event) => set_search_order_id(event.target.value)}></input>
@@ -202,10 +222,10 @@ export default function Admin_refunds(){
             <button onClick={() => {set_search_gate_active(false); set_search_gate_processing(false); set_search_gate_cancel(false); set_search_gate_done(!search_gate_done)}}>status Done</button>
 
 
-            {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? refund_arr.length > 0 ?
+            {is_admin ? refund_arr_display.length > 0 ?
                 <div>
                     <p>refunds</p>
-                    {refund_arr.map((refund: Refund) => 
+                    {refund_arr_display.map((refund: Refund) => 
                         
                             <table key={refund.refunds[0].id}>
                                 <thead>

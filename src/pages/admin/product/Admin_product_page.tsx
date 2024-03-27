@@ -9,6 +9,7 @@ import change_status from "../../../apis/records/change_status";
 import Admin_collection_select from "../../../components/Admin/Admin_collection_select";
 import get_product_status_change_template from "../../../templates/admin/get_product_status_change_template";
 import { useCookies } from "react-cookie";
+import check_for_admin from "../../../functions/sub_functions/check_for_admin";
 
 export default function Admin_product_page(){ 
     
@@ -23,12 +24,27 @@ export default function Admin_product_page(){
     const [search_collection, set_search_collection] = useState<string>("")
 
     const [products_arr, set_products_arr] = useState<Array<Product>>([]);
-
-    const [cookies, setCookie] = useCookies(['user_data'])
-
+    const [products_arr_display, set_products_arr_display] = useState<Array<Product>>([]);
+    
     const [fetch_collections, set_fetch_collections] = useState<any>();
 
     const [update, set_update] = useState<boolean>(true);
+
+    const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
+
+    const [is_admin, set_is_admin] = useState<boolean>(false)
+
+    useEffect(() => {
+        const temp = async() => {
+            var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
+
+            if(is_admin.next_status === true){
+                set_is_admin(true)
+            }
+        }
+
+        temp()
+    }, [])
 
     useEffect(() => {      // searches products based on user input, valid input: product name, product size
         var res_arr: Array<Product> = []
@@ -38,14 +54,15 @@ export default function Admin_product_page(){
 
             if(search && search_collection){
                 if(new_product.products[0].collection_id){
-                    if(new_product.products[0].product_name.includes(search) && new_product.products[0].collection_id.toString().includes(search_collection)){
+                    if(new_product.products[0].product_name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) && new_product.products[0].collection_id.toString().includes(search_collection)){
                         res_arr.push(product)
                     }
-
-                    if(search_collection === "NULL" && new_product.products[0].collection_id === null){
+                    
+                }else{
+                    if(search_collection == "null" && new_product.products[0].collection_id === null && new_product.products[0].product_name.toLocaleLowerCase().includes(search.toLocaleLowerCase())){
                         res_arr.push(product)
                     }
-                }   
+                }
             }else if(search_collection){
                 if(new_product.products[0].collection_id){
                     if(new_product.products[0].collection_id.toString().includes(search_collection)){
@@ -53,20 +70,20 @@ export default function Admin_product_page(){
                     }
                 }
 
-                if(search_collection === "NULL" && new_product.products[0].collection_id === null){
+                if(search_collection == "null" && new_product.products[0].collection_id === null){
                     res_arr.push(product)
                 }
             }else if(search){
-                if(new_product.products[0].product_name.includes(search)){
+                if(new_product.products[0].product_name.toLocaleLowerCase().includes(search.toLocaleLowerCase())){
                     res_arr.push(product)
                 }
             }
         }   
 
         if(!search && !search_collection){
-            set_products_arr(products_arr)
+            set_products_arr_display(products_arr)
         }else{
-            set_products_arr(res_arr)
+            set_products_arr_display(res_arr)
         }
        
     },[search, search_collection])
@@ -95,6 +112,7 @@ export default function Admin_product_page(){
 
           set_products_arr(data1)
           set_fetch_collections(data2)
+          set_products_arr_display(data1)
 
           set_loading(false);
           
@@ -115,7 +133,7 @@ export default function Admin_product_page(){
 
         const product_status_change_template = get_product_status_change_template()
 
-        const [api_responce, error] = await change_status(product_status_change_template, record_id, cookies.user_data[0].id)
+        const [api_responce, error] = await change_status(product_status_change_template, record_id)
 
         if(error){
             set_error_msg("error ocured")
@@ -141,7 +159,7 @@ export default function Admin_product_page(){
                     <Admin_collection_select collections={fetch_collections}></Admin_collection_select>
                 </select>            
 
-                {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? products_arr.length > 0 ?
+                {is_admin ? products_arr_display.length > 0 ?
                     <table>
                         <thead>
                             <tr>
@@ -156,7 +174,7 @@ export default function Admin_product_page(){
                         
                         <tbody>
 
-                        {products_arr.map((product: Product) => 
+                        {products_arr_display.map((product: Product) => 
                             <tr key={product.products[0].id}>
                                 <td><p>{product.products[0].product_name}</p></td>
                                 <td><p>{product.products[0].price}</p></td>

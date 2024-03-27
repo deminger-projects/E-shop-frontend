@@ -2,15 +2,30 @@ import { Link } from 'react-router-dom';
 
 import Access_denied from '../user/Access_denied';
 
-import { useCookies } from 'react-cookie';
+import { useEffect, useState } from 'react';
+import check_for_admin from '../../functions/sub_functions/check_for_admin';
 
 export default function Admin_page(){
 
-    const [cookies, setCookie] = useCookies(['user_data'])
+    const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
+
+    const [is_admin, set_is_admin] = useState<boolean>(false)
+
+    useEffect(() => {
+        const temp = async() => {
+            var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
+
+            if(is_admin.next_status === true){
+                set_is_admin(true)
+            }
+        }
+
+        temp()
+    }, [])
 
     return(
         <>
-            {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? 
+            {is_admin ? 
                 <div>
                     <Link to="/admin_collection_page"><button>collections page</button></Link>
                     <Link to="/admin_product_page"><button>products page</button></Link>

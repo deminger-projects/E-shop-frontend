@@ -32,7 +32,7 @@ export default function User_size_select(props: {sizes: Array<ProductSize>, on_c
 
             {size && options ? 
                 <select id={"size_count_select"} onChange={(event) => props.on_change({size: size.size, current_amount: event.target.value})}>
-                        {options.map((num: number) => 
+                        {options.slice(0, 10).map((num: number) => 
                             <option key={num.toString()} value={num}>{num}</option>
                         )}
                 </select>

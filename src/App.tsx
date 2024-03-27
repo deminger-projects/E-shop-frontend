@@ -37,7 +37,6 @@ import Order_completed from "./pages/user/Order_complete";
 
 import Account_info from "./pages/user/logged_in/user_info/Account_info";
 import Edit_delivery_info from "./pages/user/logged_in/user_info/Edit_delivery_info";
-import Edit_info from "./pages/user/logged_in/user_info/Edit_info";
 
 import Add_delivery_info from "./pages/user/logged_in/Add_delivery_info";
 
@@ -47,6 +46,9 @@ import Register from "./pages/user/Register";
 import Contact from "./pages/user/Contact";
 import About from "./pages/user/About";
 import Refund from "./pages/user/Refund_log_of";
+
+import Collections from "./pages/user/Collections";
+import Collection_product_showcase from "./pages/user/Showcase";
 
 export default function App(){
   
@@ -93,18 +95,21 @@ export default function App(){
 
           <Route path="/account-info" element={<Account_info />} />
           <Route path="/edit-delivery-info" element={<Edit_delivery_info />} />
-          <Route path="/edit-user-info" element={<Edit_info />} />
 
           <Route path="/add-delivery-info" element={<Add_delivery_info />} />
 
           <Route path="/admin_refunds" element={<Admin_refunds />} />
-          
+
           <Route path="login" element={<Login/>} />
           <Route path="register" element={<Register/>} />
 
           <Route path="contact_us" element={<Contact/>} />
           <Route path="about_us" element={<About/>} />
           <Route path="make-refund" element={<Refund/>} />
+          
+          <Route path="/collections" element={<Collections/>} />
+          <Route path="/showcase/:id" element={<Collection_product_showcase/>} />
+
       </Routes>
     </>
   )

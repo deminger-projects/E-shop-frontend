@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Cart from '../../components/Cart';
 import User_size_select from '../../components/User_size_select';
@@ -7,7 +7,6 @@ import User_size_select from '../../components/User_size_select';
 import {ProductSize} from "../../interfaces/Product"
 
 import User_show_case from '../../components/User_show_case';
-import { useCookies } from 'react-cookie';
 
 export default function Item_info(){
 
@@ -24,30 +23,18 @@ export default function Item_info(){
 
     const [error_msg, set_error_msg] = useState<string>("")
 
-    const [cookies, set_cookies] = useCookies(['cart_data', 'user_data']);
+    const [cart_item_count, set_cart_item_count] = useState<number>(0)
 
-    var handle_cart_change = async (event: React.MouseEvent<HTMLButtonElement>, move?: boolean) => {
+    useEffect(() => {
+        var cart_session_data = sessionStorage.getItem("cart_data")
 
-        set_loading(true)
-
-        event.preventDefault();
-
-        var clone = cookies.cart_data
-
-        if(clone !== "undefined" && clone != "" && clone){
-
-            clone.push({size_data: size_select, product: data[0]})
-    
-            set_cookies("cart_data", clone, {path: "/"})
-        }else{    
-            set_cookies("cart_data", [{size_data: size_select, product: data[0]}], {path: "/"})
+        if(cart_session_data){
+            var cart = JSON.parse(cart_session_data)
+            set_cart_item_count(cart.length)
         }
+       
+    }, [])
 
-        if(move){navigate("/prepare-order", {state: {data: data[0]}});}
-
-        set_loading(false)
-
-    }
 
     useEffect(() => {
         fetchData()
@@ -81,13 +68,44 @@ export default function Item_info(){
         }
       };
     
+
+    var handle_cart_change = async (event: React.MouseEvent<HTMLButtonElement>, move?: boolean) => {
+
+        set_loading(true)
+
+        event.preventDefault();
+
+        if(data){
+            if(sessionStorage.getItem("cart_data") === null){
+                sessionStorage.setItem("cart_data", JSON.stringify([]))
+            }else{
+                var cart_session_data = sessionStorage.getItem("cart_data")
+    
+                if(cart_session_data){
+                    var cart = JSON.parse(cart_session_data)
+    
+                    cart.push({size_data: size_select, product: data[0].products})
+
+                    set_cart_item_count(cart.length )
+    
+                    sessionStorage.setItem("cart_data", JSON.stringify(cart))
+                }
+            }
+        }
+
+        if(move){navigate("/prepare-order", {state: {data: data[0]}});}
+
+        set_loading(false)
+
+    }
+    
     return(
         <>
 
             <p>{error_msg}</p>
 
             {loading ? <p>loading</p> : <>
-                <Cart></Cart>
+                <Cart cart_item_count={cart_item_count}></Cart>
 
                 <User_show_case images={data[0].product_images} id={data[0].products[0].id} folder={"products"}></User_show_case>
 

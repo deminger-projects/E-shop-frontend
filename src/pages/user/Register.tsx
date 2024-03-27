@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom'
 
 import register_request from '../../apis/login/register_request';
 import get_register_template from '../../templates/login/get_register_template';
-import Error_display from '../../components/Error_display';
-import Admin_image_add from '../../components/Admin/Admin_add_image_handler';
 import { useCookies } from 'react-cookie';
 
 export default function Register(){
@@ -24,7 +22,7 @@ export default function Register(){
     const [psc, setPsc] = useState<string>("");
 
     const [err_msg, set_err_msg] = useState<string>("");
-
+    
     const [cookies, set_cookies] = useCookies()
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -54,7 +52,8 @@ export default function Register(){
                 set_err_msg("error ocured")
             }else{
                 if(api_responce.next_status === true){
-                    set_cookies("user_data", api_responce.user_data, {path: "/"})
+                    sessionStorage.setItem('user_data', JSON.stringify(api_responce.user_data));
+                    set_cookies("user_data", JSON.stringify(api_responce.user_data))
 
                     navigate("/main", {state: {msg: api_responce.msg}});
                 }else{

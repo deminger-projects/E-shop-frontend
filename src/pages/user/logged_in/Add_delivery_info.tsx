@@ -24,7 +24,7 @@ export default function Add_delivery_info(){
     const [loading, set_loading] = useState<boolean>(false);
     const [user_id, set_user_id] = useState<any>("");
 
-    const [cookies, setCookie] = useCookies(['user_data'])
+    const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     useEffect(() => {
         fetchData()
@@ -33,8 +33,8 @@ export default function Add_delivery_info(){
     const fetchData = async () => {
         try {
 
-            const email = cookies.user_data[0].email
-            const password = cookies.user_data[0].password
+            const email = user_data[0].email
+            const password = user_data[0].password
 
             const form_data = new FormData()
 
@@ -80,7 +80,7 @@ export default function Add_delivery_info(){
 
             const user_data_template = get_user_data_template(Number(user_id.id), name, surname, telephone, adress, city, PSC)
 
-            const [api_responce, error] = await add_record(user_data_template, Number(user_id.id), undefined, undefined, undefined, cookies.user_data[0].login_status)
+            const [api_responce, error] = await add_record(user_data_template, Number(user_id.id), undefined, undefined, undefined, user_data[0].login_status)
             
             if(error){
                 set_error_msg("error ocured")
@@ -101,7 +101,7 @@ export default function Add_delivery_info(){
             {loading ? <p>loading</p> : <>
                 <p>{error_msg}</p>
 
-                {cookies.user_data[0].login_status  === "Active" ? 
+                {user_data.length > 0 ? 
                     <>
                         <p>Add_delivery_info</p>
 

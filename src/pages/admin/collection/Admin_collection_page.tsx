@@ -8,6 +8,7 @@ import Collections from "../../../interfaces/Collections";
 import change_status from "../../../apis/records/change_status";
 import get_change_collection_template from "../../../templates/admin/get_change_collection_template";
 import { useCookies } from "react-cookie";
+import check_for_admin from "../../../functions/sub_functions/check_for_admin";
 
 export default function Admin_collection_page(){
 
@@ -20,10 +21,27 @@ export default function Admin_collection_page(){
 
     const [search_value, set_search_value] = useState<string>("")
     const [search_collections, set_search_collections] = useState<Array<Collections>>([])
+    const [search_collections_display, set_search_collections_display] = useState<Array<Collections>>([])
 
     const [cookies, setCookie] = useCookies(['user_data'])
 
     const [update, set_update] = useState<boolean>(true);
+
+    const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
+
+    const [is_admin, set_is_admin] = useState<boolean>(false)
+
+    useEffect(() => {
+        const temp = async() => {
+            var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
+
+            if(is_admin.next_status === true){
+                set_is_admin(true)
+            }
+        }
+
+        temp()
+    }, [])
 
     useEffect(() => {
         var res_arr: Array<Collections> = []
@@ -32,16 +50,16 @@ export default function Admin_collection_page(){
             if(search_value){
                 var new_collection: Collections = colletion
 
-                if(new_collection.collections[0].name.includes(search_value)){
+                if(new_collection.collections[0].name.toLocaleLowerCase().includes(search_value.toLocaleLowerCase())){
                     res_arr.push(colletion)
                 }
             }
         }   
 
-        if(search_value){
-            set_search_collections(res_arr)
+        if(!search_value){
+            set_search_collections_display(search_collections)
         }else{
-            set_search_collections(search_collections)
+            set_search_collections_display(res_arr)
         }
 
     },[search_value])
@@ -62,6 +80,7 @@ export default function Admin_collection_page(){
           const data = await response.json();
           
           set_search_collections(data)
+          set_search_collections_display(data)
           set_loading(false);
 
         } catch (error) {
@@ -101,7 +120,7 @@ export default function Admin_collection_page(){
                 <p>{responce_msg}</p>
                 <p>{error_msg}</p>
 
-                {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? search_collections.length !== 0 ?
+                {is_admin ? search_collections_display.length !== 0 ?
                     <table>
                         <thead>
                             <tr>
@@ -113,7 +132,7 @@ export default function Admin_collection_page(){
                         
                         <tbody>
 
-                    {search_collections.map((collection: Collections) => 
+                    {search_collections_display.map((collection: Collections) => 
                             <tr key={collection.collections[0].id}>
                                 <td><p>{collection.collections[0].name}</p></td>
                                 <td>                            

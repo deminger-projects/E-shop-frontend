@@ -8,9 +8,11 @@ import { useCookies } from "react-cookie"
 export default function Placed_returns(){
 
     const [refunds_arr, set_refunds_arr] = useState<Array<User_refunds>>([])
+    const [refunds_arr_display, set_refunds_arr_display] = useState<Array<User_refunds>>([])
+
     const [search_refund_id, set_search_refund_id] = useState<string>("")
 
-    const [cookies, setCookie] = useCookies(['user_data'])
+    const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     const [loading, set_loading] = useState<boolean>(true)
 
@@ -22,16 +24,16 @@ export default function Placed_returns(){
             var refund_fix: User_refunds = refund
 
             if(search_refund_id){
-                if(refund_fix.refunds[0].order_id.toString().includes(search_refund_id)){
+                if(refund_fix.refunds[0].id.toString().includes(search_refund_id)){
                     res_arr.push(refund)
                 }
             }
         }
 
         if(search_refund_id){
-            set_refunds_arr(res_arr)
+            set_refunds_arr_display(res_arr)
         }else{
-            set_refunds_arr(refunds_arr)
+            set_refunds_arr_display(refunds_arr)
         }
 
     }, [search_refund_id])
@@ -44,8 +46,8 @@ export default function Placed_returns(){
     const fetchData = async () => {
         try {
           
-            const email = cookies.user_data[0].email
-            const password = cookies.user_data[0].password
+            const email = user_data[0].email
+            const password = user_data[0].password
 
             const form_data = new FormData()
 
@@ -62,9 +64,10 @@ export default function Placed_returns(){
             throw new Error('Network response was not ok.');
           }
           const data = await response.json();
-          console.log("🚀 ~ fetchData ~ data:", data)
           
           set_refunds_arr(data)
+          set_refunds_arr_display(data)
+
           set_loading(false);
 
         } catch (error) {
@@ -82,9 +85,8 @@ export default function Placed_returns(){
                 <label htmlFor="">order id</label>
                 <input type="text" value={search_refund_id} onChange={(event) => set_search_refund_id(event.target.value)}/>
 
-                {cookies.user_data[0].login_status  === "Active" ? refunds_arr.length !== 0 ?
-                    
-                        refunds_arr.map((refund: User_refunds) => (
+                {user_data.length > 0 ? refunds_arr_display.length !== 0 ?   
+                    refunds_arr_display.map((refund: User_refunds) => (
                             
                             <table key={refund.refunds[0].id.toString()}>
                                 <thead>

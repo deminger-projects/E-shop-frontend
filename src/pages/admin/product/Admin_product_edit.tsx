@@ -18,6 +18,7 @@ import File from '../../../interfaces/Files';
 import get_filtred_data from '../../../functions/get_filtred_data';
 import get_product_template from '../../../templates/admin/get_product_template';
 import { useCookies } from 'react-cookie';
+import check_for_admin from '../../../functions/sub_functions/check_for_admin';
 
 export default function Admin_product_edit(){
 
@@ -42,6 +43,22 @@ export default function Admin_product_edit(){
 
     const [fetch_collekec, set_fetch_collekec] = useState()
     const [loading, set_loading] = useState(true)
+
+    const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
+
+    const [is_admin, set_is_admin] = useState<boolean>(false)
+
+    useEffect(() => {
+        const temp = async() => {
+            var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
+
+            if(is_admin.next_status === true){
+                set_is_admin(true)
+            }
+        }
+
+        temp()
+    }, [])
 
     useEffect(() => {
         //console.log(files)
@@ -129,7 +146,7 @@ export default function Admin_product_edit(){
             {loading ? <p>loading</p> : <>
                 <p>{error_msg}</p>
                 
-                {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? <div>
+                {is_admin ? <div>
                     <form onSubmit={handleSubmit} encType='multipart/form-data'>
 
                         <label htmlFor="product_name_edit">{"Product name"}</label>

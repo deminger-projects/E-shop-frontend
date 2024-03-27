@@ -1,36 +1,31 @@
 import React, { useState } from "react";
 
-import Cart from "../interfaces/Cart";
-import { useCookies } from "react-cookie";
-
 export default function Cart_items(){
 
     const [responce_msg, set_responce_msg] = useState<string>()
-    const [error_msg, set_error_msg] = useState<string>()
 
-    const [cookies, set_cookies] = useCookies(['cart_data']);
+    const [session_cart_data, set_session_cart_data] = useState<Array<any>>(sessionStorage.getItem("cart_data") === null ? [] : JSON.parse(sessionStorage.getItem("cart_data")!))
 
     var handle_on_click = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, pozition: number) =>{
 
         event.preventDefault();
 
-        let clone = cookies.cart_data
+        let clone = [...session_cart_data]
+        
+        clone.splice(pozition, 1)
 
-        if(clone !== 'undefined'){
-            clone.splice(pozition, 1)
+        sessionStorage.setItem("cart_data", JSON.stringify(clone))
 
-            set_cookies("cart_data", clone, {path: "/"})
-        }else{
-            set_cookies("cart_data", [], {path: "/"})
-        }
+        set_session_cart_data(clone)
+
+        set_responce_msg("item removed from cart")
     }
 
     return(
         <>
             <p>{responce_msg}</p>
-            <p>{error_msg}</p>
 
-            {cookies.cart_data !== 'undefined' ? cookies.cart_data[0] ? 
+            {session_cart_data !== null ? session_cart_data.length > 0 ? 
 
             <table>
                 <thead>
@@ -43,14 +38,14 @@ export default function Cart_items(){
                     </tr>
                 </thead>
                 
-                <tbody >
+                <tbody>
 
-            {cookies.cart_data.map((item: Cart, index: number) =>              
+            {session_cart_data.map((item: any, index: number) =>              
                     <tr key={index.toString()}>
-                        <td>{item.product.products[0].product_name}</td>
+                        <td>{item.product[0].product_name}</td>
                         <td>{item.size_data.size}</td>
-                        <td><img src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products/" + item.product.products[0].id + "/" + item.product.products[0].url} width={"100px"} height={"100px"}></img></td>
-                        <td>{item.product.products[0].price}</td>
+                        <td><img src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products/" + item.product[0].id + "/" + item.product[0].url} width={"100px"} height={"100px"}></img></td>
+                        <td>{item.product[0].price}</td>
                         <td>{item.size_data.current_amount}</td>
                         <td><button onClick={(event) =>handle_on_click(event, index)}>remove</button></td>
                     </tr>

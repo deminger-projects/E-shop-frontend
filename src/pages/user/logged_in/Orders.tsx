@@ -7,9 +7,11 @@ import { Form } from "react-router-dom";
 
 export default function Orders(){
 
-    const storedValue = sessionStorage.getItem('user_account_data');
+    const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     const [orders_arr, set_orders_arr] = useState<Array<Order>>([])
+    const [orders_arr_display, set_orders_arr_display] = useState<Array<Order>>([])
+
     const [search_order_id, set_search_order_id] = useState<string>("")
 
     const [cookies, setCookie] = useCookies(['user_data'])
@@ -23,16 +25,16 @@ export default function Orders(){
             var order_fix: Order = order
 
             if(search_order_id){
-                if(order_fix.refunds[0] .id.toString().includes(search_order_id)){
+                if(order_fix.refunds[0].id.toString().includes(search_order_id)){
                     res_arr.push(order)
                 }
             }
         }
 
         if(search_order_id){
-            set_orders_arr(res_arr)
+            set_orders_arr_display(res_arr)
         }else{
-            set_orders_arr(orders_arr)
+            set_orders_arr_display(orders_arr)
         }
 
     }, [search_order_id,])
@@ -61,9 +63,10 @@ export default function Orders(){
             throw new Error('Network response was not ok.');
           }
           const data = await response.json();
-          console.log("🚀 ~ fetchData ~ data:", data)
           
           set_orders_arr(data)
+          set_orders_arr_display(data)
+
           set_loading(false);
 
         } catch (error) {
@@ -82,9 +85,9 @@ export default function Orders(){
                 <label htmlFor="">order id</label>
                 <input type="text" value={search_order_id} onChange={(event) => set_search_order_id(event.target.value)}/>
 
-                {cookies.user_data[0].login_status === "Active" ? orders_arr.length > 0 ? 
+                {user_data.length > 0 ? orders_arr_display.length > 0 ? 
                     <>
-                        {orders_arr.map((order: Order, index1: number) => 
+                        {orders_arr_display.map((order: Order, index1: number) => 
                             <div key={index1.toString()}>
                                 <table>
                                     <thead>

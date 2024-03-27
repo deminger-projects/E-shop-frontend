@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import logoff from "../apis/login/logoff";
 import get_logoff_teplate from "../templates/login/get_logoff_teplate";
+import check_for_admin from "../functions/sub_functions/check_for_admin";
 import { useCookies } from "react-cookie";
 
 export default function Login_hud(){
@@ -13,7 +14,25 @@ export default function Login_hud(){
 
     const [loading, set_loading] = useState<boolean>(false)
 
-    const [cookies, set_cookies] = useCookies(['user_data', 'user_account_data']);
+    const [user_data, set_user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
+
+    const [is_admin, set_is_admin] = useState<boolean>(false)
+
+    const [cookies, set_cookies] = useCookies(["user_data"])
+
+    useEffect(() => {
+        const temp = async() => {
+            if(user_data.length > 0){
+                var is_admin = await check_for_admin(cookies.user_data[0].email, cookies.user_data[0].password)
+
+                if(is_admin.next_status === true){
+                    set_is_admin(true)
+                }
+            }
+        }
+
+        temp()
+    }, [])
 
     var handle_on_click = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         
@@ -28,8 +47,9 @@ export default function Login_hud(){
         if(err){
             set_error_msg(err)
         }else{
-            set_cookies("user_data", [], {path: "/"})
-
+            sessionStorage.setItem('user_data', JSON.stringify([]));
+            set_cookies("user_data", JSON.stringify([]))
+            set_user_data([])
             navigate("/login", {state: api_responce})
         }
 
@@ -42,8 +62,8 @@ export default function Login_hud(){
                 <p>{err_msg}</p>
 
                 <div id={"login_data"}>
-                    {cookies.user_data !== undefined && cookies.user_data[0] ? 
-                        cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? 
+                    {user_data.length > 0 || cookies.user_data[0] ? 
+                        is_admin ? 
                             <>
                                 <div>
                                     <Link to="/user-menu">{cookies.user_data[0].username}</Link>

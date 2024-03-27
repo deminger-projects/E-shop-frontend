@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';  
 
 import get_cart_data from '../../functions/getters/get_cart_data';
 
@@ -12,8 +11,6 @@ import Money_sum from '../../components/Money_sum';
 import { useCookies } from 'react-cookie';
 
 export default function Prepare_order(){
-
-    const navigate = useNavigate();
 
     const [name, setName] = useState<string>("");
     const [surname, setSurname] = useState<string>("");
@@ -29,35 +26,36 @@ export default function Prepare_order(){
 
     const [delivery_data, set_delivery_data] = useState<Array<UserData>>([]);    
 
-    const [cookies, setCookie] = useCookies(['user_data', 'cart_data', 'user_account_data'])
+    const [session_cart_data, set_session_cart_data] = useState<Array<any>>(sessionStorage.getItem("cart_data") === null ? [] : JSON.parse(sessionStorage.getItem("cart_data")!))
 
-    useEffect(() => {
-        fetchData()
-    }, [])
+    const [cookies, setCookie] = useCookies(['user_data'])
 
     const fetchData = async () => {
         try {
+            if(cookies.user_data){
+                const email = cookies.user_data[0].email
+                const password = cookies.user_data[0].password
+    
+                const form_data = new FormData()
+    
+                form_data.append("email", JSON.stringify(email))
+                form_data.append("password", JSON.stringify(password))
+    
+              const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_acccount_data', {
+                method: 'POST',
+                body: form_data
+            });             
+    
+    
+              if (!response.ok) {
+                throw new Error('Network response was not ok.');
+              }
+              const data = await response.json();
+              
+              set_delivery_data(data)
+            }
 
-            const email = cookies.user_data[0].email
-            const password = cookies.user_data[0].password
-
-            const form_data = new FormData()
-
-            form_data.append("email", JSON.stringify(email))
-            form_data.append("password", JSON.stringify(password))
-
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_acccount_data', {
-            method: 'POST',
-            body: form_data
-        });             
-
-
-          if (!response.ok) {
-            throw new Error('Network response was not ok.');
-          }
-          const data = await response.json();
-          
-          set_delivery_data(data)
+            
           set_loading(false);
 
         } catch (error) {
@@ -67,6 +65,10 @@ export default function Prepare_order(){
           set_loading(false);
         }
       };
+
+      useEffect(() => {
+        fetchData()
+    }, [])
       
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -81,17 +83,15 @@ export default function Prepare_order(){
         if(!adress){set_error_msg("adress is empty")}
         if(!city){set_error_msg("city is empty")}
         if(!PSC){set_error_msg("PSC is empty")}
-        if(cookies.cart_data.length === 0){set_error_msg("must put items in cart")}
+        if(session_cart_data.length < 1){set_error_msg("must put items in cart")}
        
-        if(name && surname && email && telephone && adress && city && PSC && cookies.cart_data.length > 0){
+        if(name && surname && email && telephone && adress && city && PSC && session_cart_data.length > 0){
 
-            var cart_data = get_cart_data(cookies.cart_data)
+            var cart_data = get_cart_data(session_cart_data)
 
             try{
 
                 var order_template;
-
-                console.log(delivery_data)
 
                 if(delivery_data.length <= 0){
                     order_template = get_order_template(null, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, "Inactive")
@@ -114,7 +114,7 @@ export default function Prepare_order(){
 
                 if(data.url){
                     window.location = data.url
-                    setCookie('cart_data', [])
+                    sessionStorage.setItem("cart_data", JSON.stringify([]))
                 }
                         
             } catch (err){
@@ -216,8 +216,6 @@ export default function Prepare_order(){
 
                     </form>
                 </div>
-
-                <Link to="/add-delivery-info"><button>add delivery info</button></Link>
             </>}
             
         </>

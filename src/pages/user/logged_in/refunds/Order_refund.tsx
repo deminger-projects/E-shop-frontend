@@ -12,8 +12,8 @@ import set_up_refund_products from "../../../../functions/set_ups/set_up_refund_
 import filter_refund_data from "../../../../functions/filters/filter_refund_data";
 
 import get_refund_template from "../../../../templates/refund/get_refund_template";
-import { useCookies } from "react-cookie";
 import Reasons from "../../../../interfaces/Refund_reasons";
+import Access_denied from "../../Access_denied";
 
 export default function Order_refund(){
 
@@ -28,9 +28,8 @@ export default function Order_refund(){
 
     const [loading, set_loading] = useState<boolean>(false);
     const [reasons, set_reasons] = useState<Array<Reasons>>([])
-    const [user_id, set_user_id] = useState<string>("")
 
-    const [cookies, setCookie] = useCookies(['user_data'])
+    const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     useEffect(() => {
         fetchData()
@@ -75,7 +74,7 @@ export default function Order_refund(){
 
         if(filtred_refund_data.ids.length > 0){
 
-            const refund_template = get_refund_template(location.state.data.orders[0].id, null, filtred_refund_data.ids, filtred_refund_data.reasons, filtred_refund_data.amounts, filtred_refund_data.sizes, "Proccesing")
+            const refund_template = get_refund_template(location.state.data.refunds[0].id, null, filtred_refund_data.ids, filtred_refund_data.reasons, filtred_refund_data.amounts, filtred_refund_data.sizes, "Proccesing")
            
             const [api_responce, error] = await add_record(refund_template, undefined, undefined, undefined, undefined, undefined)
            
@@ -96,6 +95,8 @@ export default function Order_refund(){
 
         <>
             {loading ? <p>loading</p> : <>
+
+            {user_data.length > 0 ? <>
                 <p>{error_msg}</p>
 
                     <form onSubmit={handleSubmit}>
@@ -122,6 +123,8 @@ export default function Order_refund(){
                         <button>submit</button>
 
                     </form> 
+            </> : <Access_denied></Access_denied>}
+                
             </>}
         </>
     )

@@ -3,13 +3,10 @@ import { Link, useLocation } from "react-router-dom";
 
 import Access_denied from "../../Access_denied";
 
-import Cookies from 'universal-cookie';
-
 import change_status from "../../../../apis/records/change_status";
 
 import UserData, {User_data} from "../../../../interfaces/user/User_data"
 import get_account_info_template from "../../../../templates/user/get_account_info_template";
-import { useCookies } from "react-cookie";
 
 export default function Account_info(){
 
@@ -24,7 +21,7 @@ export default function Account_info(){
 
     const [update, set_update] = useState<boolean>(false)
 
-    const [cookies, setCookie] = useCookies(["user_data"])
+    const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     useEffect(() => {
         fetchData()
@@ -33,8 +30,8 @@ export default function Account_info(){
     const fetchData = async () => {
         try {
 
-            const email = cookies.user_data[0].email
-            const password = cookies.user_data[0].password
+            const email = user_data[0].email
+            const password = user_data[0].password
 
             const form_data = new FormData()
 
@@ -91,7 +88,7 @@ export default function Account_info(){
                 <p>{responce_msg}</p>
                 <p>{error_msg}</p>
 
-                {cookies.user_data[0].login_status === "Active" ?
+                {user_data[0].login_status === "Active" ?
 
                     <>
                             
@@ -122,7 +119,7 @@ export default function Account_info(){
                                     <td><p>{user_data.city}</p></td>
                                     <td><p>{user_data.postcode}</p></td>
                                     <td><p>{user_data.status}</p></td>
-                                    <td><button><Link to={"/edit-delivery-info"} state={{data: user_data}}>edit</Link></button></td>
+                                    <td><button><Link to={"/edit-delivery-info"} state={{data: user_data, user_id: delivery_data[0].users[0].id}}>edit</Link></button></td>
                                     <td><button onClick={(event) => handle_delete(event, user_data)}>delete</button></td>
                                 </tr>         
                         ) } 

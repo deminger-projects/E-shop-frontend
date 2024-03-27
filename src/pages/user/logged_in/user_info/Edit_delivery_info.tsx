@@ -60,39 +60,41 @@ export default function Edit_delivery_info(){
 
     return(
         <>
-            <p>{error_msg}</p>
+            {loading ? <p>loading</p> : <>
+                <p>{error_msg}</p>
 
-            {cookies.user_data[0].login_status === "Active" ? 
-                <>
-                    <div>
-                        <form onSubmit={handleSubmit}>
-                            
-                                <div>
-                                    <label htmlFor="name">name</label>
-                                    <input id={"name"} type="text" value={name} onChange={(e) => set_name(e.target.value)}></input>
+                {user_data ? 
+                    <>
+                        <div>
+                            <form onSubmit={handleSubmit}>
+                                
+                                    <div>
+                                        <label htmlFor="name">name</label>
+                                        <input id={"name"} type="text" value={name} onChange={(e) => set_name(e.target.value)}></input>
 
-                                    <label htmlFor="surname">surname</label>
-                                    <input id={"surname"} type="text" value={surname} onChange={(e) => set_surname(e.target.value)}></input>
+                                        <label htmlFor="surname">surname</label>
+                                        <input id={"surname"} type="text" value={surname} onChange={(e) => set_surname(e.target.value)}></input>
 
-                                    <label htmlFor="adress">adress</label>
-                                    <input id={"adress"} type="text" value={adress} onChange={(e) => set_adress(e.target.value)}></input>
+                                        <label htmlFor="adress">adress</label>
+                                        <input id={"adress"} type="text" value={adress} onChange={(e) => set_adress(e.target.value)}></input>
 
-                                    <label htmlFor="city">city</label>
-                                    <input id={"city"} type="text" value={city} onChange={(e) => set_city(e.target.value)}></input>
-                                    
-                                    <label htmlFor="phone">adress</label>
-                                    <input id={"phone"} type="text" value={phone} onChange={(e) => set_phone(e.target.value)}></input>
+                                        <label htmlFor="city">city</label>
+                                        <input id={"city"} type="text" value={city} onChange={(e) => set_city(e.target.value)}></input>
+                                        
+                                        <label htmlFor="phone">adress</label>
+                                        <input id={"phone"} type="text" value={phone} onChange={(e) => set_phone(e.target.value)}></input>
 
-                                    <label htmlFor="psc">psc</label>
-                                    <input id={"psc"} type="text" value={psc} onChange={(e) => set_psc(e.target.value)}></input>
-                                </div>
-                            
-                            
-                            <button>send</button>
-                        </form>
-                    </div>
-                </> : <Access_denied></Access_denied>
-            }
+                                        <label htmlFor="psc">psc</label>
+                                        <input id={"psc"} type="text" value={psc} onChange={(e) => set_psc(e.target.value)}></input>
+                                    </div>
+                                
+                                
+                                <button>send</button>
+                            </form>
+                        </div>
+                    </> : <Access_denied></Access_denied>
+                }
+                </>}
         </>
     )
 }

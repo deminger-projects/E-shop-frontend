@@ -9,6 +9,8 @@ export default function Header(){
         <>
             <div id="header">
 
+                <Link id="collections" to="/collections">collections</Link>
+
                 <Link id="company_name" to="/main">company name (nbc)</Link>
                 <Login_hud></Login_hud>
 

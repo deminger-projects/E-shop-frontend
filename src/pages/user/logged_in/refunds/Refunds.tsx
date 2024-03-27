@@ -12,11 +12,13 @@ export default function Refunds(){
     const location = useLocation()
 
     const [orders_arr, set_orders_arr] = useState<Array<New_orders>>([])
+    const [orders_arr_display, set_orders_arr_display] = useState<Array<New_orders>>([])
+
     const [search_order_id, set_search_order_id] = useState<string>("")
 
     const [loading, set_loading] = useState<boolean>(true)
 
-    const [cookies, setCookie] = useCookies(['user_data'])
+    const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     useEffect(() => {
         var res_arr: Array<New_orders> = []
@@ -35,9 +37,9 @@ export default function Refunds(){
         }
 
         if(search_order_id){
-            set_orders_arr(res_arr)
+            set_orders_arr_display(res_arr)
         }else{
-            set_orders_arr(orders_arr)
+            set_orders_arr_display(orders_arr)
         }
 
     }, [search_order_id])
@@ -49,8 +51,8 @@ export default function Refunds(){
     const fetchData = async () => {
         try {
 
-            const email = cookies.user_data[0].email
-            const password = cookies.user_data[0].password
+            const email = user_data[0].email
+            const password = user_data[0].password
 
             const form_data = new FormData()
 
@@ -67,9 +69,10 @@ export default function Refunds(){
             throw new Error('Network response was not ok.');
           }
           const data = await response.json();
-          console.log("🚀 ~ fetchData ~ data:", data)
           
           set_orders_arr(data)
+          set_orders_arr_display(data)
+
           set_loading(false);
 
         } catch (error) {
@@ -89,7 +92,7 @@ export default function Refunds(){
 
                 {location.state ? <p>{location.state.msg}</p> : <></>}
 
-                {cookies.user_data[0].login_status  === "Active" ? orders_arr.length !== 0 ? orders_arr.map((order: New_orders, index: number) => {
+                {user_data.length > 0 ? orders_arr_display.length !== 0 ? orders_arr_display.map((order: New_orders, index: number) => {
 
                     return <div key={index.toString()}>
                     <table>

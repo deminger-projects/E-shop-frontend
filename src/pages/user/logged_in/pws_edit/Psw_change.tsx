@@ -5,9 +5,7 @@ import Access_denied from "../../Access_denied";
 
 import edit_record from "../../../../apis/records/edit_record";
 import get_psw_template from "../../../../templates/other/ger_psw_template";
-import { useCookies } from "react-cookie";
 
-import UserData from "../../../../interfaces/user/User_data";
 import logoff_template from "../../../../templates/login/get_logoff_teplate";
 import logoff from "../../../../apis/login/logoff";
 
@@ -25,7 +23,7 @@ export default function Psw_change(){
     const [data, set_data] = useState<any>();
     const [update, set_update] = useState<boolean>(true);
 
-    const [cookies, setCookie] = useCookies(['user_data'])
+    const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     useEffect(() => {
         fetchData()
@@ -34,8 +32,8 @@ export default function Psw_change(){
     const fetchData = async () => {
         try {
 
-            const email = cookies.user_data[0].email
-            const password = cookies.user_data[0].password
+            const email = user_data[0].email
+            const password = user_data[0].password
 
             const form_data = new FormData()
 
@@ -75,7 +73,7 @@ export default function Psw_change(){
         if(!current_psw){set_error_msg("current password in empty")}
         if(psw_input1 !== psw_input2){set_error_msg("passwords do not match")}
 
-        if(current_psw && psw_input1 && psw_input2 && cookies.user_data[0].password.toUpperCase() === current_psw.toUpperCase() && psw_input1 === psw_input2){
+        if(current_psw && psw_input1 && psw_input2 && user_data[0].password.toUpperCase() === current_psw.toUpperCase() && psw_input1 === psw_input2){
         
             const psw_template = get_psw_template(psw_input1)
 
@@ -85,7 +83,7 @@ export default function Psw_change(){
 
             await logoff(temp, data.email, data.password)
 
-            setCookie("user_data", "")
+            sessionStorage.setItem("user_data", JSON.stringify([]))
 
             navigate("/login", {state: {msg: "password changed"}})
         }
@@ -98,7 +96,7 @@ export default function Psw_change(){
     return(
         <>
             {loading ? <p>loading</p> : <>
-                {cookies.user_data[0].login_status === "Active" ? 
+                {user_data[0].login_status === "Active" ? 
                     <><p>{error_msg}</p>
 
                     <div>

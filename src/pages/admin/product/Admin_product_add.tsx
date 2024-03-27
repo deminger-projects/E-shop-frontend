@@ -18,6 +18,7 @@ import set_up_files from '../../../functions/set_ups/set_up_files';
 import get_filtred_data from '../../../functions/get_filtred_data';
 import get_product_template from '../../../templates/admin/get_product_template';
 import { useCookies } from 'react-cookie';
+import check_for_admin from '../../../functions/sub_functions/check_for_admin';
 
 export default function Admin_product_add(){
 
@@ -46,6 +47,22 @@ export default function Admin_product_add(){
     const [loading, set_loading] = useState(true)
 
     const [collections, set_collections] = useState()
+
+    const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
+
+    const [is_admin, set_is_admin] = useState<boolean>(false)
+
+    useEffect(() => {
+        const temp = async() => {
+            var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
+
+            if(is_admin.next_status === true){
+                set_is_admin(true)
+            }
+        }
+
+        temp()
+    }, [])
 
     useEffect(() => {
         fetchData()
@@ -124,7 +141,7 @@ export default function Admin_product_add(){
                 <p>{error_msg}</p>
                 <p>{responce_msg}</p>
 
-                {cookies.user_data[0].login_status === "Active" && cookies.user_data[0].username === "Admin" ? <div className="admin_add_product">
+                {is_admin ? <div className="admin_add_product">
                     <form onSubmit={handleSubmit} encType="multipart/form-data">
                         
                         <label htmlFor="product_name">{"Product name"}</label>
