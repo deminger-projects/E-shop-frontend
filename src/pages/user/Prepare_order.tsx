@@ -9,8 +9,15 @@ import UserData, {User_data} from "../../interfaces/user/User_data"
 import get_order_template from '../../templates/order/get_order_template';
 import Money_sum from '../../components/Money_sum';
 import { useCookies } from 'react-cookie';
+import get_user_acccount_data from '../../apis/getters/user/get_user_account_data';
+import get_stripe_payment_url from '../../apis/getters/get_stripe_payment_url';
+import Loading from '../../components/Loading';
+import cart_products_validation from '../../apis/other/cart_products_validation';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 export default function Prepare_order(){
+
+    const navigate = useNavigate();
 
     const [name, setName] = useState<string>("");
     const [surname, setSurname] = useState<string>("");
@@ -26,47 +33,22 @@ export default function Prepare_order(){
 
     const [delivery_data, set_delivery_data] = useState<Array<UserData>>([]);    
 
-    const [session_cart_data, set_session_cart_data] = useState<Array<any>>(sessionStorage.getItem("cart_data") === null ? [] : JSON.parse(sessionStorage.getItem("cart_data")!))
+    const [session_cart_data] = useState<Array<any>>(sessionStorage.getItem("cart_data") === null ? [] : JSON.parse(sessionStorage.getItem("cart_data")!))
 
-    const [cookies, setCookie] = useCookies(['user_data'])
+    const [cookies] = useCookies(['user_data'])
 
-    const fetchData = async () => {
-        try {
-            if(cookies.user_data){
-                const email = cookies.user_data[0].email
-                const password = cookies.user_data[0].password
-    
-                const form_data = new FormData()
-    
-                form_data.append("email", JSON.stringify(email))
-                form_data.append("password", JSON.stringify(password))
-    
-              const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_acccount_data', {
-                method: 'POST',
-                body: form_data
-            });             
-    
-    
-              if (!response.ok) {
-                throw new Error('Network response was not ok.');
-              }
-              const data = await response.json();
-              
-              set_delivery_data(data)
-            }
-
-            
-          set_loading(false);
-
-        } catch (error) {
-
-          console.log(error);
-
-          set_loading(false);
-        }
-      };
+    const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
       useEffect(() => {
+        const fetchData = async () => {
+            if(user_data.length > 0){
+                var data = await get_user_acccount_data(user_data[0].email, user_data[0].password)
+
+                set_delivery_data(data)
+                set_loading(false);
+            }
+          };
+
         fetchData()
     }, [])
       
@@ -89,8 +71,9 @@ export default function Prepare_order(){
 
             var cart_data = get_cart_data(session_cart_data)
 
-            try{
+            var validation_responce: any = await cart_products_validation(cart_data.templates_for_validation)
 
+            if(validation_responce.next_status === true){
                 var order_template;
 
                 if(delivery_data.length <= 0){
@@ -98,27 +81,16 @@ export default function Prepare_order(){
                 }else{
                     order_template = get_order_template(delivery_data[0].users[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user_data[0].login_status)
                 }
-
-                const form_data = new FormData()
-
-                form_data.append('items', JSON.stringify({products: cart_data.cart_items_for_stripe_paywall}))
-                form_data.append('tables', JSON.stringify(order_template))
-                form_data.append('cart', JSON.stringify(cart_data.items_for_validation))
-
-                const responce = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/stripe_create_session', {
-                    method: 'POST',
-                    body: form_data
-                })
-
-                const data = await responce.json()
-
-                if(data.url){
-                    window.location = data.url
+    
+                var responce = await get_stripe_payment_url(cart_data, order_template)
+    
+                if(responce.url){
+                    window.location = responce.url
                     sessionStorage.setItem("cart_data", JSON.stringify([]))
                 }
-                        
-            } catch (err){
-                console.log("🚀 ~ file: add_record.ts:40 ~ add_record ~ err:", err)
+            }else{
+                sessionStorage.setItem("cart_data", JSON.stringify([]))
+                navigate("/main", {state:{msg: "error: invalid manipulation with data"}});
             }
         }
 
@@ -142,14 +114,14 @@ export default function Prepare_order(){
     return(
         <>
 
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
                 <Cart_items></Cart_items>
 
                 <Money_sum></Money_sum>
 
                 <p>{error_msg}</p>
 
-                {delivery_data.length > 0 && cookies.user_data ? cookies.user_data[0].login_status === "Active" && delivery_data[0].user_data.length > 0 ?
+                {delivery_data.length > 0 && user_data.length > 0 ? user_data[0].login_status === "Active" && delivery_data[0].user_data.length > 0 ?
                     <>
                         <table>
                             <thead>

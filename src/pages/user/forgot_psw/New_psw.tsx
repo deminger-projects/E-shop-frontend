@@ -5,12 +5,12 @@ import Access_denied from "../Access_denied";
 
 import edit_record from "../../../apis/records/edit_record";
 import get_psw_template from "../../../templates/other/ger_psw_template";
+import Loading from "../../../components/Loading";
 
 export default function New_psw(){
     
     const navigate = useNavigate();
     const location = useLocation();
-    console.log("🚀 ~ New_psw ~ location:", location)
 
     var is_valid = JSON.stringify(location.state) !== "null" ? location.state.status === true ? true : false : false
 
@@ -49,27 +49,24 @@ export default function New_psw(){
 
     return(
         <>
-            {loading ? <p>loading</p> : <>
-                {is_valid ? 
-                    <>
-                        <p>{error_msg}</p>
+            {loading ? <Loading></Loading> : 
+            <> 
+                <p>{error_msg}</p>
 
-                        <div>
-                            <form onSubmit={handleSubmit}>
-                                <label htmlFor="first_psw">new password</label>
-                                <input type="password" id="first_psw" value={psw_input1} onChange={(e) => setPsw_input1(e.target.value)}></input>
+                <div>
+                    <form onSubmit={handleSubmit}>
+                        <label htmlFor="first_psw">new password</label>
+                        <input type="password" id="first_psw" value={psw_input1} onChange={(e) => setPsw_input1(e.target.value)}></input>
 
-                                <label htmlFor="second_psw">new again password</label>
-                                <input type="password" id="second_psw" value={psw_input2} onChange={(e) => setPsw_input2(e.target.value)}></input>
+                        <label htmlFor="second_psw">new again password</label>
+                        <input type="password" id="second_psw" value={psw_input2} onChange={(e) => setPsw_input2(e.target.value)}></input>
 
-                                <button>send</button>
-                            </form>
-                            
-                        </div>
-                    </> : <Access_denied></Access_denied>
-                }
-            </>}
-            
+                        <button>send</button>
+                    </form>
+                    
+                </div>
+            </>
+            }
         </>
     )
 }

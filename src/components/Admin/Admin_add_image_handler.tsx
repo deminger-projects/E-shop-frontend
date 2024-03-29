@@ -263,7 +263,7 @@ export default function Admin_image_add(props: {on_change: Function, on_delete: 
             {default_urls.main !== undefined || settings.main === true ? 
                 <div key={"main"}>
                     <img src={default_urls.main} width={"100px"} height={"100px"} alt="img"></img>
-                    <input type="file" id="main" onChange={(event) => {handle_input_change(event.target.files, "main")}}></input>
+                    <input accept="image/png, image/gif, image/jpeg" type="file" id="main" onChange={(event) => {handle_input_change(event.target.files, "main")}}></input>
                     <label htmlFor="main">(main)</label>
                     <br></br>
                 </div> 
@@ -274,7 +274,7 @@ export default function Admin_image_add(props: {on_change: Function, on_delete: 
             {default_urls.hover !== undefined || settings.hover === true ? 
                 <div key={"hover"}>
                     <img src={default_urls.hover} width={"100px"} height={"100px"} alt="img"></img>
-                    <input type="file" id="hover" onChange={(event) => {handle_input_change(event.target.files, "hover")}}></input>
+                    <input accept="image/png, image/gif, image/jpeg" type="file" id="hover" onChange={(event) => {handle_input_change(event.target.files, "hover")}}></input>
                     <label htmlFor="hover">(hover)</label>
                     <br></br>
                 </div> 
@@ -283,7 +283,7 @@ export default function Admin_image_add(props: {on_change: Function, on_delete: 
             {default_urls.other.map((url: string, index: number) => 
                 <div key={index.toString()} id={index.toString()}>
                     <img src={url} width={"100px"} height={"100px"} alt="img"></img>
-                    <input type="file" id={"other_" + index.toString()} onChange={(event) => {handle_input_change(event.target.files, "other", index)}}></input>
+                    <input accept="image/png, image/gif, image/jpeg" type="file" id={"other_" + index.toString()} onChange={(event) => {handle_input_change(event.target.files, "other", index)}}></input>
                     <label htmlFor={"other_" + index.toString()}></label>
 
                     <button type='button' onClick={() => handle_delete_img(index)}>delete</button>

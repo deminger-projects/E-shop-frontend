@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import refund_request from "../../apis/other/refund_request";
 import get_refund_request_template from "../../templates/refund/get_refund_request_template";
+import Loading from "../../components/Loading";
 
 export default function Refund(){
 
@@ -46,7 +47,7 @@ export default function Refund(){
 
     return(
         <>  
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
                 <p>{error_msg}</p>
 
                 <label htmlFor="order_code">Order code</label>

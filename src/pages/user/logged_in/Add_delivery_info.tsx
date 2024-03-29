@@ -5,7 +5,8 @@ import Access_denied from "../Access_denied";
 
 import add_record from "../../../apis/records/add_record";
 import get_user_data_template from "../../../templates/user/get_user_data_template";
-import { useCookies } from "react-cookie";
+import get_user_data from "../../../apis/getters/user/get_user_data";
+import Loading from "../../../components/Loading";
 
 export default function Add_delivery_info(){
 
@@ -27,40 +28,14 @@ export default function Add_delivery_info(){
     const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     useEffect(() => {
+        const fetchData = async () => {
+            var id = await get_user_data(user_data[0].email, user_data[0].password)
+
+            set_user_id(id)
+            set_loading(false);
+        }
         fetchData()
     }, [])
-
-    const fetchData = async () => {
-        try {
-
-            const email = user_data[0].email
-            const password = user_data[0].password
-
-            const form_data = new FormData()
-
-            form_data.append("email", JSON.stringify(email))
-            form_data.append("password", JSON.stringify(password))
-
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_data', {
-            method: 'POST',
-            body: form_data
-        }); 
-
-          if (!response.ok) {
-            throw new Error('Network response was not ok.');
-          }
-          const data = await response.json();
-          
-          set_user_id(data)
-          set_loading(false);
-
-        } catch (error) {
-
-          console.log(error);
-
-          set_loading(false);
-        }
-      };
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -98,7 +73,7 @@ export default function Add_delivery_info(){
 
     return(
         <>
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
                 <p>{error_msg}</p>
 
                 {user_data.length > 0 ? 

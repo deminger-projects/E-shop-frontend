@@ -1,22 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import Cart from '../../components/Cart';
 import Product from '../../interfaces/Product';
+import get_collection_product_showcase from '../../apis/getters/get_collection_product_showcase';
+import Product_comp from '../../components/Product';
+import Loading from '../../components/Loading';
 
 export default function Showcase(){
 
-    var url_data = useParams()
+    const url_data = useParams()
     const collection_id = Number(url_data.id)
 
-    const [data, set_data] = useState<any>()
-    const [data_display, set_data_display] = useState<any>()
+    const [data, set_data] = useState<Array<Product>>([])
+    const [data_display, set_data_display] = useState<Array<Product>>([])
 
     const [loading, set_loading] = useState<boolean>(true)
 
     const [search, set_search] = useState<string>("")
 
-    useEffect(() => {      // searches products based on user input, valid input: product name
+    useEffect(() => {      //search bar
         var res_arr: Array<Product> = []
     
         if(data){
@@ -32,71 +35,39 @@ export default function Showcase(){
 
         if(search){
             set_data_display(res_arr)
-            console.log("search ano")
         }else{
             set_data_display(data)
-            console.log("search ne")
         }
-    },[search])
+    },[search, data])
 
-    useEffect(() => {
+    useEffect(() => {   //ziskava collection_product_showcase data
+        const fetchData = async () => {
+            var data = await get_collection_product_showcase(collection_id)
+
+            set_data(data)
+            set_data_display(data)
+
+            set_loading(false)
+        };
+
         fetchData()
-    }, [])
+    }, [collection_id])
 
-    const fetchData = async () => {
-        try {
-
-            const form = new FormData();
-
-            form.append("id", JSON.stringify(collection_id))
-
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_collection_product_showcase', {
-            method: 'POST',
-            body: form  
-        }); 
-
-          if (!response.ok) {
-            throw new Error('Network response was not ok.');
-          }
-          const data = await response.json();
-          console.log("🚀 ~ fetchData ~ data:", data)
-
-           set_data(data);
-           set_data_display(data)
-           
-           set_loading(false);
-
-        } catch (error) {
-
-          console.log(error);
-
-           set_loading(false);
-        }
-        console.log("🚀 ~ fetchData ~ data:", data)
-    };
+    
     
       return( 
         <>
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
                 <Cart></Cart>
 
                 <input type="string" value={search} onChange={(event) => set_search(event.target.value)}></input>
 
                 <div className="grid-container">
                     {data_display.length !== 0 ?
-                        data_display.map(((product: any) =>
-                            <div key={product.products[0].id.toString()} className="grid-item">
-                                <Link to={"/item-info/" + product.products[0].id} state={{product_data: product}}>
-                                    <p>{product.products[0].product_name}</p>
-                                    <img className="images" src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products/" + product.products[0].id + "/" + product.products[0].url} width={"100px"} height={"100px"}></img>
-                                    <p>{product.products[0].price}</p>
-                                </Link>
-                                                
-                                <br></br>
-                                <br></br>
-                            </div>  
+                        data_display.map(((product: Product) =>
+                            <Product_comp key={product.products[0].id.toString()} item={product}></Product_comp>
                         ))
-                        
+            
                     : <p>no records</p> }
                 </div>
             </>}

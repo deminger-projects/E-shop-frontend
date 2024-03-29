@@ -14,6 +14,8 @@ import filter_refund_data from "../../../../functions/filters/filter_refund_data
 import get_refund_template from "../../../../templates/refund/get_refund_template";
 import Reasons from "../../../../interfaces/Refund_reasons";
 import Access_denied from "../../Access_denied";
+import get_refund_reasons from "../../../../apis/getters/get_refund_reasons";
+import Loading from "../../../../components/Loading";
 
 export default function Order_refund(){
 
@@ -32,34 +34,17 @@ export default function Order_refund(){
     const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     useEffect(() => {
+        const fetchData = async () => {
+            var data = await get_refund_reasons()
+    
+            set_reasons(data);
+            set_loading(false);
+          };
+          
         fetchData()
     }, [])
 
-    const fetchData = async () => {
-        try {
-
-            const form_data = new FormData()
-
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_refund_reasons', {
-            method: 'POST'
-        }); 
-
-
-          if (!response.ok) {
-            throw new Error('Network response was not ok.');
-          }
-          const data = await response.json();
-
-          set_reasons(data);
-            set_loading(false);
-
-        } catch (error) {
-
-          console.log(error);
-
-           set_loading(false);
-        }
-      };
+    
 
     
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -88,13 +73,12 @@ export default function Order_refund(){
         }
 
         set_loading(false)
-
     }
 
     return(
 
         <>
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
 
             {user_data.length > 0 ? <>
                 <p>{error_msg}</p>

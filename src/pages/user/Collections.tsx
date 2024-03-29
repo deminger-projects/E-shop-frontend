@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import Cart from "../../components/Cart";
 
 import Collections from "../../interfaces/Collections";
+import get_collections_showcase from "../../apis/getters/get_collection_showcase";
+import Collection_comp from "../../components/Collection";
+import Loading from "../../components/Loading";
 
 export default function Collections_showcase(){
 
@@ -37,38 +40,22 @@ export default function Collections_showcase(){
     },[search_value])
 
     useEffect(() => {
+        const fetchData = async () => {
+            var data = await get_collections_showcase()
+
+            set_collection_arr(data)
+            set_search_collections_display(data)
+            set_loading(false);
+          };
+
         fetchData()
     }, [])
-
-    const fetchData = async () => {
-        try {
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_collections_showcase', {
-            method: 'POST'  
-        }); 
-
-          if (!response.ok) {
-            throw new Error('Network response was not ok.');
-          }
-          const data = await response.json();
-          
-          set_collection_arr(data)
-          set_search_collections_display(data)
-          set_loading(false);
-
-        } catch (error) {
-
-          console.log(error);
-
-          set_loading(false);
-        }
-      };
-
  
     return( 
         <>
             {location.state ? <p>{location.state.msg}</p> : <></>}
 
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
                 <Cart></Cart>
 
                 <input type="string" value={search_value} onChange={(event) => set_search_value(event.target.value)}></input>
@@ -76,14 +63,8 @@ export default function Collections_showcase(){
                 <div className="grid-container">
                     {collection_arr_display.length !== 0 ?
                         collection_arr_display.map(((collection: Collections) =>
-                            <div key={collection.collections[0].id.toString()}>
-                                <Link to={"/showcase/" + collection.collections[0].id}>
-                                    <p>{collection.collections[0].name}</p>
-                                    <img className="images" src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/collections/" + collection.collections[0].id + "/" + collection.collections[0].image_url} width={"100px"} height={"100px"}></img>
-                                </Link>
-                            </div>
+                            <Collection_comp key={collection.collections[0].id.toString()} item={collection}></Collection_comp>
                         ))
-                        
                     : <p>no records</p> }
                 </div>
             </>}

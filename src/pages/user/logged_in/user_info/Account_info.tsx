@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import Access_denied from "../../Access_denied";
+import AccessDenied from "../../Access_denied";
 
 import change_status from "../../../../apis/records/change_status";
 
 import UserData, {User_data} from "../../../../interfaces/user/User_data"
 import get_account_info_template from "../../../../templates/user/get_account_info_template";
+import get_user_acccount_data from "../../../../apis/getters/user/get_user_account_data";
+import Loading from "../../../../components/Loading";
 
 export default function Account_info(){
 
@@ -24,40 +26,15 @@ export default function Account_info(){
     const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     useEffect(() => {
+        const fetchData = async () => {
+            var data = await get_user_acccount_data(user_data[0].email, user_data[0].password)
+
+            set_delivery_data(data)
+            set_loading(false);
+          };
+
         fetchData()
-    }, [update])
-
-    const fetchData = async () => {
-        try {
-
-            const email = user_data[0].email
-            const password = user_data[0].password
-
-            const form_data = new FormData()
-
-            form_data.append("email", JSON.stringify(email))
-            form_data.append("password", JSON.stringify(password))
-
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_acccount_data', {
-            method: 'POST',
-            body: form_data
-        }); 
-
-          if (!response.ok) {
-            throw new Error('Network response was not ok.');
-          }
-          const data = await response.json();
-          
-          set_delivery_data(data)
-          set_loading(false);
-
-        } catch (error) {
-
-          console.log(error);
-
-          set_loading(false);
-        }
-      };
+    },[update, user_data])
 
     var handle_delete = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, user_data: User_data) => {
 
@@ -79,16 +56,15 @@ export default function Account_info(){
 
         set_update(!update)
         set_loading(false)
-
     }
 
     return(
         <>
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
                 <p>{responce_msg}</p>
                 <p>{error_msg}</p>
 
-                {user_data[0].login_status === "Active" ?
+                {user_data.length > 0 ?
 
                     <>
                             
@@ -119,7 +95,7 @@ export default function Account_info(){
                                     <td><p>{user_data.city}</p></td>
                                     <td><p>{user_data.postcode}</p></td>
                                     <td><p>{user_data.status}</p></td>
-                                    <td><button><Link to={"/edit-delivery-info"} state={{data: user_data, user_id: delivery_data[0].users[0].id}}>edit</Link></button></td>
+                                    <td><button><Link to={"/edit-delivery-info"} state={{data: user_data}}>edit</Link></button></td>
                                     <td><button onClick={(event) => handle_delete(event, user_data)}>delete</button></td>
                                 </tr>         
                         ) } 
@@ -132,7 +108,7 @@ export default function Account_info(){
 
                         <button><Link to="/add-delivery-info">add info</Link></button>
 
-                    </> : <Access_denied></Access_denied> 
+                    </> : <AccessDenied></AccessDenied> 
                 }
             </>}
             

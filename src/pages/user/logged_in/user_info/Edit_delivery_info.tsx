@@ -5,7 +5,7 @@ import Access_denied from "../../Access_denied";
 
 import edit_record from "../../../../apis/records/edit_record";
 import get_user_data_template from "../../../../templates/user/get_user_data_template";
-import { useCookies } from "react-cookie";
+import Loading from "../../../../components/Loading";
 
 export default function Edit_delivery_info(){
 
@@ -23,8 +23,6 @@ export default function Edit_delivery_info(){
 
     const [loading, set_loading] = useState<boolean>(false);
 
-    const [cookies, setCookie] = useCookies(['user_data'])
-
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
         set_loading(true)
@@ -40,9 +38,9 @@ export default function Edit_delivery_info(){
 
         if(name && surname && adress && city && phone && psc){
 
-            const user_data_template = get_user_data_template(cookies.user_data[0].id, name, surname, phone, adress, city, psc)
+            const user_data_template = get_user_data_template(user_data.id, name, surname, phone, adress, city, psc)
             
-            const [api_responce, err] = await edit_record(user_data_template, user_data.id, cookies.user_data[0].id)
+            const [api_responce, err] = await edit_record(user_data_template, user_data.id)
 
             if(err){
                 set_error_msg("error ocured")
@@ -60,7 +58,7 @@ export default function Edit_delivery_info(){
 
     return(
         <>
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
                 <p>{error_msg}</p>
 
                 {user_data ? 

@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-import Access_denied from "../../Access_denied";
+import AccessDenied from "../../Access_denied";
 
 import edit_record from "../../../../apis/records/edit_record";
 import get_psw_template from "../../../../templates/other/ger_psw_template";
 
 import logoff_template from "../../../../templates/login/get_logoff_teplate";
 import logoff from "../../../../apis/login/logoff";
+import get_user_data from "../../../../apis/getters/user/get_user_data";
+import Loading from "../../../../components/Loading";
 
 export default function Psw_change(){
 
@@ -26,40 +28,16 @@ export default function Psw_change(){
     const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     useEffect(() => {
+        const fetchData = async () => {
+            var data = await get_user_data(user_data[0].email, user_data[0].password)
+
+            set_data(data);
+            set_loading(false);
+          };
+
         fetchData()
-    }, [update])
+    }, [update, user_data])
 
-    const fetchData = async () => {
-        try {
-
-            const email = user_data[0].email
-            const password = user_data[0].password
-
-            const form_data = new FormData()
-
-            form_data.append("email", JSON.stringify(email))
-            form_data.append("password", JSON.stringify(password))
-
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_data', {
-            method: 'POST',
-            body: form_data
-        }); 
-
-          if (!response.ok) {
-            throw new Error('Network response was not ok.');
-          }
-          const data = await response.json();
-
-          set_data(data);
-           set_loading(false);
-
-        } catch (error) {
-
-          console.log(error);
-
-           set_loading(false);
-        }
-      };
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -90,32 +68,31 @@ export default function Psw_change(){
 
         set_loading(false)
         set_update(!update)
-
     }
 
     return(
         <>
-            {loading ? <p>loading</p> : <>
-                {user_data[0].login_status === "Active" ? 
+            {loading ? <Loading></Loading> : <>
+                {user_data.length > 0 ? 
                     <><p>{error_msg}</p>
 
                     <div>
                         <form onSubmit={handleSubmit}>
                             <label htmlFor="current_psw">Current password</label>
-                            <input type="text" id="current_psw" value={current_psw} onChange={(e) => set_current_psw(e.target.value)}></input>
+                            <input type="password" id="current_psw" value={current_psw} onChange={(e) => set_current_psw(e.target.value)}></input>
 
 
                             <label htmlFor="first_psw">new password</label>
-                            <input type="text" id="first_psw" value={psw_input1} onChange={(e) => setPsw_input1(e.target.value)}></input>
+                            <input type="password" id="first_psw" value={psw_input1} onChange={(e) => setPsw_input1(e.target.value)}></input>
 
                             <label htmlFor="second_psw">new again password</label>
-                            <input type="text" id="second_psw" value={psw_input2} onChange={(e) => setPsw_input2(e.target.value)}></input>
+                            <input type="password" id="second_psw" value={psw_input2} onChange={(e) => setPsw_input2(e.target.value)}></input>
 
                             <button>send</button>
                         </form>
                         
                     </div>
-                    </> : <Access_denied></Access_denied>
+                    </> : <AccessDenied></AccessDenied>
                 }
             </>}
         </>

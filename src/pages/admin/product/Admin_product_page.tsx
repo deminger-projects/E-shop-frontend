@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import {Link, useLocation} from "react-router-dom";
 
-import Access_denied from '../../user/Access_denied';
+import AccessDenied from '../../user/Access_denied';
 
 import Product from "../../../interfaces/Product";
 
 import change_status from "../../../apis/records/change_status";
-import Admin_collection_select from "../../../components/Admin/Admin_collection_select";
+import AdminCollectionSelect from "../../../components/Admin/Admin_collection_select";
 import get_product_status_change_template from "../../../templates/admin/get_product_status_change_template";
-import { useCookies } from "react-cookie";
 import check_for_admin from "../../../functions/sub_functions/check_for_admin";
+import get_admin_collections from "../../../apis/getters/admin/get_admin_collections";
+import get_admin_products from "../../../apis/getters/admin/get_admin_products";
+import Loading from "../../../components/Loading";
 
 export default function Admin_product_page(){ 
     
@@ -36,15 +38,17 @@ export default function Admin_product_page(){
 
     useEffect(() => {
         const temp = async() => {
-            var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
+            if(user_data.length > 0){
+                var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
 
-            if(is_admin.next_status === true){
-                set_is_admin(true)
+                if(is_admin.next_status === true){
+                    set_is_admin(true)
+                }
             }
         }
 
         temp()
-    }, [])
+    }, [user_data])
 
     useEffect(() => {      // searches products based on user input, valid input: product name, product size
         var res_arr: Array<Product> = []
@@ -59,7 +63,7 @@ export default function Admin_product_page(){
                     }
                     
                 }else{
-                    if(search_collection == "null" && new_product.products[0].collection_id === null && new_product.products[0].product_name.toLocaleLowerCase().includes(search.toLocaleLowerCase())){
+                    if((search_collection === "null" || search_collection === null) && new_product.products[0].collection_id === null && new_product.products[0].product_name.toLocaleLowerCase().includes(search.toLocaleLowerCase())){
                         res_arr.push(product)
                     }
                 }
@@ -70,7 +74,7 @@ export default function Admin_product_page(){
                     }
                 }
 
-                if(search_collection == "null" && new_product.products[0].collection_id === null){
+                if((search_collection === "null" || search_collection === null) && new_product.products[0].collection_id === null){
                     res_arr.push(product)
                 }
             }else if(search){
@@ -86,43 +90,22 @@ export default function Admin_product_page(){
             set_products_arr_display(res_arr)
         }
        
-    },[search, search_collection])
+    },[search, search_collection, products_arr])
 
     useEffect(() => {
-        fetchData()
-    }, [update])
+        const fetchData = async () => {
+            var collecions = await get_admin_collections()
+            var products = await get_admin_products()
 
-    const fetchData = async () => {
-        try {
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_admin_products', {
-            method: 'POST'  
-        }); 
+            set_products_arr(products)
+            set_fetch_collections(collecions)
+            set_products_arr_display(products)
+    
+            set_loading(false);
+          };
 
-        const response2 = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_admin_collections', {
-            method: 'POST'  
-        }); 
-
-          if (!response.ok && !response2.ok) {
-            throw new Error('Network response was not ok.');
-          }
- 
-          const data1 = await response.json();
-          const data2 = await response2.json();
-
-
-          set_products_arr(data1)
-          set_fetch_collections(data2)
-          set_products_arr_display(data1)
-
-          set_loading(false);
-          
-        } catch (error) {
-
-          console.log(error);
-
-          set_loading(false);
-        }
-      };
+        fetchData()        
+    }, [update, user_data])
 
 
     var handleSubmit = async (event: React.MouseEvent<HTMLElement>, record_id: number) =>{   
@@ -144,11 +127,10 @@ export default function Admin_product_page(){
         set_update(!update)
     }
 
-
     return( 
         <>
 
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
                 <p>{responce_msg}</p>
                 <p>{error_msg}</p>
 
@@ -156,7 +138,7 @@ export default function Admin_product_page(){
 
                 <select value={search_collection} onChange={(event) => set_search_collection(event.target.value)}>
                     <option value={""}>select collection</option>
-                    <Admin_collection_select collections={fetch_collections}></Admin_collection_select>
+                    <AdminCollectionSelect collections={fetch_collections}></AdminCollectionSelect>
                 </select>            
 
                 {is_admin ? products_arr_display.length > 0 ?
@@ -182,7 +164,7 @@ export default function Admin_product_page(){
                                 {product.products[0].collection_name === null ? <td><p>NONE</p></td> : <td><p>{product.products[0].collection_name}</p></td>}
                                 
                                 <td>
-                                    <img src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products/" + product.products[0].id + "/" + product.products[0].url} width={"100px"} height={"100px"}></img>
+                                    <img alt={product.products[0].product_name} src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products/" + product.products[0].id + "/" + product.products[0].url} width={"100px"} height={"100px"}></img>
                                 </td>
 
                                 <td><p>{product.products[0].add_date}</p></td>
@@ -201,7 +183,7 @@ export default function Admin_product_page(){
                         </tbody>
                     </table>
                 : <p>no records</p>
-                : <Access_denied></Access_denied>}
+                : <AccessDenied></AccessDenied>}
             </>}
             
         </>

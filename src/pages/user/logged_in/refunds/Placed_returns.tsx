@@ -1,9 +1,10 @@
 
 import Access_denied from "../../Access_denied"
 
-import User_refunds, {OrderProduct, Refund} from "../../../../interfaces/user/User_Refunds"
+import User_refunds, {OrderProduct} from "../../../../interfaces/user/User_Refunds"
 import { useEffect, useState } from "react"
-import { useCookies } from "react-cookie"
+import get_user_placed_returns from "../../../../apis/getters/user/get_user_placed_returns"
+import Loading from "../../../../components/Loading"
 
 export default function Placed_returns(){
 
@@ -40,48 +41,22 @@ export default function Placed_returns(){
 
 
     useEffect(() => {
+        const fetchData = async () => {
+            var data = await get_user_placed_returns(user_data[0].email, user_data[0].password)
+    
+            set_refunds_arr(data)
+            set_refunds_arr_display(data)
+    
+            set_loading(false);
+          };
+
         fetchData()
     }, [])
-
-    const fetchData = async () => {
-        try {
-          
-            const email = user_data[0].email
-            const password = user_data[0].password
-
-            const form_data = new FormData()
-
-            form_data.append("email", JSON.stringify(email))
-            form_data.append("password", JSON.stringify(password))
-
-
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_place_returns', {
-            method: 'POST',
-            body: form_data
-        }); 
-
-          if (!response.ok) {
-            throw new Error('Network response was not ok.');
-          }
-          const data = await response.json();
-          
-          set_refunds_arr(data)
-          set_refunds_arr_display(data)
-
-          set_loading(false);
-
-        } catch (error) {
-
-          console.log(error);
-
-          set_loading(false);
-        }
-      };
 
     return(
         <>
 
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
                 <label htmlFor="">order id</label>
                 <input type="text" value={search_refund_id} onChange={(event) => set_search_refund_id(event.target.value)}/>
 

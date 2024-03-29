@@ -7,21 +7,23 @@ import User_size_select from '../../components/User_size_select';
 import {ProductSize} from "../../interfaces/Product"
 
 import User_show_case from '../../components/User_show_case';
+import get_product_by_id from '../../apis/getters/get_product_by_id';
+import Loading from '../../components/Loading';
 
 export default function Item_info(){
 
     const navigate = useNavigate();
 
-    var url_data = useParams()
+    const url_data = useParams()
     const id = Number(url_data.id)
 
     const [data, set_data] = useState<any>()
     const [loading, set_loading] = useState<boolean>(true)
 
-    const [response, set_responce] = useState<string>("")
+    const [response] = useState<string>("")
     const [size_select, set_size_select] = useState<ProductSize>()
 
-    const [error_msg, set_error_msg] = useState<string>("")
+    const [error_msg] = useState<string>("")
 
     const [cart_item_count, set_cart_item_count] = useState<number>(0)
 
@@ -37,37 +39,15 @@ export default function Item_info(){
 
 
     useEffect(() => {
+        const fetchData = async () => {
+            var data = await get_product_by_id(id)
+
+            set_data(data);
+            set_loading(false);
+          };
+
         fetchData()
     }, [])
-
-    const fetchData = async () => {
-        try {
-
-            const form = new FormData();
-
-            form.append("id", JSON.stringify(id))
-
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_product_by_id', {
-            method: 'POST',
-            body: form  
-        }); 
-
-          if (!response.ok) {
-            throw new Error('Network response was not ok.');
-          }
-          const data = await response.json();
-
-           set_data(data);
-           set_loading(false);
-
-        } catch (error) {
-
-          console.log(error);
-
-           set_loading(false);
-        }
-      };
-    
 
     var handle_cart_change = async (event: React.MouseEvent<HTMLButtonElement>, move?: boolean) => {
 
@@ -104,7 +84,7 @@ export default function Item_info(){
 
             <p>{error_msg}</p>
 
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
                 <Cart cart_item_count={cart_item_count}></Cart>
 
                 <User_show_case images={data[0].product_images} id={data[0].products[0].id} folder={"products"}></User_show_case>

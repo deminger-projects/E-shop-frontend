@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import send_aut_code from "../../../apis/other/send_aut_code";
 import get_send_aut_code_template from "../../../templates/other/get_send_aut_code_template";
+import Loading from "../../../components/Loading";
 
 export default function Forgot_psw(){
 
@@ -44,7 +45,7 @@ export default function Forgot_psw(){
 
     return(
         <>
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
                 <p>{error_msg}</p>
 
                 <div>

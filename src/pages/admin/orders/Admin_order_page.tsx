@@ -6,8 +6,9 @@ import change_status from "../../../apis/records/change_status";
 
 import Order, {OrderProduct} from "../../../interfaces/Order"
 import get_order_status_change_template from "../../../templates/admin/get_order_status_change_template";
-import { useCookies } from "react-cookie";
 import check_for_admin from "../../../functions/sub_functions/check_for_admin";
+import get_admin_orders from "../../../apis/getters/admin/get_admin_orders";
+import Loading from "../../../components/Loading";
 
 export default function Admin_order_page(){
 
@@ -15,8 +16,6 @@ export default function Admin_order_page(){
     const [error_msg, set_error_msg] = useState<string>("")
 
     const [loading, set_loading] = useState<boolean>(true)
-
-    const [cookies, setCookie] = useCookies(['user_data'])
     
     const [search_gate_order_id, set_search_gate_order_id] = useState<boolean>(false)
     const [search_gate_name, set_search_gate_name] = useState<boolean>(false)
@@ -136,31 +135,17 @@ export default function Admin_order_page(){
 
     
     useEffect(() => {
+        const fetchData = async () => {
+            var data = await get_admin_orders()
+
+            set_order_arr(data)
+            set_order_arr_display(data)
+            set_loading(false);
+          };
+
         fetchData()
     }, [update])
 
-    const fetchData = async () => {
-        try {
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_admin_orders', {
-            method: 'POST'  
-        }); 
-
-          if (!response.ok) {
-            throw new Error('Network response was not ok.');
-          }
-          const data = await response.json();
-          
-          set_order_arr(data)
-          set_order_arr_display(data)
-          set_loading(false);
-
-        } catch (error) {
-
-          console.log(error);
-
-          set_loading(false);
-        }
-      };
 
     var handle_submit = async (event: React.MouseEvent<HTMLElement>, record_id: number, status: string) => {
 
@@ -170,7 +155,7 @@ export default function Admin_order_page(){
 
         const order_status_change_template = get_order_status_change_template(status)
 
-        const [api_responce, error] = await change_status(order_status_change_template, record_id , cookies.user_data[0].id)
+        const [api_responce, error] = await change_status(order_status_change_template, record_id)
     
         if(error){
             set_error_msg("error ocured")
@@ -184,7 +169,7 @@ export default function Admin_order_page(){
 
     return(
         <>
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
             <p>{responce_msg}</p>
             <p>{error_msg}</p>
 

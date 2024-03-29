@@ -22,17 +22,23 @@ export default function Login_hud(){
 
     useEffect(() => {
         const temp = async() => {
-            if(user_data.length > 0){
-                var is_admin = await check_for_admin(cookies.user_data[0].email, cookies.user_data[0].password)
-
-                if(is_admin.next_status === true){
-                    set_is_admin(true)
+            if(cookies.user_data){
+                if(user_data.length > 0 || cookies.user_data.lenght > 0){
+                    var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
+    
+                    if(is_admin.next_status === true){
+                        set_is_admin(true)
+                    }else{
+                        set_is_admin(false)
+                    }
                 }
+                set_user_data(cookies.user_data)
             }
-        }
+        } 
 
         temp()
-    }, [])
+    }, [cookies.user_data, user_data.length, user_data])
+
 
     var handle_on_click = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         
@@ -62,7 +68,7 @@ export default function Login_hud(){
                 <p>{err_msg}</p>
 
                 <div id={"login_data"}>
-                    {user_data.length > 0 || cookies.user_data[0] ? 
+                    {user_data.length > 0 ? 
                         is_admin ? 
                             <>
                                 <div>

@@ -7,6 +7,7 @@ import change_status from "../../../apis/records/change_status"
 import get_refund_status_change_template from "../../../templates/admin/get_refund_status_change_template"
 import { useCookies } from "react-cookie"
 import check_for_admin from "../../../functions/sub_functions/check_for_admin"
+import get_admin_refunds from "../../../apis/getters/admin/get_admin_refunds"
 
 export default function Admin_refunds(){
 
@@ -32,8 +33,6 @@ export default function Admin_refunds(){
     const [search_email, set_search_email] = useState<string>("")
     const [search_phone, set_search_phone] = useState<string>("")
 
-    const [cookies, setCookie] = useCookies(['user_data'])
-
     const [loading, set_loading] = useState<boolean>(true)
     const [update, set_update] = useState<boolean>(true)
 
@@ -54,33 +53,19 @@ export default function Admin_refunds(){
     }, [])
 
     useEffect(() => {
+        const fetchData = async () => {
+            var data = await get_admin_refunds()
+
+            set_refund_arr(data)
+            set_refund_arr_display(data)
+  
+            set_loading(false);
+          };
+
         fetchData()
     }, [update])
 
-    const fetchData = async () => {
-        try {
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_admin_refunds', {
-            method: 'POST'  
-        }); 
-
-          if (!response.ok) {
-            throw new Error('Network response was not ok.');
-          }
-          const data = await response.json();
-          
-          set_refund_arr(data)
-          set_refund_arr_display(data)
-
-          set_loading(false);
-
-        } catch (error) {
-
-          console.log(error);
-
-          set_loading(false);
-        }
-      };
-
+    
     useEffect(() => {      // searches products based on user input, valid input: product name, product size
         var res_arr: Array<Refund> = []
 
@@ -151,6 +136,7 @@ export default function Admin_refunds(){
 
     },[search_order_id, search_name, search_surname, search_email, search_phone, search_gate_active, search_gate_processing, search_gate_cancel, search_gate_done])
 
+    
     var handle_submit = async (event: React.MouseEvent<HTMLElement>, record_id: number, status: string) => {
 
         set_loading(true)
@@ -159,7 +145,7 @@ export default function Admin_refunds(){
 
         const refund_status_change = get_refund_status_change_template(status)
 
-        const [api_responce, error] = await change_status(refund_status_change, record_id, cookies.user_data[0].id)
+        const [api_responce, error] = await change_status(refund_status_change, record_id)
 
         if(error){
             set_error_msg("error ocured")

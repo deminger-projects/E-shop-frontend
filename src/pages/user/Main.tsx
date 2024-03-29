@@ -4,6 +4,9 @@ import { Link, useLocation } from "react-router-dom";
 import Cart from "../../components/Cart";
 
 import Product from "../../interfaces/Product"
+import get_main_page_data from "../../apis/getters/get_main_page_data";
+import Product_comp from "../../components/Product";
+import Loading from "../../components/Loading";
 
 export default function Main(){
 
@@ -25,9 +28,7 @@ export default function Main(){
                     res_arr.push(product)
                 }
             }
-        }   
-
-        
+        }           
 
         if(search){
             set_products_arr_display(res_arr)
@@ -38,38 +39,22 @@ export default function Main(){
 
     
     useEffect(() => {
+        const fetchData = async () => {
+            var data = await get_main_page_data()
+
+            set_products_arr(data)
+            set_products_arr_display(data)
+            set_loading(false);
+          };
+
         fetchData()
     }, [])
 
-    const fetchData = async () => {
-        try {
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/main_page_request', {
-            method: 'POST'  
-        }); 
-
-          if (!response.ok) {
-            throw new Error('Network response was not ok.');
-          }
-          const data = await response.json();
-          
-          set_products_arr(data)
-          set_products_arr_display(data)
-          set_loading(false);
-
-        } catch (error) {
-
-          console.log(error);
-
-          set_loading(false);
-        }
-      };
-
- 
     return( 
         <>
             {location.state ? <p>{location.state.msg}</p> : <></>}
 
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
                 <Cart></Cart>
 
                 <input type="string" value={search} onChange={(event) => set_search(event.target.value)}></input>
@@ -77,16 +62,7 @@ export default function Main(){
                 <div className="grid-container">
                     {products_arr_display.length !== 0 ?
                         products_arr_display.map(((product: Product) =>
-                            <div key={product.products[0].id.toString()} className="grid-item">
-                                <Link to={"/item-info/" + product.products[0].id} state={{product_data: product}}>
-                                    <p>{product.products[0].product_name}</p>
-                                    <img className="images" src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products/" + product.products[0].id + "/" + product.products[0].url} width={"100px"} height={"100px"}></img>
-                                    <p>{product.products[0].price}</p>
-                                </Link>
-                                                
-                                <br></br>
-                                <br></br>
-                            </div>  
+                            <Product_comp key={product.products[0].id.toString()} item={product}></Product_comp>
                         ))
                         
                     : <p>no records</p> }

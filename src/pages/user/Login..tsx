@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import login_reguest from '../../apis/login/login_request';
 import get_login_template from '../../templates/login/get_login_template';
 import { useCookies } from 'react-cookie';
+import Loading from '../../components/Loading';
 
 export default function Login(){
 
@@ -55,7 +56,7 @@ export default function Login(){
 
     return(
         <>      
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
                 <p>{error_msg}</p>
 
                 <div className='login_register_div'>
@@ -66,7 +67,7 @@ export default function Login(){
                         <br></br>
 
                         <label htmlFor="login_password">{"Password"}</label>
-                        <input id="login_password" type="text" value={password} onChange={(e) => setPassword(e.target.value)}></input>
+                        <input id="login_password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
                         <br></br>
 
                         <button>Login</button>

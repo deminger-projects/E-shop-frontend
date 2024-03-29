@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import {Link, useLocation} from "react-router-dom";
 
-import Access_denied from '../../user/Access_denied';
+import AccessDenied from '../../user/Access_denied';
 
 import Collections from "../../../interfaces/Collections";
 
 import change_status from "../../../apis/records/change_status";
 import get_change_collection_template from "../../../templates/admin/get_change_collection_template";
-import { useCookies } from "react-cookie";
 import check_for_admin from "../../../functions/sub_functions/check_for_admin";
+import get_admin_collections from "../../../apis/getters/admin/get_admin_collections";
+import Loading from "../../../components/Loading";
 
 export default function Admin_collection_page(){
 
@@ -23,8 +24,6 @@ export default function Admin_collection_page(){
     const [search_collections, set_search_collections] = useState<Array<Collections>>([])
     const [search_collections_display, set_search_collections_display] = useState<Array<Collections>>([])
 
-    const [cookies, setCookie] = useCookies(['user_data'])
-
     const [update, set_update] = useState<boolean>(true);
 
     const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
@@ -33,15 +32,17 @@ export default function Admin_collection_page(){
 
     useEffect(() => {
         const temp = async() => {
-            var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
+            if(user_data.length > 0){
+                var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
 
-            if(is_admin.next_status === true){
-                set_is_admin(true)
+                if(is_admin.next_status === true){
+                    set_is_admin(true)
+                }
             }
         }
 
         temp()
-    }, [])
+    }, [user_data])
 
     useEffect(() => {
         var res_arr: Array<Collections> = []
@@ -62,36 +63,21 @@ export default function Admin_collection_page(){
             set_search_collections_display(res_arr)
         }
 
-    },[search_value])
+    },[search_value, search_collections])
 
     useEffect(() => {
+        const fetchData = async () => {
+            var data = await get_admin_collections()
+
+            set_search_collections(data)
+            set_search_collections_display(data)
+            set_loading(false);
+          };
+
         fetchData()
-    }, [update])
+    }, [update, user_data])
 
-    const fetchData = async () => {
-        try {
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_admin_collections', {
-            method: 'POST'  
-        }); 
-
-          if (!response.ok) {
-            throw new Error('Network response was not ok.');
-          }
-          const data = await response.json();
-          
-          set_search_collections(data)
-          set_search_collections_display(data)
-          set_loading(false);
-
-        } catch (error) {
-
-          console.log(error);
-
-          set_loading(false);
-        }
-      };
-
-
+    
     var handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>, record_id: number) =>{
 
         set_loading(true)
@@ -114,7 +100,7 @@ export default function Admin_collection_page(){
     return( 
         <>
 
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
                 <input type="text" value={search_value} onChange={(event) => set_search_value(event.target.value)}/>
 
                 <p>{responce_msg}</p>
@@ -136,7 +122,7 @@ export default function Admin_collection_page(){
                             <tr key={collection.collections[0].id}>
                                 <td><p>{collection.collections[0].name}</p></td>
                                 <td>                            
-                                    <img src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/collections/" + collection.collections[0].id + "/" + collection.collections[0].image_url} width={"100px"} height={"100px"}></img>
+                                    <img alt={collection.collections[0].name} src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/collections/" + collection.collections[0].id + "/" + collection.collections[0].image_url} width={"100px"} height={"100px"}></img>
                                 </td>    
 
                                 <td><p>{collection.collections[0].add_date}</p></td>
@@ -154,7 +140,7 @@ export default function Admin_collection_page(){
                         </tbody>
                     </table>
                 : <p>no records</p>
-                : <Access_denied></Access_denied>
+                : <AccessDenied></AccessDenied>
                 }
             </>}
         </>

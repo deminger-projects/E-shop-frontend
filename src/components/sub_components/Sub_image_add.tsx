@@ -62,7 +62,7 @@ export default function Sub_image_add(props: {get_check_box_status: Function, se
                     model_show_case_arr.map(({file, url}, index) => (
                         <div key={index.toString()} id={index.toString()}>
                             <img src={url} width={"100px"} height={"100px"} alt="img"></img>
-                            <input type="file" id={"other_" + index.toString()} onChange={(event) => {handle_input_change(event.target.files, "product_show_case", index)}}></input>
+                            <input accept="image/png, image/gif, image/jpeg" type="file" id={"other_" + index.toString()} onChange={(event) => {handle_input_change(event.target.files, "product_show_case", index)}}></input>
                             <label htmlFor={"other_" + index.toString()}></label>
                         </div> 
                     ))
@@ -80,7 +80,7 @@ export default function Sub_image_add(props: {get_check_box_status: Function, se
                     detail_show_case_arr.map(({file, url}, index) => (
                         <div key={index.toString()} id={index.toString()}>
                             <img src={url} width={"100px"} height={"100px"} alt="img"></img>
-                            <input type="file" id={"other_" + index.toString()} onChange={(event) => {handle_input_change(event.target.files, "detail_show_case", index)}}></input>
+                            <input accept="image/png, image/gif, image/jpeg" type="file" id={"other_" + index.toString()} onChange={(event) => {handle_input_change(event.target.files, "detail_show_case", index)}}></input>
                             <label htmlFor={"other_" + index.toString()}></label>
                         </div> 
                     ))

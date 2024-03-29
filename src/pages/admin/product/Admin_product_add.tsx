@@ -19,6 +19,8 @@ import get_filtred_data from '../../../functions/get_filtred_data';
 import get_product_template from '../../../templates/admin/get_product_template';
 import { useCookies } from 'react-cookie';
 import check_for_admin from '../../../functions/sub_functions/check_for_admin';
+import get_admin_collections from '../../../apis/getters/admin/get_admin_collections';
+import Loading from '../../../components/Loading';
 
 export default function Admin_product_add(){
 
@@ -65,31 +67,17 @@ export default function Admin_product_add(){
     }, [])
 
     useEffect(() => {
+        const fetchData = async () => {
+            var data = await get_admin_collections()
+
+            set_collections(data)
+            set_loading(false);
+          };
+
         fetchData()
     }, [])
 
-    const fetchData = async () => {
-        try {
-          const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_collections', {
-            method: 'POST'  
-        }); 
-
-          if (!response.ok) {
-            throw new Error('Network response was not ok.');
-          }
-          const data = await response.json();
-          
-          set_collections(data)
-          set_loading(false);
-
-        } catch (error) {
-
-          console.log(error);
-
-          set_loading(false);
-        }
-      };
-
+    
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
         set_loading(true)
@@ -137,7 +125,7 @@ export default function Admin_product_add(){
     return(
         <>
 
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
                 <p>{error_msg}</p>
                 <p>{responce_msg}</p>
 

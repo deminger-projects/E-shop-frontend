@@ -15,6 +15,7 @@ import get_filtred_data from '../../../functions/get_filtred_data';
 import get_edit_collection_template from '../../../templates/admin/get_edit_collection_template';
 import { useCookies } from 'react-cookie';
 import check_for_admin from '../../../functions/sub_functions/check_for_admin';
+import Loading from '../../../components/Loading';
 
 export default function Admin_collection_add(){
     
@@ -95,7 +96,7 @@ export default function Admin_collection_add(){
     return(
         <>
 
-            {loading ? <p>loading</p> : <>
+            {loading ? <Loading></Loading> : <>
                 <p>{error_msg}</p>
 
                 {is_admin ? <div className="admin_add_collection">

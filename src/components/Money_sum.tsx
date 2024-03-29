@@ -1,25 +1,22 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import get_cart_data from '../functions/getters/get_cart_data';
-import { useCookies } from 'react-cookie';
 
 export default function Money_sum() {
   
-  const [cookies, set_cookies] = useCookies(['cart_data']);
+  const [cart_data] = useState<Array<any>>(sessionStorage.getItem("cart_data") === null ? [] : JSON.parse(sessionStorage.getItem("cart_data")!))
 
   const [products_cost, set_products_cost] = useState(0)
-  const [delivery_cost, set_delivery_cost] = useState(15)
+  const [delivery_cost] = useState(15)
 
   const [loading, set_loading] = useState(true)
 
   useEffect(() => {
 
-    if(cookies.cart_data !== 'undefined'){
+    if(cart_data.length > 0){
       var sum_product_cost = 0
 
-      for(let item of cookies.cart_data){
-          var price = item.product.products[0].price
-          var discount = Number(item.product.products[0].discount)
+      for(let item of cart_data){
+          var price = item.product[0].price
+          var discount = Number(item.product[0].discount)
   
           if(discount !== 0){
               price = price * discount / 100
@@ -35,7 +32,7 @@ export default function Money_sum() {
 
     set_loading(false)
     
-  },[])
+  },[cart_data])
     
     
     
@@ -45,6 +42,7 @@ export default function Money_sum() {
       {loading ? <p>loading</p> : <>
         <div>
           <table>
+            <tbody>
                 <tr>
                     <th>Item</th>
                     <th>Cost</th>
@@ -61,7 +59,7 @@ export default function Money_sum() {
                     <td>{delivery_cost}</td>
                     <td>{products_cost + delivery_cost}</td>
                 </tr>
-                
+              </tbody>
           </table>
         </div>
       </>}
