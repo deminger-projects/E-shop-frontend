@@ -15,10 +15,12 @@ export default function Login_hud(){
     const [loading, set_loading] = useState<boolean>(false)
 
     const [user_data, set_user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
+    console.log("🚀 ~ Login_hud ~ user_data:", user_data)
 
     const [is_admin, set_is_admin] = useState<boolean>(false)
 
     const [cookies, set_cookies] = useCookies(["user_data"])
+    console.log("🚀 ~ Login_hud ~ cookies:", cookies)
 
     useEffect(() => {
         const temp = async() => {
