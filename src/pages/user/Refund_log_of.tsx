@@ -30,6 +30,7 @@ export default function Refund(){
                 const refund_template = get_refund_request_template(Number(order_code), email)  
 
                 const [api_responce, error] = await refund_request(refund_template, email, true)
+                console.log("🚀 ~ handleSubmit ~ api_responce:", api_responce)
                 
                 if(error){
                     set_error_msg("error ocured")

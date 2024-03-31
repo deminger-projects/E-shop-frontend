@@ -38,10 +38,10 @@ export default function Edit_delivery_info(){
 
         if(name && surname && adress && city && phone && psc){
 
-            const user_data_template = get_user_data_template(user_data.id, name, surname, phone, adress, city, psc)
+            const user_data_template = get_user_data_template(user_data.user_id, name, surname, phone, adress, city, psc)
             
             const [api_responce, err] = await edit_record(user_data_template, user_data.id)
-
+            
             if(err){
                 set_error_msg("error ocured")
             }else{

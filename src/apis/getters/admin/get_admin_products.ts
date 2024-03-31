@@ -1,6 +1,6 @@
 export default async function get_admin_products(){
     try {
-        const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_admin_collections', {
+        const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_admin_products', {
             method: 'POST'  
         }); 
 

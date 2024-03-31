@@ -15,10 +15,10 @@ export default function User_size_select(props: {sizes: Array<ProductSize>, on_c
             amouts.push(index)   
         }        
 
-        set_size({size: size_data.size, current_amount: size_data.current_amount})
+        set_size({size: size_data.size, current_amount: 1})
         set_options(amouts)
 
-        props.on_change({size: size_data.size, current_amount: size_data.current_amount})
+        props.on_change({size: size_data.size, current_amount: 1})
     }
 
     return(

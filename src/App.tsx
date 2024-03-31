@@ -43,7 +43,6 @@ import Add_delivery_info from "./pages/user/logged_in/Add_delivery_info";
 import Login from "./pages/user/Login.";
 import Register from "./pages/user/Register";
 
-import Contact from "./pages/user/Contact";
 import About from "./pages/user/About";
 import Refund from "./pages/user/Refund_log_of";
 
@@ -103,7 +102,6 @@ export default function App(){
           <Route path="login" element={<Login/>} />
           <Route path="register" element={<Register/>} />
 
-          <Route path="contact_us" element={<Contact/>} />
           <Route path="about_us" element={<About/>} />
           <Route path="make-refund" element={<Refund/>} />
           

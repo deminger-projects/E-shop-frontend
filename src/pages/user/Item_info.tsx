@@ -28,6 +28,10 @@ export default function Item_info(){
     const [cart_item_count, set_cart_item_count] = useState<number>(0)
 
     useEffect(() => {
+        console.log(size_select)
+    }, [size_select])
+
+    useEffect(() => {
         var cart_session_data = sessionStorage.getItem("cart_data")
 
         if(cart_session_data){
@@ -57,7 +61,7 @@ export default function Item_info(){
 
         if(data){
             if(sessionStorage.getItem("cart_data") === null){
-                sessionStorage.setItem("cart_data", JSON.stringify([]))
+                sessionStorage.setItem("cart_data", JSON.stringify([{size_data: size_select, product: data[0].products}]))
             }else{
                 var cart_session_data = sessionStorage.getItem("cart_data")
     
@@ -66,7 +70,7 @@ export default function Item_info(){
     
                     cart.push({size_data: size_select, product: data[0].products})
 
-                    set_cart_item_count(cart.length )
+                    set_cart_item_count(cart.length)
     
                     sessionStorage.setItem("cart_data", JSON.stringify(cart))
                 }

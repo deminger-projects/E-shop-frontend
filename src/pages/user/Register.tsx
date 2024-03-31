@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import register_request from '../../apis/login/register_request';
 import get_register_template from '../../templates/login/get_register_template';
 import { useCookies } from 'react-cookie';
+import Loading from '../../components/Loading';
 
 export default function Register(){
 
@@ -22,10 +23,14 @@ export default function Register(){
     const [psc, setPsc] = useState<string>("");
 
     const [err_msg, set_err_msg] = useState<string>("");
+
+    const [loading, set_loading] = useState<boolean>(false);
     
     const [cookies, set_cookies] = useCookies()
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
+        set_loading(true)
 
         event.preventDefault();
 
@@ -61,69 +66,75 @@ export default function Register(){
                 }
             }
         }
+
+        set_loading(false)
     }
 
     return(
         <>
-            <p>{err_msg}</p>
 
-            <div className='login_register_div'>
-                    <form onSubmit={handleSubmit} encType="multipart/form-data">
-    
-                        <label htmlFor="username">{"Username"}</label>
-                        <input id="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)}></input>
-                        <br></br>
-    
-                        <label htmlFor="password">{"Password"}</label>
-                        <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
-                        <br></br>
+            {loading? <Loading></Loading> : <>
+                <p>{err_msg}</p>
 
-                        <label htmlFor="password_again">{"Password again"}</label>
-                        <input id="password_again" type="password" value={password_again} onChange={(e) => set_password_again(e.target.value)}></input>
-                        <br></br>
-    
-                        <label htmlFor="email">{"Email"}</label>
-                        <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}></input>
-                        <br></br>
-    
-                        <br></br>
-                        <br></br>
-                        <br></br>
+                <div className='login_register_div'>
+                        <form onSubmit={handleSubmit} encType="multipart/form-data">
+        
+                            <label htmlFor="username">{"Username"}</label>
+                            <input id="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)}></input>
+                            <br></br>
+        
+                            <label htmlFor="password">{"Password"}</label>
+                            <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
+                            <br></br>
 
-                        
-                        <label htmlFor="name">{"Name"}</label>
-                        <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)}></input>
-                        <br></br>
-    
-                        <label htmlFor="surname">{"Surname"}</label>
-                        <input id="surname" type="text" value={surname} onChange={(e) => setSurname(e.target.value)}></input>
-                        <br></br>
-    
-                        <label htmlFor="telephone">{"Telephone"}</label>
-                        <input id="telephone" type="tel" value={telephone} onChange={(e) => setTelephone(e.target.value)}></input>
-                        <br></br>
-    
-                        <label htmlFor="adress">{"Adress"}</label>
-                        <input id="adress" type="text" value={adress} onChange={(e) => setAdress(e.target.value)}></input>
-                        <br></br>
-    
-                        <label htmlFor="city">{"City"}</label>
-                        <input id="city" type="text" value={city} onChange={(e) => setCity(e.target.value)}></input>
-                        <br></br>
-    
-                        <label htmlFor="PSC">{"PSC"}</label>
-                        <input id="PSC" type="number" value={psc} onChange={(e) => setPsc(e.target.value)}></input>
-                        <br></br>
+                            <label htmlFor="password_again">{"Password again"}</label>
+                            <input id="password_again" type="password" value={password_again} onChange={(e) => set_password_again(e.target.value)}></input>
+                            <br></br>
+        
+                            <label htmlFor="email">{"Email"}</label>
+                            <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}></input>
+                            <br></br>
+        
+                            <br></br>
+                            <br></br>
+                            <br></br>
 
+                            
+                            <label htmlFor="name">{"Name"}</label>
+                            <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)}></input>
+                            <br></br>
+        
+                            <label htmlFor="surname">{"Surname"}</label>
+                            <input id="surname" type="text" value={surname} onChange={(e) => setSurname(e.target.value)}></input>
+                            <br></br>
+        
+                            <label htmlFor="telephone">{"Telephone"}</label>
+                            <input id="telephone" type="tel" value={telephone} onChange={(e) => setTelephone(e.target.value)}></input>
+                            <br></br>
+        
+                            <label htmlFor="adress">{"Adress"}</label>
+                            <input id="adress" type="text" value={adress} onChange={(e) => setAdress(e.target.value)}></input>
+                            <br></br>
+        
+                            <label htmlFor="city">{"City"}</label>
+                            <input id="city" type="text" value={city} onChange={(e) => setCity(e.target.value)}></input>
+                            <br></br>
+        
+                            <label htmlFor="PSC">{"PSC"}</label>
+                            <input id="PSC" type="number" value={psc} onChange={(e) => setPsc(e.target.value)}></input>
+                            <br></br>
+
+                
+                            <br />
+                            <br />
+                            <br />
+        
+                            <button>Register</button>
+        
+                        </form>
+                    </div>
+            </>}
             
-                        <br />
-                        <br />
-                        <br />
-    
-                        <button>Register</button>
-    
-                    </form>
-                </div>
         </>
     )
 }
