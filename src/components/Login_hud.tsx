@@ -27,6 +27,19 @@ export default function Login_hud(){
             if(cookies.user_data){
                 if(user_data.length > 0 || cookies.user_data.lenght > 0){
                     var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
+                    console.log("🚀 ~ temp ~ is_admin:", is_admin)
+    
+                    if(is_admin.next_status === true){
+                        set_is_admin(true)
+                    }else{
+                        set_is_admin(false)
+                    }
+                }
+                set_user_data(cookies.user_data)
+            }else{
+                if(user_data.length > 0){
+                    var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
+                    console.log("🚀 ~ temp ~ is_admin:", is_admin)
     
                     if(is_admin.next_status === true){
                         set_is_admin(true)
