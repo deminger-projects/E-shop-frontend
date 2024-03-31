@@ -15,35 +15,17 @@ export default function Login_hud(){
     const [loading, set_loading] = useState<boolean>(false)
 
     const [user_data, set_user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
-    console.log("🚀 ~ Login_hud ~ user_data:", user_data)
 
     const [is_admin, set_is_admin] = useState<boolean>(false)
 
     const [cookies, set_cookies] = useCookies(["user_data"])
-    console.log("🚀 ~ Login_hud ~ cookies:", cookies)
 
     useEffect(() => {
         const temp = async() => {
             if(cookies.user_data){
-
-                console.log("valid 1")
                 if(user_data.length > 0 || cookies.user_data.lenght > 0){
                     var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
-                    console.log("🚀 ~ temp ~ is_admin:", is_admin)
-                    console.log("valid 2")
 
-                    if(is_admin.next_status === true){
-                        set_is_admin(true)
-                    }else{
-                        set_is_admin(false)
-                    }
-                }
-                set_user_data(cookies.user_data)
-            }else{
-                if(user_data.length > 0){
-                    var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
-                    console.log("🚀 ~ temp ~ is_admin:", is_admin)
-    
                     if(is_admin.next_status === true){
                         set_is_admin(true)
                     }else{

@@ -29,7 +29,7 @@ export default function Prepare_order(){
 
     const [error_msg, set_error_msg] = useState<string>("");    
     
-    const [loading, set_loading] = useState<boolean>(false);    
+    const [loading, set_loading] = useState<boolean>(true);    
 
     const [delivery_data, set_delivery_data] = useState<Array<UserData>>([]);    
 
