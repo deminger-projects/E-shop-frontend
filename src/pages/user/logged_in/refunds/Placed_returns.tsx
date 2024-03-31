@@ -109,7 +109,7 @@ export default function Placed_returns(){
                                                     <td><p>{product.size}</p></td>
                                                     <td><p>{product.prize}</p></td>
                                                     <td><p>{product.amount}</p></td>
-                                                    <td><img src={"images/products/" + product.product_id + "/" + product.image_url} width={"100px"} height={"100px"}/></td>
+                                                    <td><img src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products/" + product.product_id + "/" + product.image_url} width={"100px"} height={"100px"}/></td>
                                                 </tr>     
                                             </tbody>       
                                         

@@ -142,9 +142,7 @@ export default function get_filtred_data(urls: {main: string|undefined, hover:st
 
         for(var base_file of base_layout.detail_show_case){
             for(var new_file of urls.detail_show_case){
-                console.log("🚀 ~ get_filtred_data ~ new_file:", new_file)
-                console.log("🚀 ~ get_filtred_data ~ base_file:", base_file)
-
+                
                 if(base_file === new_file){
                     var temp = base_file.split("/")
                     file_names_to_keep.push(temp[temp.length - 1])                              
@@ -154,8 +152,5 @@ export default function get_filtred_data(urls: {main: string|undefined, hover:st
         }
     }
 
-    console.log(file_names_to_keep)
-
     return {files_to_save: new_files, file_names_to_keep: file_names_to_keep, file_names_for_table: files_for_tables, model_show_case_status: model_show_case_status, detail_show_case_status: detail_show_case_status}
-
 }

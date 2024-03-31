@@ -5,7 +5,6 @@ import Access_denied from "../../user/Access_denied"
 import Refund, { Refund_Product } from "../../../interfaces/Refunds"
 import change_status from "../../../apis/records/change_status"
 import get_refund_status_change_template from "../../../templates/admin/get_refund_status_change_template"
-import { useCookies } from "react-cookie"
 import check_for_admin from "../../../functions/sub_functions/check_for_admin"
 import get_admin_refunds from "../../../apis/getters/admin/get_admin_refunds"
 
@@ -41,6 +40,8 @@ export default function Admin_refunds(){
     const [is_admin, set_is_admin] = useState<boolean>(false)
 
     useEffect(() => {
+        set_loading(true)
+
         const temp = async() => {
             var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
 
@@ -50,19 +51,23 @@ export default function Admin_refunds(){
         }
 
         temp()
+        set_loading(false);
+
     }, [])
 
     useEffect(() => {
+        set_loading(true)
         const fetchData = async () => {
             var data = await get_admin_refunds()
 
             set_refund_arr(data)
             set_refund_arr_display(data)
   
-            set_loading(false);
           };
 
         fetchData()
+        set_loading(false);
+
     }, [update])
 
     

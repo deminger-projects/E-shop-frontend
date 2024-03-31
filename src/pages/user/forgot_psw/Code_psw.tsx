@@ -21,7 +21,7 @@ export default function Code_psw(){
     return(
 
         <>
-            <p>{location.state.code}</p>
+            <p>code send to email</p>
 
             <div>
                 <label htmlFor="code">code</label>

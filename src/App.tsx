@@ -56,7 +56,7 @@ export default function App(){
       <Header></Header>
 
         <Routes>
-          <Route path="/" element={<p>home</p>} />
+          <Route path="/" element={<Main />} />
 
           <Route path="/admin_page" element={<Admin_page />} />
 

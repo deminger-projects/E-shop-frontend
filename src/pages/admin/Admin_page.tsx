@@ -11,6 +11,8 @@ export default function Admin_page(){
 
     const [is_admin, set_is_admin] = useState<boolean>(false)
 
+    const [loading, set_loading] = useState<boolean>(true)
+
     useEffect(() => {
         const temp = async() => {
             if(user_data.length > 0){
@@ -22,6 +24,8 @@ export default function Admin_page(){
             }
         }
         temp()
+
+        set_loading(false)
     }, [user_data])
 
     return(

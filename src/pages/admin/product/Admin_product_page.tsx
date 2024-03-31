@@ -50,9 +50,6 @@ export default function Admin_product_page(){
         temp()
     }, [user_data])
 
-    useEffect(() => {
-        console.log(products_arr_display)
-    }, [products_arr_display])
 
     useEffect(() => {      // searches products based on user input, valid input: product name, product size
         var res_arr: Array<Product> = []
@@ -100,7 +97,6 @@ export default function Admin_product_page(){
         const fetchData = async () => {
             var collecions = await get_admin_collections()
             var products = await get_admin_products()
-            console.log("🚀 ~ fetchData ~ products:", products)
 
             set_products_arr(products)
             set_fetch_collections(collecions)

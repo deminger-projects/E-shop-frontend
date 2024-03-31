@@ -46,6 +46,7 @@ export default function Admin_order_page(){
 
     useEffect(() => {
         const temp = async() => {
+            set_loading(true)
             var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
 
             if(is_admin.next_status === true){
@@ -54,6 +55,7 @@ export default function Admin_order_page(){
         }
 
         temp()
+        set_loading(false)
     }, [])
 
     useEffect(() => {      // searches products based on user input, valid input: product name, product size
@@ -136,14 +138,17 @@ export default function Admin_order_page(){
     
     useEffect(() => {
         const fetchData = async () => {
+            set_loading(true)
+
             var data = await get_admin_orders()
 
             set_order_arr(data)
             set_order_arr_display(data)
-            set_loading(false);
           };
 
         fetchData()
+        set_loading(false);
+
     }, [update])
 
 
