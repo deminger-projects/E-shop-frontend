@@ -25,10 +25,13 @@ export default function Login_hud(){
     useEffect(() => {
         const temp = async() => {
             if(cookies.user_data){
+
+                console.log("valid 1")
                 if(user_data.length > 0 || cookies.user_data.lenght > 0){
                     var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
                     console.log("🚀 ~ temp ~ is_admin:", is_admin)
-    
+                    console.log("valid 2")
+
                     if(is_admin.next_status === true){
                         set_is_admin(true)
                     }else{
