@@ -94,7 +94,7 @@ export default function Prepare_order(){
             }
         }
 
-        set_loading(false)
+        //set_loading(false)
     }
 
     var handle_click = (pointer: number) => {

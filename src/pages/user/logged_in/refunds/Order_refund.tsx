@@ -62,7 +62,7 @@ export default function Order_refund(){
             if(error){
                 set_error_msg("error ocured")
             }else if(api_responce.next_status === true){
-                navigate("/login", {state: {msg: api_responce.msg}})
+                navigate("/placed-returns", {state: {msg: api_responce.msg}})
             }else if(api_responce.next_status === false){
                 set_error_msg(api_responce.msg)
             }
