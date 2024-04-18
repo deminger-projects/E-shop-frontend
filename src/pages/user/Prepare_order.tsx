@@ -45,8 +45,9 @@ export default function Prepare_order(){
                 var data = await get_user_acccount_data(user_data[0].email, user_data[0].password)
 
                 set_delivery_data(data)
-                set_loading(false);
+                
             }
+            set_loading(false);
           };
 
         fetchData()

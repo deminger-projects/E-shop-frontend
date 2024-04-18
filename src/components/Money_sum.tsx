@@ -55,9 +55,9 @@ export default function Money_sum() {
                 </tr>
 
                 <tr>
-                    <td>{products_cost}</td>
-                    <td>{delivery_cost}</td>
-                    <td>{products_cost + delivery_cost}</td>
+                    <td>{products_cost + "€"}</td>
+                    <td>{delivery_cost + "€"}</td>
+                    <td>{products_cost + delivery_cost + "€"}</td>
                 </tr>
               </tbody>
           </table>

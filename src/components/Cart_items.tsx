@@ -46,7 +46,7 @@ export default function Cart_items(){
                         <td>{item.size_data.size}</td>
                         <td><img src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products/" + item.product[0].id + "/" + item.product[0].url} width={"100px"} height={"100px"}></img></td>
                         <td>{item.product[0].price}</td>
-                        <td>{item.size_data.current_amount}</td>
+                        <td>{item.size_data.current_amount + "€"}</td>
                         <td><button onClick={(event) =>handle_on_click(event, index)}>remove</button></td>
                     </tr>
             )}
