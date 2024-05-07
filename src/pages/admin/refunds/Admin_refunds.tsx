@@ -252,7 +252,7 @@ export default function Admin_refunds(){
                                         <th>product_name</th>
                                         <th>size</th>
                                         <th>prize</th>
-                                        <th>quntity</th>
+                                        <th>quantity</th>
                                         <th>reason</th>
                                     </tr>
                                 </thead>

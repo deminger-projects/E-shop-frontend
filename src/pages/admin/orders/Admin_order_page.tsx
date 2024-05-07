@@ -266,7 +266,7 @@ export default function Admin_order_page(){
                                 <tr>
                                     <th>product_name</th>
                                     <th>size</th>
-                                    <th>quntity</th>
+                                    <th>quantity</th>
                                 </tr>
                             </thead>
                             
