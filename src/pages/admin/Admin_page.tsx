@@ -31,16 +31,20 @@ export default function Admin_page(){
     return(
         <>
             {is_admin ? 
+            <>
+                <br />
                 <div>
-                    <Link to="/admin_collection_page"><button>collections page</button></Link>
-                    <Link to="/admin_product_page"><button>products page</button></Link>
-                    <Link to="/admin_order_page"><button>orders page</button></Link>
+                        <Link to="/admin_collection_page"><button>collections page</button></Link>
+                        <Link to="/admin_product_page"><button>products page</button></Link>
+                        <Link to="/admin_order_page"><button>orders page</button></Link>
 
-                    <Link to="/admin_collection_add"><button>Add collections</button></Link>
-                    <Link to="/admin_product_add"><button>Add products</button></Link>
+                        <Link to="/admin_collection_add"><button>Add collections</button></Link>
+                        <Link to="/admin_product_add"><button>Add products</button></Link>
 
-                    <Link to="/admin_refunds"><button>refunds</button></Link>
-                </div> 
+                        <Link to="/admin_refunds"><button>refunds</button></Link>
+                    </div> 
+            </>
+                
                 
                 : <AccessDenied></AccessDenied>}
         </>
