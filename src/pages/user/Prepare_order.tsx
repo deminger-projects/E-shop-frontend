@@ -118,6 +118,8 @@ export default function Prepare_order(){
             {loading ? <Loading></Loading> : <>
                 <Cart_items></Cart_items>
 
+                <br />
+    
                 <Money_sum></Money_sum>
 
                 <p>{error_msg}</p>
