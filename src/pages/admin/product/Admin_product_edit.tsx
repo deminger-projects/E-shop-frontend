@@ -148,7 +148,7 @@ export default function Admin_product_edit(){
                         <br></br>
                         <br></br>
 
-                        <label htmlFor="product_cost_edit">{"Product cost"}</label>
+                        <label htmlFor="product_cost_edit">{"Product price"}</label>
                         <input id="product_cost_edit" type="number" name="product_cost_edit" value={cost} onChange={(e) => setCost(e.target.value)}></input>
                         <br></br>
                         <br></br>
