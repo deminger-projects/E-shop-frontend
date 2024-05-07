@@ -101,6 +101,7 @@ export default function Admin_collection_page(){
         <>
 
             {loading ? <Loading></Loading> : <>
+                <br />
                 <input type="text" value={search_value} onChange={(event) => set_search_value(event.target.value)}/>
 
                 <p>{responce_msg}</p>
