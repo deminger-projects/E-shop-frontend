@@ -5,7 +5,7 @@ export default function Money_sum() {
   const [cart_data] = useState<Array<any>>(sessionStorage.getItem("cart_data") === null ? [] : JSON.parse(sessionStorage.getItem("cart_data")!))
 
   const [products_cost, set_products_cost] = useState(0)
-  const [delivery_cost] = useState(15)
+  const [delivery_cost] = useState(0)
 
   const [loading, set_loading] = useState(true)
 
