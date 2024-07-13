@@ -1,6 +1,9 @@
 import Files from "../interfaces/Files";
 
 export default function get_filtred_data(urls: {main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}, files: Files | undefined, base_layout: {main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}){
+    console.log("🚀 ~ get_filtred_data ~ base_layout:", base_layout)
+    console.log("🚀 ~ get_filtred_data ~ files:", files)
+    console.log("🚀 ~ get_filtred_data ~ urls:", urls)
     
     var new_files: Array<File> = []
     var file_names_to_keep: Array<string> = []
@@ -99,16 +102,18 @@ export default function get_filtred_data(urls: {main: string|undefined, hover:st
 
 
 
-
     if(urls.main === base_layout.main && base_layout.main){
         var temp = base_layout.main.split("/")
         file_names_to_keep.push(temp[temp.length - 1])
     }
 
+
+
     if(urls.hover === base_layout.hover && base_layout.hover){
         var temp = base_layout.hover.split("/")
         file_names_to_keep.push(temp[temp.length - 1])
     }
+
 
 
     for (let base_index = 0; base_index < base_layout.other.length; base_index++) {
@@ -125,6 +130,7 @@ export default function get_filtred_data(urls: {main: string|undefined, hover:st
     }
 
 
+
     if(files === undefined || files.model_show_case?.status === true){
     
         for(var base_file of base_layout.model_show_case){
@@ -137,6 +143,8 @@ export default function get_filtred_data(urls: {main: string|undefined, hover:st
             }
         }
     }
+
+
 
     if(files === undefined || files.detail_show_case?.status === true){
 
@@ -151,6 +159,7 @@ export default function get_filtred_data(urls: {main: string|undefined, hover:st
             }
         }
     }
+
 
     return {files_to_save: new_files, file_names_to_keep: file_names_to_keep, file_names_for_table: files_for_tables, model_show_case_status: model_show_case_status, detail_show_case_status: detail_show_case_status}
 }
