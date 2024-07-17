@@ -25,9 +25,7 @@ export default function User_show_case(props: {images: Array<ProductImage>, id: 
     const [button_status, set_button_status] = useState<any>(new_other().length > 0 ? true : false)
 
     const [other_status, set_other_status] = useState<boolean>(false)
-
     
-
     return(
         <>
             {show_cases.model_show_case.map((image, index) => (
