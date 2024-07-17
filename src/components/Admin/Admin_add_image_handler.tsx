@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import Sub_image_add from "../sub_components/Sub_image_add"
 import fix_file_name from "../../functions/sub_functions/fix_file_name"
@@ -12,6 +12,11 @@ export default function Admin_image_add(props: {on_change: Function, on_delete: 
     const [default_urls, set_default_urls] = useState<{main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}>(props.default_urls ? props.default_urls : {main: undefined, hover: undefined, other: [], model_show_case: [], detail_show_case: []})
 
     const [files, set_files] = useState<{main: File|undefined, hover: File|undefined, other: Array<File>, model_show_case: {status: Boolean, data: Array<{file: File, url: string}>}, detail_show_case: {status: Boolean, data: Array<{file: File, url: string}>}}>(props.default_files ? props.default_files : {main: undefined, hover: undefined, other: [], model_show_case: {status: false, data: []}, detail_show_case: {status: false, data: []}})
+
+
+    useEffect(()=> {
+        console.log(default_urls)
+    }, [default_urls])
 
     var handle_add_img = () => {
 
@@ -210,7 +215,9 @@ export default function Admin_image_add(props: {on_change: Function, on_delete: 
                     var new_file = new File([blob], new_file_name, {type: 'image/png'})
     
                     old_other[pozition] = new_name
+                    console.log("🚀 ~ Admin_image_add ~ old_other:", old_other)
                     old_files[pozition] = new_file
+                    console.log("🚀 ~ Admin_image_add ~ old_files:", old_files)
     
                     set_files({...files, other: old_files})
                     set_default_urls({...default_urls, other: old_other})

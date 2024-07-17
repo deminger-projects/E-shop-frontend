@@ -1,9 +1,6 @@
 import Files from "../interfaces/Files";
 
 export default function get_filtred_data(urls: {main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}, files: Files | undefined, base_layout: {main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}){
-    console.log("🚀 ~ get_filtred_data ~ base_layout:", base_layout)
-    console.log("🚀 ~ get_filtred_data ~ files:", files)
-    console.log("🚀 ~ get_filtred_data ~ urls:", urls)
     
     var new_files: Array<File> = []
     var file_names_to_keep: Array<string> = []
@@ -123,11 +120,35 @@ export default function get_filtred_data(urls: {main: string|undefined, hover:st
                 file_names_to_keep.push(temp[temp.length - 1])
                 break
             }
-            
-
         }
-        
     }
+
+
+
+
+
+    if(files && files.detail_show_case){
+        if(files.detail_show_case.data.length > 0){
+            for (let index = 0; index < files.detail_show_case.data.length; index++) {
+                if(files.detail_show_case.data[index].file !== undefined){
+                    urls.detail_show_case[index] = files.detail_show_case.data[index].file.name
+                }
+            }
+        }
+    }
+
+    if(files && files.model_show_case){
+        if(files.model_show_case.data.length > 0){
+            for (let index = 0; index < files.model_show_case.data.length; index++) {
+                if(files.model_show_case.data[index].file !== undefined){
+                    urls.detail_show_case[index] = files.model_show_case.data[index].file.name
+                }
+            }
+        }
+    }
+
+
+
 
 
 
