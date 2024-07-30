@@ -10,6 +10,7 @@ import get_change_collection_template from "../../../templates/admin/get_change_
 import check_for_admin from "../../../functions/sub_functions/check_for_admin";
 import get_admin_collections from "../../../apis/getters/admin/get_admin_collections";
 import Loading from "../../../components/Loading";
+import Roll_button from "../../../components/Roll_button";
 
 export default function Admin_collection_page(){
 
@@ -136,13 +137,16 @@ export default function Admin_collection_page(){
                                 <td>                           
                                     <button onClick={(event) => handleSubmit(event, collection.collections[0].id)}>DELETE</button>
                                 </td>
-                            </tr>
+                            </tr>      
                     )}
                         </tbody>
                     </table>
                 : <p>no records</p>
                 : <AccessDenied></AccessDenied>
                 }
+
+                
+                
             </>}
         </>
     )

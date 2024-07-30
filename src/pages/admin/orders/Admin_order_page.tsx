@@ -141,6 +141,7 @@ export default function Admin_order_page(){
             set_loading(true)
 
             var data = await get_admin_orders()
+            console.log("🚀 ~ fetchData ~ data:", data)
 
             set_order_arr(data)
             set_order_arr_display(data)

@@ -7,6 +7,8 @@ import Files from "../../interfaces/Files"
 
 export default function Admin_image_add(props: {on_change: Function, on_delete: Function, default_files?: {main: File|undefined, hover: File|undefined, other: Array<File>, model_show_case: {status: Boolean, data: Array<{file: File, url: string}>}, detail_show_case: {status: Boolean, data: Array<{file: File, url: string}>}}, default_urls?: {main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}, settings?: {hover: boolean, model_show_case?: boolean, detail_show_case?: boolean}}){
 
+    console.log(props.default_urls)
+
     const settings = props.settings ? {main: true, hover: props.settings.hover, model_show_case: props.settings.model_show_case, detail_show_case: props.settings.detail_show_case} : {main: true, hover: false, model_show_case: false, detail_show_case: false}
 
     const [default_urls, set_default_urls] = useState<{main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}>(props.default_urls ? props.default_urls : {main: undefined, hover: undefined, other: [], model_show_case: [], detail_show_case: []})

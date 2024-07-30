@@ -6,11 +6,15 @@ import Product from '../../interfaces/Product';
 import get_collection_product_showcase from '../../apis/getters/get_collection_product_showcase';
 import Product_comp from '../../components/Product';
 import Loading from '../../components/Loading';
+import Roll_button from '../../components/Roll_button';
 
 export default function Showcase(){
 
     const url_data = useParams()
     const collection_id = Number(url_data.id)
+
+    const [roll_button_status, set_roll_button_status] = useState<boolean>(false)
+    const [last_item_id, set_last_item_id] = useState<number>(0)
 
     const [data, set_data] = useState<Array<Product>>([])
     const [data_display, set_data_display] = useState<Array<Product>>([])
@@ -42,7 +46,7 @@ export default function Showcase(){
 
     useEffect(() => {   //ziskava collection_product_showcase data
         const fetchData = async () => {
-            var data = await get_collection_product_showcase(collection_id)
+            var data = await get_collection_product_showcase(collection_id, last_item_id)
 
             set_data(data)
             set_data_display(data)
@@ -53,8 +57,34 @@ export default function Showcase(){
         fetchData()
     }, [collection_id])
 
+
+    var get_more_products = async () => {
+        set_loading(true)
+
+        var data1 = await get_collection_product_showcase(collection_id, last_item_id)
+
+        if(data1.length > 0){
+            var products_arr_copy = [...data]
+            var new_data = products_arr_copy.concat(data1)
     
+            set_data(new_data)
+            set_data_display(new_data)
     
+            set_last_item_id(data1[data1.length - 1].collections[0].id)
+            
+            if(data1.length < 9){
+                set_roll_button_status(false)
+            }
+            set_roll_button_status(true)
+        }else{
+            set_roll_button_status(false)
+        }
+
+        set_loading(false)
+    }
+
+
+
       return( 
         <>
             {loading ? <Loading></Loading> : <>
@@ -70,6 +100,9 @@ export default function Showcase(){
             
                     : <p>no records</p> }
                 </div>
+
+                {roll_button_status ? <Roll_button get_more_products={get_more_products}></Roll_button> : <></>}
+
             </>}
                     
         </>

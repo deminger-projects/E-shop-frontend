@@ -7,10 +7,14 @@ import New_orders, {OrderProduct, Order}  from "../../../../interfaces/new_refun
 import { useEffect, useState } from "react";
 import get_user_avaible_returns from "../../../../apis/getters/user/get_user_avaible_returns";
 import Loading from "../../../../components/Loading";
+import Roll_button from "../../../../components/Roll_button";
 
 export default function Refunds(){
 
     const location = useLocation()
+
+    const [roll_button_status, set_roll_button_status] = useState<boolean>(false)
+    const [last_item_id, set_last_item_id] = useState<number>(0)
 
     const [orders_arr, set_orders_arr] = useState<Array<New_orders>>([])
     const [orders_arr_display, set_orders_arr_display] = useState<Array<New_orders>>([])
@@ -47,7 +51,7 @@ export default function Refunds(){
     
     useEffect(() => {
         const fetchData = async () => {
-            var data = await get_user_avaible_returns(user_data[0].email, user_data[0].password)
+            var data = await get_user_avaible_returns(user_data[0].email, user_data[0].password, last_item_id)
 
             set_orders_arr(data)
             set_orders_arr_display(data)
@@ -57,6 +61,35 @@ export default function Refunds(){
 
         fetchData()
     }, [])
+
+    var get_more_products = async () => {
+        set_loading(true)
+
+        var data1 = await get_user_avaible_returns(user_data[0].email, user_data[0].password, last_item_id)
+
+        if(data1.length > 0){
+            var products_arr_copy = [...orders_arr]
+            var new_data = products_arr_copy.concat(data1)
+    
+            set_orders_arr(new_data)
+            set_orders_arr_display(new_data)
+
+            
+    
+            set_last_item_id(data1[data1.length - 1].orders[0].id)
+            
+            
+            set_roll_button_status(true)
+
+            if(data1.length < 9){
+                set_roll_button_status(false)
+            }
+        }else{
+            set_roll_button_status(false)
+        }
+
+        set_loading(false)
+    }
 
     return(
         <>
@@ -128,8 +161,13 @@ export default function Refunds(){
 
                     </div>
 
-                })  : <p>no records</p> : <Access_denied></Access_denied>
+                })  
+        
+
+                : <p>no records</p> : <Access_denied></Access_denied>
                 }    
+                
+                {roll_button_status ? <Roll_button get_more_products={get_more_products}></Roll_button> : <></>}
         </>}
 
 

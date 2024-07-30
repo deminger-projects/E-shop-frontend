@@ -12,10 +12,15 @@ import check_for_admin from "../../../functions/sub_functions/check_for_admin";
 import get_admin_collections from "../../../apis/getters/admin/get_admin_collections";
 import get_admin_products from "../../../apis/getters/admin/get_admin_products";
 import Loading from "../../../components/Loading";
+import Roll_button from "../../../components/Roll_button";
+import get_more_products from "../../../functions/get_more_products";
 
 export default function Admin_product_page(){ 
     
     const location = useLocation();
+
+    const [roll_button_status, set_roll_button_status] = useState<boolean>(false)
+    const [last_item_id, set_last_item_id] = useState<number>(0)
 
     const [responce_msg, set_responce_msg] = useState<string>(location.state ? location.state.msg : "")
     const [error_msg, set_error_msg] = useState<string>("")
@@ -96,7 +101,14 @@ export default function Admin_product_page(){
     useEffect(() => {
         const fetchData = async () => {
             var collecions = await get_admin_collections()
-            var products = await get_admin_products()
+            var products = await get_admin_products(last_item_id)
+            console.log("🚀 ~ fetchData ~ products:", products)
+
+            if(products.length < 9){
+                set_roll_button_status(false)
+            }
+
+            set_roll_button_status(true)
 
             set_products_arr(products)
             set_fetch_collections(collecions)
@@ -127,6 +139,33 @@ export default function Admin_product_page(){
 
         set_update(!update)
     }
+
+
+    var get_more_products = async () => {
+        set_loading(true)
+
+        var data1 = await get_admin_products(last_item_id)
+
+        if(data1.length > 0){
+            var products_arr_copy = [...products_arr]
+            var new_data = products_arr_copy.concat(data1)
+    
+            set_products_arr(new_data)
+            set_products_arr_display(new_data)
+    
+            set_last_item_id(data1[data1.length - 1].products[0].id)
+            
+            if(data1.length < 9){
+                set_roll_button_status(false)
+            }
+            set_roll_button_status(true)
+        }else{
+            set_roll_button_status(false)
+        }
+
+        set_loading(false)
+    }
+   
 
     return( 
         <>
@@ -181,8 +220,11 @@ export default function Admin_product_page(){
                                 </td>
                             </tr>
                     )}
+                        
+                        {/* {roll_button_status ? <Roll_button get_more_products={get_more_products}></Roll_button> : <></>} */}
                         </tbody>
                     </table>
+                    
                 : <p>no records</p>
                 : <AccessDenied></AccessDenied>}
             </>}

@@ -20,6 +20,7 @@ import { useCookies } from 'react-cookie';
 import check_for_admin from '../../../functions/sub_functions/check_for_admin';
 import get_admin_collections from '../../../apis/getters/admin/get_admin_collections';
 import Loading from '../../../components/Loading';
+import get_product_by_id from '../../../apis/getters/get_product_by_id';
 
 export default function Admin_product_edit(){
 
@@ -29,10 +30,15 @@ export default function Admin_product_edit(){
     const file_set_up = set_up_files(location.state.product_images, location.state.products[0], "products")
     const size_set_up = set_up_sizes(location.state.product_sizes)
 
-    const [name, setName] = useState<string>(location.state.products[0].product_name);
-    const [collection, setCollection] = useState<string>(location.state.products[0].collection_id);
-    const [cost, setCost] = useState<string>(location.state.products[0].price);
-    const [description, setDescription] = useState<string>(location.state.products[0].description);
+    // const [name, setName] = useState<string>(location.state.products[0].product_name);
+    // const [collection, setCollection] = useState<string>(location.state.products[0].collection_id);
+    // const [cost, setCost] = useState<string>(location.state.products[0].price);
+    // const [description, setDescription] = useState<string>(location.state.products[0].description);
+
+    const [name, setName] = useState<string>("");
+    const [collection, setCollection] = useState<string>("");
+    const [cost, setCost] = useState<string>("");
+    const [description, setDescription] = useState<string>("");
 
     const [files, set_files] = useState<any>({main: undefined, hover: undefined, other: [], model_show_case: {status: file_set_up.model_status, data: []}, detail_show_case: {status: file_set_up.detail_status, data: []}})
     const [sizes, set_sizes] = useState<Array<Size>>(size_set_up)
@@ -71,6 +77,31 @@ export default function Admin_product_edit(){
           };
 
         fetchData()
+    }, [])
+
+
+    useEffect(() => {
+        set_loading(true)
+
+        const fetch_data = async () => {
+            var data = await get_product_by_id(location.state.products[0].id)
+
+            setName(data[0].products[0].product_name)
+            setCollection(data[0].products[0].collection_id)
+            setCost(data[0].products[0].price)
+            setDescription(data[0].products[0].description)
+
+            const file_set_up = set_up_files(data[0].product_images, data[0].products[0], "products")
+            const size_set_up = set_up_sizes(data[0].product_sizes)
+
+            set_files({main: undefined, hover: undefined, other: [], model_show_case: {status: file_set_up.model_status, data: []}, detail_show_case: {status: file_set_up.detail_status, data: []}})
+            set_urls(file_set_up.ulrs)
+            set_sizes(size_set_up)
+        }
+
+        fetch_data()
+
+        set_loading(false)
     }, [])
 
    

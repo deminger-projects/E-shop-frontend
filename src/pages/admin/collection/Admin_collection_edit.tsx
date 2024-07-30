@@ -15,15 +15,17 @@ import get_edit_collection_template from '../../../templates/admin/get_edit_coll
 import { useCookies } from 'react-cookie';
 import check_for_admin from '../../../functions/sub_functions/check_for_admin';
 import Loading from '../../../components/Loading';
+import get_product_by_id from '../../../apis/getters/get_product_by_id';
+import get_collection_by_id from '../../../apis/getters/get_collection_by_id';
 
 export default function Admin_collection_edit(){
 
     const navigate = useNavigate();
     const location = useLocation();
-    
+    console.log(location.state)
     const file_set_up = set_up_files(location.state.collection_images, location.state.collections[0], "collections")
     
-    const [collection_name, setCollection_name] = useState<string>(location.state.collections[0].name);
+    const [collection_name, setCollection_name] = useState<string>("");
 
     const [urls, set_urls] = useState<{main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}>(file_set_up.ulrs)
     const [files, set_files] = useState<Files>()
@@ -48,6 +50,26 @@ export default function Admin_collection_edit(){
         }
 
         temp()
+    }, [])
+
+    useEffect(() => {
+        set_loading(true)
+
+        const fetch_data = async () => {
+            var data = await get_collection_by_id(location.state.collections[0].id)
+            console.log("🚀 ~ constfetch_data= ~ data:", data)
+
+            setCollection_name(data[0].collections[0].name)
+
+            const file_set_up = set_up_files(data[0].collection_images, data[0].collections[0], "collections")
+            console.log("🚀 ~ constfetch_data= ~ file_set_up:", file_set_up)
+
+            set_urls(file_set_up.ulrs)
+        }
+
+        fetch_data()
+
+        set_loading(false)
     }, [])
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
