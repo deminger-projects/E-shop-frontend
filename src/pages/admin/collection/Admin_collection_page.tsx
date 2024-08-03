@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 
 import AccessDenied from '../../user/Access_denied';
 
@@ -11,9 +11,12 @@ import check_for_admin from "../../../functions/sub_functions/check_for_admin";
 import get_admin_collections from "../../../apis/getters/admin/get_admin_collections";
 import Loading from "../../../components/Loading";
 import Roll_button from "../../../components/Roll_button";
+import get_admin_collection_images from "../../../apis/getters/admin/get_admin_collection_images";
+import Product from "../../../interfaces/Product";
 
 export default function Admin_collection_page(){
 
+    const navigate = useNavigate();
     const location = useLocation();
 
     const [responce_msg, set_responce_msg] = useState<string>(location.state ? location.state.msg : "")
@@ -98,6 +101,28 @@ export default function Admin_collection_page(){
         set_update(!update)
     }
 
+    var handle_click = async (event:React.MouseEvent<HTMLElement>, id: number, collection: Collections) => {
+
+        set_loading(true)
+
+        event.preventDefault();
+
+        var data1 = await get_admin_collection_images(id)
+
+        var images_arr = []
+
+        for(var image of data1){
+            images_arr.push(image.collection_images[0])
+        }
+
+        var new_data = {collections: collection, collection_images: images_arr}        
+        
+        set_loading(false)
+
+        navigate("/admin_collection_edit", {state: {collection_data: new_data}});
+
+    }
+
     return( 
         <>
 
@@ -130,10 +155,9 @@ export default function Admin_collection_page(){
                                 <td><p>{collection.collections[0].add_date}</p></td>
 
                                 <td>
-                                    <Link to="/admin_collection_edit" state={collection}>
-                                            <button>EDIT</button>
-                                    </Link>
+                                    <button onClick={(event) => handle_click(event, collection.collections[0].id, collection)}>EDIT</button>
                                 </td>
+
                                 <td>                           
                                     <button onClick={(event) => handleSubmit(event, collection.collections[0].id)}>DELETE</button>
                                 </td>

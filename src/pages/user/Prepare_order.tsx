@@ -13,11 +13,18 @@ import get_user_acccount_data from '../../apis/getters/user/get_user_account_dat
 import get_stripe_payment_url from '../../apis/getters/get_stripe_payment_url';
 import Loading from '../../components/Loading';
 import cart_products_validation from '../../apis/other/cart_products_validation';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+
 
 export default function Prepare_order(){
 
     const navigate = useNavigate();
+
+    const [html_state, set_html_state] = useState<string>("");
+
+    useEffect(() => {
+        console.log(html_state)
+    }, [html_state])
 
     const [name, setName] = useState<string>("");
     const [surname, setSurname] = useState<string>("");
@@ -111,13 +118,13 @@ export default function Prepare_order(){
             setPSC(user_info.postcode)
         }
     }
-    
+   
+
     return(
         <>
 
             {loading ? <Loading></Loading> : <>
                 <Cart_items></Cart_items>
-
                 <br />
     
                 <Money_sum></Money_sum>
@@ -184,15 +191,19 @@ export default function Prepare_order(){
                         <br></br>
 
                         <label htmlFor="PSC">{"PSC"}</label>
-                        <input id="PSC" type="number" value={PSC} onChange={(e) => setPSC(e.target.value)}></input>
+                        <input id="PSC" type="text" value={PSC} onChange={(e) => setPSC(e.target.value)}></input>
                         <br></br>
 
                         <button>send</button>
 
-                    </form>
+                    </form>                
+                    
+                
+
                 </div>
             </>}
             
         </>
     )
 }
+

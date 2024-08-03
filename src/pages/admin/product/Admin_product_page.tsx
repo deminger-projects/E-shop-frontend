@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {Link, useLocation} from "react-router-dom";
+import {Link, Navigate, useLocation, useNavigate} from "react-router-dom";
 
 import AccessDenied from '../../user/Access_denied';
 
@@ -14,10 +14,12 @@ import get_admin_products from "../../../apis/getters/admin/get_admin_products";
 import Loading from "../../../components/Loading";
 import Roll_button from "../../../components/Roll_button";
 import get_more_products from "../../../functions/get_more_products";
+import get_admin_products_images from "../../../apis/getters/admin/get_admin_products_images";
 
 export default function Admin_product_page(){ 
     
     const location = useLocation();
+    const navigate = useNavigate();
 
     const [roll_button_status, set_roll_button_status] = useState<boolean>(false)
     const [last_item_id, set_last_item_id] = useState<number>(0)
@@ -141,31 +143,41 @@ export default function Admin_product_page(){
     }
 
 
-    var get_more_products = async () => {
+    var get_admin_images = async (id: number, product: Product) => {
         set_loading(true)
 
-        var data1 = await get_admin_products(last_item_id)
+        var data1 = await get_admin_products_images(id)
+        console.log("🚀 ~ varget_admin_images= ~ data1:", data1)
 
-        if(data1.length > 0){
-            var products_arr_copy = [...products_arr]
-            var new_data = products_arr_copy.concat(data1)
-    
-            set_products_arr(new_data)
-            set_products_arr_display(new_data)
-    
-            set_last_item_id(data1[data1.length - 1].products[0].id)
-            
-            if(data1.length < 9){
-                set_roll_button_status(false)
-            }
-            set_roll_button_status(true)
-        }else{
-            set_roll_button_status(false)
-        }
-
+        //var new_data = {products: product, products_images: data1}        
+        
         set_loading(false)
+
+        return product
     }
    
+
+    var handle_click = async (event:React.MouseEvent<HTMLElement>, id: number, product: Product) => {
+
+        set_loading(true)
+
+        event.preventDefault();
+
+        var data1 = await get_admin_products_images(id)
+
+        var images_arr = []
+
+        for(var image of data1){
+            images_arr.push(image.product_images[0])
+        }
+
+        var new_data = {products: product, product_images: images_arr}        
+        
+        set_loading(false)
+
+        navigate("/admin_product_edit", {state: {product_data: new_data}});
+
+    }
 
     return( 
         <>
@@ -210,9 +222,7 @@ export default function Admin_product_page(){
                                 <td><p>{product.products[0].add_date}</p></td>
 
                                 <td>
-                                    <Link to="/admin_product_edit" state={product}>
-                                        <button>EDIT</button>
-                                    </Link>
+                                    <button onClick={(event) => handle_click(event, product.products[0].id, product)}>EDIT</button>
                                 </td>
                                 
                                 <td>
@@ -232,3 +242,5 @@ export default function Admin_product_page(){
         </>
     )
 }
+
+//{<Link to="/admin_product_edit" state={get_admin_images(product.products[0].id, product)}></Link>}

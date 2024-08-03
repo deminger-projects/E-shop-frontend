@@ -21,28 +21,26 @@ import check_for_admin from '../../../functions/sub_functions/check_for_admin';
 import get_admin_collections from '../../../apis/getters/admin/get_admin_collections';
 import Loading from '../../../components/Loading';
 import get_product_by_id from '../../../apis/getters/get_product_by_id';
+import { url } from 'inspector';
+import Image_test from '../../../components/Admin/Image_test';
 
 export default function Admin_product_edit(){
 
     const navigate = useNavigate();
     const location = useLocation()
 
-    const file_set_up = set_up_files(location.state.product_images, location.state.products[0], "products")
-    const size_set_up = set_up_sizes(location.state.product_sizes)
-
-    // const [name, setName] = useState<string>(location.state.products[0].product_name);
-    // const [collection, setCollection] = useState<string>(location.state.products[0].collection_id);
-    // const [cost, setCost] = useState<string>(location.state.products[0].price);
-    // const [description, setDescription] = useState<string>(location.state.products[0].description);
+    var file_set_up_test = set_up_files(location.state.product_data.product_images, location.state.product_data.products.products[0], "products")
 
     const [name, setName] = useState<string>("");
     const [collection, setCollection] = useState<string>("");
     const [cost, setCost] = useState<string>("");
     const [description, setDescription] = useState<string>("");
 
-    const [files, set_files] = useState<any>({main: undefined, hover: undefined, other: [], model_show_case: {status: file_set_up.model_status, data: []}, detail_show_case: {status: file_set_up.detail_status, data: []}})
-    const [sizes, set_sizes] = useState<Array<Size>>(size_set_up)
-    const [urls, set_urls] = useState<{main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}>(file_set_up.ulrs)
+    const [base_layout, set_base_layout] = useState<any>();
+
+    const [files, set_files] = useState<any>({main: undefined, hover: undefined, other: [], model_show_case: {status: file_set_up_test.model_status, data: []}, detail_show_case: {status: file_set_up_test.detail_status, data: []}})
+    const [sizes, set_sizes] = useState<Array<Size>>([])
+    const [urls, set_urls] = useState<{main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}>(file_set_up_test.ulrs)
 
     const [error_msg, set_error_msg] = useState<string>("")
 
@@ -84,7 +82,7 @@ export default function Admin_product_edit(){
         set_loading(true)
 
         const fetch_data = async () => {
-            var data = await get_product_by_id(location.state.products[0].id)
+            var data = await get_product_by_id(location.state.product_data.products.products[0].id)
 
             setName(data[0].products[0].product_name)
             setCollection(data[0].products[0].collection_id)
@@ -97,14 +95,14 @@ export default function Admin_product_edit(){
             set_files({main: undefined, hover: undefined, other: [], model_show_case: {status: file_set_up.model_status, data: []}, detail_show_case: {status: file_set_up.detail_status, data: []}})
             set_urls(file_set_up.ulrs)
             set_sizes(size_set_up)
+
+            set_base_layout(file_set_up.ulrs)
+        
         }
 
         fetch_data()
 
-        set_loading(false)
     }, [])
-
-   
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -113,7 +111,8 @@ export default function Admin_product_edit(){
         event.preventDefault();
 
         const filtred_sizes = filter_sizes(sizes)
-        const filtred_data = get_filtred_data(urls, files, file_set_up.ulrs)
+        const filtred_data = get_filtred_data(urls, files, base_layout)
+        console.log("🚀 ~ handleSubmit ~ filtred_data:", filtred_data)
         
         if(!name){set_error_msg("name is empty")}
         if(!cost){set_error_msg("cost is empty")}
@@ -126,11 +125,11 @@ export default function Admin_product_edit(){
 
         if(name && cost && description && filtred_sizes.sizes.length > 0){
         
-            const product_template = get_product_template(collection, name, Number(cost), description, filtred_sizes.sizes, location.state.products[0].id, filtred_sizes.amounts, filtred_data.file_names_for_table, files)
+            const product_template = get_product_template(collection, name, Number(cost), description, filtred_sizes.sizes, location.state.product_data.products.products[0].id, filtred_sizes.amounts, filtred_data.file_names_for_table, files)
 
             if(files){
                 if(((files.model_show_case?.status === true && filtred_data.model_show_case_status === true) || files.model_show_case?.status === false) && ((files.detail_show_case?.status === true && filtred_data.detail_show_case_status === true) || files.detail_show_case?.status === false)){
-                    const [api_responce, error] = await edit_record(product_template, location.state.products[0].id, cookies.user_data[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "products")
+                    const [api_responce, error] = await edit_record(product_template, location.state.product_data.products.products[0].id, cookies.user_data[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "products")
 
                     if(error){
                         set_error_msg("error ocured")
@@ -141,7 +140,7 @@ export default function Admin_product_edit(){
                     }
                 }
             }else{
-                const [api_responce, error] = await edit_record(product_template, location.state.products[0].id, cookies.user_data[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "products")
+                const [api_responce, error] = await edit_record(product_template, location.state.product_data.products.products[0].id, cookies.user_data[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "products")
 
                 if(error){
                     set_error_msg("error ocured")
@@ -155,6 +154,7 @@ export default function Admin_product_edit(){
 
         set_loading(false)
     }
+
 
     return(
         <>
@@ -194,7 +194,9 @@ export default function Admin_product_edit(){
                         <br></br>
                         <br></br>
 
-                        <Admin_image_add on_delete={set_urls} on_change={set_files} default_files={files} default_urls={file_set_up.ulrs} settings={{hover: true, model_show_case: true, detail_show_case: true}}></Admin_image_add>
+                        <Admin_image_add on_delete={set_urls} on_change={set_files} default_files={files} default_urls={urls} settings={{hover: true, model_show_case: true, detail_show_case: true}}></Admin_image_add>
+
+                        <Image_test base_images={location.state.product_data.product_images} settings={{hover: true,  model_show_case: true, detail_show_case: true}}></Image_test>
 
                         <button>save</button>
 

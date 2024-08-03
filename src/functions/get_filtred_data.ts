@@ -156,7 +156,9 @@ export default function get_filtred_data(urls: {main: string|undefined, hover:st
     
         for(var base_file of base_layout.model_show_case){
             for(var new_file of urls.model_show_case){
+                
                 if(base_file === new_file){
+                    
                     var temp = base_file.split("/")
                     file_names_to_keep.push(temp[temp.length - 1])                              
                     break;
@@ -164,6 +166,8 @@ export default function get_filtred_data(urls: {main: string|undefined, hover:st
             }
         }
     }
+
+    
 
 
 

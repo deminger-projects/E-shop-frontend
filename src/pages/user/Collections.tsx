@@ -46,7 +46,6 @@ export default function Collections_showcase(){
     useEffect(() => {
         const fetchData = async () => {
             var data = await get_collections_showcase(last_item_id)
-            console.log("🚀 ~ varget_more_products= ~ data:", data)
 
             if(data.length < 9){
                 set_roll_button_status(false)
@@ -55,7 +54,9 @@ export default function Collections_showcase(){
             set_collection_arr(data)
             set_search_collections_display(data)
             
-            set_last_item_id(data[data.length - 1].collections[0].id)
+            if(data.length > 0){
+                set_last_item_id(data[data.length - 1].collections[0].id)
+            }
 
             set_loading(false);
           };

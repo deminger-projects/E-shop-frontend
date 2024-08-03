@@ -5,20 +5,13 @@ import fix_file_name from "../../functions/sub_functions/fix_file_name"
 
 import Files from "../../interfaces/Files"
 
-export default function Admin_image_add(props: {on_change: Function, on_delete: Function, default_files?: {main: File|undefined, hover: File|undefined, other: Array<File>, model_show_case: {status: Boolean, data: Array<{file: File, url: string}>}, detail_show_case: {status: Boolean, data: Array<{file: File, url: string}>}}, default_urls?: {main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}, settings?: {hover: boolean, model_show_case?: boolean, detail_show_case?: boolean}}){
-
-    console.log(props.default_urls)
+export default function Admin_image_add(props: {on_change: Function, on_delete: Function, default_files?: {main: File|undefined, hover: File|undefined, other: Array<File>, model_show_case: {status: Boolean, data: Array<{file: File, url: string}>}, detail_show_case: {status: Boolean, data: Array<{file: File, url: string}>}}, default_urls?: {main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}, settings?: {hover: boolean, model_show_case?: boolean, detail_show_case?: boolean}, test?: string}){
 
     const settings = props.settings ? {main: true, hover: props.settings.hover, model_show_case: props.settings.model_show_case, detail_show_case: props.settings.detail_show_case} : {main: true, hover: false, model_show_case: false, detail_show_case: false}
 
-    const [default_urls, set_default_urls] = useState<{main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}>(props.default_urls ? props.default_urls : {main: undefined, hover: undefined, other: [], model_show_case: [], detail_show_case: []})
+    const [default_urls, set_default_urls] = useState<{main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}>(props.default_urls ? {main: props.default_urls.main , hover: props.default_urls.hover, other: props.default_urls.other, model_show_case: props.default_urls.model_show_case, detail_show_case: props.default_urls.detail_show_case} : {main: undefined , hover: undefined, other: [], model_show_case: [], detail_show_case: []})
 
     const [files, set_files] = useState<{main: File|undefined, hover: File|undefined, other: Array<File>, model_show_case: {status: Boolean, data: Array<{file: File, url: string}>}, detail_show_case: {status: Boolean, data: Array<{file: File, url: string}>}}>(props.default_files ? props.default_files : {main: undefined, hover: undefined, other: [], model_show_case: {status: false, data: []}, detail_show_case: {status: false, data: []}})
-
-
-    useEffect(()=> {
-        console.log(default_urls)
-    }, [default_urls])
 
     var handle_add_img = () => {
 
@@ -29,8 +22,8 @@ export default function Admin_image_add(props: {on_change: Function, on_delete: 
     }
 
     var handle_input_change = (file: FileList|null, type: string, pozition?: number, special_type?: string) => {
-
-        if(file && file[0] !== undefined){
+        //&& file[0] !== undefined
+        if(file ){
 
             var all_file_names = []
     
@@ -73,7 +66,6 @@ export default function Admin_image_add(props: {on_change: Function, on_delete: 
     
                 }
             }
-            
 
             for(var other_file of default_urls.other){
                 var temp = other_file.split("/")
@@ -217,17 +209,14 @@ export default function Admin_image_add(props: {on_change: Function, on_delete: 
                     var new_file = new File([blob], new_file_name, {type: 'image/png'})
     
                     old_other[pozition] = new_name
-                    console.log("🚀 ~ Admin_image_add ~ old_other:", old_other)
+
                     old_files[pozition] = new_file
-                    console.log("🚀 ~ Admin_image_add ~ old_files:", old_files)
     
                     set_files({...files, other: old_files})
                     set_default_urls({...default_urls, other: old_other})
     
                     props.on_change({...files, other: old_files})
                     props.on_delete({...default_urls, other: old_other})
-    
-            
             }
         }
     }
@@ -269,6 +258,8 @@ export default function Admin_image_add(props: {on_change: Function, on_delete: 
 
     return(
         <>
+            {props.test ? <input type="text" value={props.test} /> : ""}
+            
             {default_urls.main !== undefined || settings.main === true ? 
                 <div key={"main"}>
                     <img src={default_urls.main} width={"100px"} height={"100px"} alt="img"></img>
