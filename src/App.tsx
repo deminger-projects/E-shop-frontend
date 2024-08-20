@@ -49,6 +49,8 @@ import Refund from "./pages/user/Refund_log_of";
 import Collections from "./pages/user/Collections";
 import Collection_product_showcase from "./pages/user/Showcase";
 
+import Padding from "./components/Padding";
+
 export default function App(){
   
   return(
@@ -109,6 +111,11 @@ export default function App(){
           <Route path="/showcase/:id" element={<Collection_product_showcase/>} />
 
       </Routes>
+
+      
+
     </>
   )
 }
+
+//<Padding></Padding>

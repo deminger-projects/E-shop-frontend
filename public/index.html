@@ -17,6 +17,7 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     
+    
     <!-- <script src="https://widget.packeta.com/v6/www/js/library.js"></script>
 
     <script>
@@ -24,27 +25,27 @@
       
       const packetaOptions = {
           country: "cz", 
-    language: "cs", 
-    valueFormat: "\"Packeta\",id,carrierId,carrierPickupPointId,name,city,street", 
-    view: "modal", 
-    defaultCurrency: "kč"
+valueFormat: "\"Packeta\",id,carrierId,carrierPickupPointId,name,city,street", 
+view: "modal", 
+defaultCurrency: "kč"
       };
       
       false
-    
-      function showSelectedPickupPoint(point, set_adress) {
+  
+      function showSelectedPickupPoint(point) {
           const saveElement = document.querySelector(".packeta-selector-value");
           // Add here an action on pickup point selection
-          set_adress(point)
           saveElement.innerText = '';
           if (point) {
             console.log("Selected point", point);
             saveElement.innerText = "Address: " + point.formatedValue; 
-            window.postMessage(point)
           }
       }
-    
+  
     </script> -->
+
+     
+  
 
 
 

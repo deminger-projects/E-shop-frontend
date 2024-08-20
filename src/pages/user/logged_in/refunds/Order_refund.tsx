@@ -34,6 +34,7 @@ export default function Order_refund(){
     useEffect(() => {
         const fetchData = async () => {
             var data = await get_refund_reasons()
+            console.log("🚀 ~ fetchData ~ data:", data)
     
             set_reasons(data);
             set_loading(false);

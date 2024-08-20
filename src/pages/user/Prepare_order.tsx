@@ -15,16 +15,12 @@ import Loading from '../../components/Loading';
 import cart_products_validation from '../../apis/other/cart_products_validation';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 
-
 export default function Prepare_order(){
 
     const navigate = useNavigate();
 
-    const [html_state, set_html_state] = useState<string>("");
-
-    useEffect(() => {
-        console.log(html_state)
-    }, [html_state])
+    const [hand_gate, set_hand_gate] = useState<boolean>(false);
+    const [zasilkovna_gate, set_zasilkovna_gate] = useState<boolean>(false);
 
     const [name, setName] = useState<string>("");
     const [surname, setSurname] = useState<string>("");
@@ -102,10 +98,10 @@ export default function Prepare_order(){
             }
         }
 
-        //set_loading(false)
+        set_loading(false)
     }
 
-    var handle_click = (pointer: number) => {
+    var handle_click_user = (pointer: number) => {
         if(delivery_data){
             var user_info: User_data = delivery_data[0].user_data[pointer]
         
@@ -113,12 +109,63 @@ export default function Prepare_order(){
             setSurname(user_info.surname)
             setEmail(user_info.email)
             setTelephone(user_info.phone)
+            
+        }
+    }
+
+    var handle_click_delivery = (pointer: number) => {
+        if(delivery_data){
+            var user_info: User_data = delivery_data[0].user_data[pointer]
+        
+           
             setAdress(user_info.adress)
             setCity(user_info.city)
             setPSC(user_info.postcode)
         }
     }
-   
+
+    var zasilkovna_mapa_handle = () => {
+        const script = document.createElement('script');
+        script.src = 'https://widget.packeta.com/v6/www/js/library.js';
+        script.async = true;
+
+        const packetaApiKey = 'e49432e5e4e5c7bf';
+
+        const packetaOptions = {
+            country: "cz", 
+  valueFormat: "\"Packeta\",id,carrierId,carrierPickupPointId,name,city,street", 
+  view: "modal", 
+  defaultCurrency: "kč"
+        };
+
+        var new_window: any = window
+
+        script.onload = () => {
+
+            new_window.Packeta.Widget.pick(packetaApiKey, (point: any) => {setAdress(point.street); setCity(point.city); setPSC(point.zip)}, packetaOptions)
+            
+
+
+           
+        };
+        script.onerror = () => {
+            console.error('Chyba při načítání Packeta widget skriptu.');
+          };
+
+          document.body.appendChild(script);
+
+          return () => {
+            const scriptElement = document.querySelector('script[src="https://widget.packeta.com/v6/www/js/library.js"]');
+            if (scriptElement) {
+              document.body.removeChild(scriptElement);
+            }
+          };
+    }
+
+    useEffect(() => {
+        
+      }, []);
+        
 
     return(
         <>
@@ -138,23 +185,19 @@ export default function Prepare_order(){
                                 <tr>
                                     <th>name</th>
                                     <th>surname</th>
+                                    <th>email</th>
                                     <th>phone</th>
-                                    <th>adress</th>
-                                    <th>city</th>
-                                    <th>psc</th>
                                 </tr>
                             </thead>
 
                             <tbody>
                 
                     {delivery_data[0].user_data.map((delivery_info: User_data, index: number) => 
-                            <tr key={index.toString()} onClick={() => {handle_click(index)}}>
+                            <tr key={index.toString()} onClick={() => {handle_click_user(index)}}>
                                 <td>{delivery_info.name}</td>
                                 <td>{delivery_info.surname}</td>
+                                <td>{delivery_info.email}</td>
                                 <td>{delivery_info.phone}</td>
-                                <td>{delivery_info.adress}</td>
-                                <td>{delivery_info.city}</td>
-                                <td>{delivery_info.postcode}</td>
                             </tr>
                     )}
                             </tbody> 
@@ -182,23 +225,70 @@ export default function Prepare_order(){
                         <input id="telephone" type="tel" value={telephone} onChange={(e) => setTelephone(e.target.value)}></input>
                         <br></br>
 
-                        <label htmlFor="adress">{"Adress"}</label>
-                        <input id="adress" type="text" value={adress} onChange={(e) => setAdress(e.target.value)}></input>
-                        <br></br>
-
-                        <label htmlFor="city">{"City"}</label>
-                        <input id="city" type="text" value={city} onChange={(e) => setCity(e.target.value)}></input>
-                        <br></br>
-
-                        <label htmlFor="PSC">{"PSC"}</label>
-                        <input id="PSC" type="text" value={PSC} onChange={(e) => setPSC(e.target.value)}></input>
-                        <br></br>
+                        
 
                         <button>send</button>
 
                     </form>                
+
+                    <button onClick={() => {set_hand_gate(!hand_gate); setAdress(""); setCity(""); setPSC(""); set_zasilkovna_gate(false)}}>Balík do ruky</button>
+
+                        {hand_gate ? <>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>adress</th>
+                                        <th>city</th>
+                                        <th>psc</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
                     
-                
+                        {delivery_data[0].user_data.map((delivery_info: User_data, index: number) => 
+                                <tr key={index.toString()} onClick={() => {handle_click_delivery(index)}}>
+                                    <td>{delivery_info.adress}</td>
+                                    <td>{delivery_info.city}</td>
+                                    <td>{delivery_info.postcode}</td>
+                                </tr>
+                        )}
+                                </tbody> 
+                            </table>
+
+
+                            <label htmlFor="adress">{"Adress"}</label>
+                            <input id="adress" type="text" value={adress} onChange={(e) => setAdress(e.target.value)}></input>
+                            <br></br>
+
+                            <label htmlFor="city">{"City"}</label>
+                            <input id="city" type="text" value={city} onChange={(e) => setCity(e.target.value)}></input>
+                            <br></br>
+
+                            <label htmlFor="PSC">{"PSC"}</label>
+                            <input id="PSC" type="text" value={PSC} onChange={(e) => setPSC(e.target.value)}></input>
+                            <br></br>
+                        </> : <></>}
+
+                        <button onClick={() => {set_zasilkovna_gate(!zasilkovna_gate); setAdress(""); setCity(""); setPSC(""); set_hand_gate(false)}}>Zásilkovna výdejní místo</button>
+
+                        {zasilkovna_gate ? 
+                        <>
+                            <button onClick={zasilkovna_mapa_handle}>Vybrat zásilkovnu</button>
+
+                            <label htmlFor="adress">{"Adress"}</label>
+                            <input id="adress" type="text" value={adress} onChange={(e) => setAdress(e.target.value)}></input>
+                            <br></br>
+
+                            <label htmlFor="city">{"City"}</label>
+                            <input id="city" type="text" value={city} onChange={(e) => setCity(e.target.value)}></input>
+                            <br></br>
+
+                            <label htmlFor="PSC">{"PSC"}</label>
+                            <input id="PSC" type="text" value={PSC} onChange={(e) => setPSC(e.target.value)}></input>
+                            <br></br>
+                        </>
+                        : <></>} 
 
                 </div>
             </>}

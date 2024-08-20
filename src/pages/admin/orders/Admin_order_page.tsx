@@ -228,6 +228,9 @@ export default function Admin_order_page(){
 
 
             <br />
+
+            <a href="https://www.potisky-tricek.cz/" target="_blank" >objednat zde</a>
+
             <br />
 
            {is_admin ? order_arr_display.length > 0 ? 
@@ -294,7 +297,9 @@ export default function Admin_order_page(){
                             </tbody>
                     
                         </table>
+                        
                 )}
+                
                 </div>
                 : <p>no records</p>
                 : <Access_denied></Access_denied>
