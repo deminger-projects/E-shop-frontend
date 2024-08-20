@@ -62,11 +62,11 @@ export default function Admin_refunds(){
 
             set_refund_arr(data)
             set_refund_arr_display(data)
-  
+            set_loading(false);
+
           };
 
         fetchData()
-        set_loading(false);
 
     }, [update])
 
@@ -109,7 +109,7 @@ export default function Admin_refunds(){
                     res_arr.push(refund)
                 }   
             }else if(search_order_id){
-                if(new_refund.refunds[0].order_id.toString().toLocaleLowerCase().includes(search_order_id.toLocaleLowerCase())){
+                if(new_refund.refunds[0].order_code.toString().toLocaleLowerCase().includes(search_order_id.toLocaleLowerCase())){
                     res_arr.push(refund)
                 }            
             }else if(search_name){
@@ -179,7 +179,7 @@ export default function Admin_refunds(){
 
             
             {search_gate_order_id ? <>
-                <label htmlFor="">order id</label>
+                <label htmlFor="">order code</label>
                 <input type="string" value={search_order_id} onChange={(event) => set_search_order_id(event.target.value)}></input>
             </> : ""}
 
@@ -221,7 +221,7 @@ export default function Admin_refunds(){
                             <table key={refund.refunds[0].id}>
                                 <thead>
                                     <tr>
-                                        <th>order id</th>
+                                        <th>order code</th>
                                         <th>name</th>
                                         <th>surname</th>
                                         <th>adress</th>
@@ -235,7 +235,7 @@ export default function Admin_refunds(){
                                 
                                 <tbody>
                                     <tr>
-                                        <td>{refund.refunds[0].order_id}</td>
+                                        <td>{refund.refunds[0].order_code}</td>
                                         <td>{refund.refunds[0].name}</td>
                                         <td>{refund.refunds[0].surname}</td>
                                         <td>{refund.refunds[0].adress}</td>

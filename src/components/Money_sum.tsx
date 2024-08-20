@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 
-export default function Money_sum() {
+export default function Money_sum(props: {delivery: number}) {
   
   const [cart_data] = useState<Array<any>>(sessionStorage.getItem("cart_data") === null ? [] : JSON.parse(sessionStorage.getItem("cart_data")!))
 
   const [products_cost, set_products_cost] = useState(0)
-  const [delivery_cost] = useState(0)
 
   const [loading, set_loading] = useState(true)
 
@@ -56,8 +55,8 @@ export default function Money_sum() {
 
                 <tr>
                     <td>{products_cost + "€"}</td>
-                    <td>{delivery_cost + "€"}</td>
-                    <td>{products_cost + delivery_cost + "€"}</td>
+                    <td>{props.delivery + "€"}</td>
+                    <td>{products_cost + props.delivery + "€"}</td>
                 </tr>
               </tbody>
           </table>

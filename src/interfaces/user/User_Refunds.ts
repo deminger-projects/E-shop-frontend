@@ -24,4 +24,5 @@ export interface Refund {
     postcode: string;
     add_date: string;
     status:   string;
+    order_code: string
 }

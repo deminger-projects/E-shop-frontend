@@ -25,4 +25,7 @@ export interface OrderUser {
     postcode: string;
     add_date: string;
     status:   string;
+    country:   string;
+    zasilkovna:   boolean;
+    order_code: string
 }

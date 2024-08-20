@@ -103,7 +103,7 @@ export default function Admin_order_page(){
                     res_arr.push(order)
                 }   
             }else if(search_order_id){
-                if(new_order.orders[0].id.toString().toLocaleLowerCase().includes(search_order_id.toLocaleLowerCase())){
+                if(new_order.orders[0].order_code.toString().toLocaleLowerCase().includes(search_order_id.toLocaleLowerCase())){
                     res_arr.push(order)
                 }            
             }else if(search_name){
@@ -137,18 +137,20 @@ export default function Admin_order_page(){
 
     
     useEffect(() => {
-        const fetchData = async () => {
-            set_loading(true)
+        set_loading(true)
 
+        const fetchData = async () => {
+            
             var data = await get_admin_orders()
-            console.log("🚀 ~ fetchData ~ data:", data)
 
             set_order_arr(data)
             set_order_arr_display(data)
+
+            set_loading(false);
           };
 
         fetchData()
-        set_loading(false);
+        
 
     }, [update])
 
@@ -189,7 +191,7 @@ export default function Admin_order_page(){
 
 
             {search_gate_order_id ? <>
-                <label htmlFor="">order id</label>
+                <label htmlFor="">order code</label>
                 <input type="string" value={search_order_id} onChange={(event) => set_search_order_id(event.target.value)}></input>
             </> : ""}
 
@@ -229,7 +231,6 @@ export default function Admin_order_page(){
 
             <br />
 
-            <a href="https://www.potisky-tricek.cz/" target="_blank" >objednat zde</a>
 
             <br />
 
@@ -240,7 +241,7 @@ export default function Admin_order_page(){
                         <table key={order.orders[0].id.toString()}>
                             <thead>
                                 <tr>
-                                    <th>order id</th>
+                                    <th>order code</th>
                                     <th>name</th>
                                     <th>surname</th>
                                     <th>adress</th>
@@ -248,13 +249,15 @@ export default function Admin_order_page(){
                                     <th>phone</th>
                                     <th>psc</th>
                                     <th>order_date</th>
+                                    <th>country</th>
+                                    <th>zasilkovna status</th>
                                     <th>status</th>
                                 </tr>
                             </thead>
                             
                             <tbody>
                                 <tr>
-                                    <td>{order.orders[0].id}</td>
+                                    <td>{order.orders[0].order_code}</td>
                                     <td>{order.orders[0].name}</td>
                                     <td>{order.orders[0].surname}</td>
                                     <td>{order.orders[0].adress}</td>
@@ -262,6 +265,8 @@ export default function Admin_order_page(){
                                     <td>{order.orders[0].phone}</td>
                                     <td>{order.orders[0].postcode}</td>
                                     <td>{order.orders[0].add_date}</td>
+                                    <td>{order.orders[0].country}</td>
+                                    <td>{order.orders[0].zasilkovna}</td>
                                     <td>{order.orders[0].status}</td>
                                 </tr>
                             </tbody>

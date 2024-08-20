@@ -29,7 +29,7 @@ export default function Orders(){
             var order_fix: Order = order
 
             if(search_order_id){
-                if(order_fix.refunds[0].id.toString().includes(search_order_id)){
+                if(order_fix.refunds[0].order_code.toString().includes(search_order_id)){
                     res_arr.push(order)
                 }
             }
@@ -85,7 +85,7 @@ export default function Orders(){
         <>
 
             {loading ? <Loading></Loading> : <>
-                <label htmlFor="">order id</label>
+                <label htmlFor="">order code</label>
                 <input type="text" value={search_order_id} onChange={(event) => set_search_order_id(event.target.value)}/>
 
                 {user_data.length > 0 ? orders_arr_display.length > 0 ? 
@@ -95,7 +95,7 @@ export default function Orders(){
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>order id</th>
+                                            <th>order code</th>
                                             <th>name</th>
                                             <th>surname</th>
                                             <th>email</th>
@@ -109,7 +109,7 @@ export default function Orders(){
                                     
                                     <tbody>
                                         <tr>
-                                            <td><p>{order.refunds[0].id}</p></td>
+                                            <td><p>{order.refunds[0].order_code}</p></td>
                                             <td><p>{order.refunds[0].name}</p></td>
                                             <td><p>{order.refunds[0].surname}</p></td>
                                             <td><p>{order.refunds[0].email}</p></td>

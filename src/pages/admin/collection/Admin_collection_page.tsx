@@ -120,7 +120,6 @@ export default function Admin_collection_page(){
         set_loading(false)
 
         navigate("/admin_collection_edit", {state: {collection_data: new_data}});
-
     }
 
     return( 
@@ -129,6 +128,8 @@ export default function Admin_collection_page(){
             {loading ? <Loading></Loading> : <>
                 <br />
                 <input type="text" value={search_value} onChange={(event) => set_search_value(event.target.value)}/>
+
+                <Link to={'/admin_collection_add'}>Přidat kolekci</Link>
 
                 <p>{responce_msg}</p>
                 <p>{error_msg}</p>

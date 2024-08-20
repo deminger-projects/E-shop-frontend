@@ -104,7 +104,6 @@ export default function Admin_product_page(){
         const fetchData = async () => {
             var collecions = await get_admin_collections()
             var products = await get_admin_products(last_item_id)
-            console.log("🚀 ~ fetchData ~ products:", products)
 
             if(products.length < 9){
                 set_roll_button_status(false)
@@ -192,6 +191,8 @@ export default function Admin_product_page(){
                     <option value={""}>select collection</option>
                     <AdminCollectionSelect collections={fetch_collections}></AdminCollectionSelect>
                 </select>            
+
+                <Link to={'/admin_product_add'}>Přidat produkt</Link>
 
                 {is_admin ? products_arr_display.length > 0 ?
                     <table>

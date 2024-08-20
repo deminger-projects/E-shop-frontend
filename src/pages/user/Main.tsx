@@ -53,14 +53,17 @@ export default function Main(){
                 set_roll_button_status(false)
             }
 
-            set_roll_button_status(true)
+            if(data.length > 1){
+                set_roll_button_status(true)
 
-            set_products_arr(data)
-            set_products_arr_display(data)
-
-            set_last_item_id(data[data.length - 1].products[0].id)
+                set_products_arr(data)
+                set_products_arr_display(data)
+    
+                set_last_item_id(data[data.length - 1].products[0].id)
+            }
 
             set_loading(false);
+
           };
 
         fetchData()

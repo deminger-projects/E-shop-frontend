@@ -14,6 +14,7 @@ export interface Refund {
     add_date: string;
     status:   string;
     order_id: number;
+    order_code: string
 }
 
 export interface Refund_Product {

@@ -21,11 +21,12 @@ export default function Placed_returns(){
         var res_arr: Array<User_refunds> = []
 
         for(var refund of refunds_arr){
+        console.log("🚀 ~ useEffect ~ refund:", refund)
 
             var refund_fix: User_refunds = refund
 
             if(search_refund_id){
-                if(refund_fix.refunds[0].id.toString().includes(search_refund_id)){
+                if(refund_fix.refunds[0].order_code.toString().includes(search_refund_id)){
                     res_arr.push(refund)
                 }
             }
@@ -57,7 +58,7 @@ export default function Placed_returns(){
         <>
 
             {loading ? <Loading></Loading> : <>
-                <label htmlFor="">order id</label>
+                <label htmlFor="">order code</label>
                 <input type="text" value={search_refund_id} onChange={(event) => set_search_refund_id(event.target.value)}/>
 
                 {user_data.length > 0 ? refunds_arr_display.length !== 0 ?   
@@ -66,7 +67,7 @@ export default function Placed_returns(){
                             <table key={refund.refunds[0].id.toString()}>
                                 <thead>
                                     <tr>
-                                        <th>order id</th>
+                                        <th>order code</th>
                                         <th>name</th>
                                         <th>surname</th>
                                         <th>email</th>
@@ -80,7 +81,7 @@ export default function Placed_returns(){
 
                                 <tbody>
                                     <tr>
-                                        <td><p>{refund.refunds[0].id}</p></td>
+                                        <td><p>{refund.refunds[0].order_code}</p></td>
                                         <td><p>{refund.refunds[0].name}</p></td>
                                         <td><p>{refund.refunds[0].surname}</p></td>
                                         <td><p>{refund.refunds[0].email}</p></td>

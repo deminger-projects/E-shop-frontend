@@ -26,6 +26,9 @@ export default function Account_info(){
     const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     useEffect(() => {
+
+        set_loading(true)
+        
         const fetchData = async () => {
             var data = await get_user_acccount_data(user_data[0].email, user_data[0].password)
 
