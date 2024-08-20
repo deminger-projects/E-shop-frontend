@@ -83,15 +83,15 @@ export default function Prepare_order(){
 
             var validation_responce: any = await cart_products_validation(cart_data.templates_for_validation)
 
-            var order_code = await generate_order_code()
+            var order_code = (await generate_order_code()).order_code
 
             if(validation_responce.next_status === true){
                 var order_template;
 
                 if(delivery_data.length <= 0){
-                    order_template = get_order_template(null, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, "Inactive", country, zasilkovna_gate, order_code.order_code)
+                    order_template = get_order_template(null, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, "Inactive", country, zasilkovna_gate, order_code)
                 }else{
-                    order_template = get_order_template(delivery_data[0].users[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user_data[0].login_status, country, zasilkovna_gate, order_code.order_code)
+                    order_template = get_order_template(delivery_data[0].users[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user_data[0].login_status, country, zasilkovna_gate, order_code)
                 }
     
                 var responce = await get_stripe_payment_url(cart_data, order_template, delivery_price, order_code)
