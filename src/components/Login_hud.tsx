@@ -21,8 +21,18 @@ export default function Login_hud(){
     const [cookies, set_cookies] = useCookies(["user_data"])
 
     useEffect(() => {
+        console.log(cookies)
+
+        console.log(user_data)
+
+        console.log(sessionStorage.getItem("user_data"))
+
+
+    }, [cookies, user_data])
+
+    useEffect(() => {
         const temp = async() => {
-            if(cookies.user_data){
+            if(sessionStorage.getItem("user_data")){
                 if(user_data.length > 0 || cookies.user_data.lenght > 0){
                     var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
 

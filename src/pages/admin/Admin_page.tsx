@@ -8,7 +8,7 @@ import check_for_admin from '../../functions/sub_functions/check_for_admin';
 export default function Admin_page(){
 
     const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
-
+    
     const [is_admin, set_is_admin] = useState<boolean>(false)
 
     const [loading, set_loading] = useState<boolean>(true)
