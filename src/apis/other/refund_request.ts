@@ -1,7 +1,7 @@
 import Tables from "../../interfaces/Tables"
 import refund_template_interface from "../../interfaces/templates/refund_template"
 
-export default async function refund_request(refund_template: refund_template_interface, email: string, is_refund?: boolean){
+export default async function refund_request(refund_template: any, email: string, is_refund?: boolean){
 
     const form_data = new FormData()
 

@@ -21,7 +21,6 @@ export default function Placed_returns(){
         var res_arr: Array<User_refunds> = []
 
         for(var refund of refunds_arr){
-        console.log("🚀 ~ useEffect ~ refund:", refund)
 
             var refund_fix: User_refunds = refund
 

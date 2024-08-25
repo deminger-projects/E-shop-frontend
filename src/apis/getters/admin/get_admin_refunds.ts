@@ -1,7 +1,13 @@
-export default async function get_admin_refunds(){
+export default async function get_admin_refunds(status: string){
     try {
+
+      const form = new FormData();
+
+      form.append("status", JSON.stringify(status))
+
         const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_admin_refunds', {
-            method: 'POST'  
+            method: 'POST',
+            body: form 
         }); 
 
           if (!response.ok) {

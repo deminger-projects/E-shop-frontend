@@ -1,6 +1,6 @@
-const refund_request_template = (order_code: number, email: string) => {
+const refund_request_template = (order_code: string, email: string) => {
     return {
-        orders: {id$: order_code, email$: email}
+        orders: {order_code$: order_code, email$: email}
     }
 }
 

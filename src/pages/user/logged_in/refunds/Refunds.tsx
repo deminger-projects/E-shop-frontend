@@ -13,7 +13,7 @@ export default function Refunds(){
 
     const location = useLocation()
 
-    const [roll_button_status, set_roll_button_status] = useState<boolean>(false)
+    const [roll_button_status, set_roll_button_status] = useState<boolean>(true)
     const [last_item_id, set_last_item_id] = useState<number>(0)
 
     const [orders_arr, set_orders_arr] = useState<Array<New_orders>>([])
@@ -67,24 +67,17 @@ export default function Refunds(){
 
         var data1 = await get_user_avaible_returns(user_data[0].email, user_data[0].password, last_item_id)
 
-        if(data1.length > 0){
+        if(data1.length === 3){
             var products_arr_copy = [...orders_arr]
             var new_data = products_arr_copy.concat(data1)
     
             set_orders_arr(new_data)
             set_orders_arr_display(new_data)
 
-            
-    
             set_last_item_id(data1[data1.length - 1].orders[0].id)
-            
-            
+                        
             set_roll_button_status(true)
-
-            if(data1.length < 9){
-                set_roll_button_status(false)
-            }
-        }else{
+        }else if(data1.length < 3){
             set_roll_button_status(false)
         }
 

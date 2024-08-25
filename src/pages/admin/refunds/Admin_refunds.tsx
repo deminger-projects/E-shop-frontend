@@ -34,6 +34,8 @@ export default function Admin_refunds(){
 
     const [loading, set_loading] = useState<boolean>(true)
     const [update, set_update] = useState<boolean>(true)
+    
+    const [current_status, set_current_status] = useState<string>("");
 
     const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
@@ -55,20 +57,20 @@ export default function Admin_refunds(){
 
     }, [])
 
-    useEffect(() => {
-        set_loading(true)
-        const fetchData = async () => {
-            var data = await get_admin_refunds()
+    // useEffect(() => {
+    //     set_loading(true)
+    //     const fetchData = async () => {
+    //         var data = await get_admin_refunds()
 
-            set_refund_arr(data)
-            set_refund_arr_display(data)
-            set_loading(false);
+    //         set_refund_arr(data)
+    //         set_refund_arr_display(data)
+    //         set_loading(false);
 
-          };
+    //       };
 
-        fetchData()
+    //     fetchData()
 
-    }, [update])
+    // }, [update])
 
     
     useEffect(() => {      // searches products based on user input, valid input: product name, product size
@@ -158,9 +160,25 @@ export default function Admin_refunds(){
             set_api_responce_msg(api_responce.msg)
         }
 
-        set_update(!update)
+        await handle_status_select(current_status)
+        //set_update(!update)
         set_loading(false)
 
+    }
+
+    var handle_status_select = async(status: string) => {
+        set_loading(true)
+        const fetchData = async () => {
+            var data = await get_admin_refunds(status)
+
+            set_refund_arr(data)
+            set_refund_arr_display(data)
+            set_loading(false);
+            set_current_status(status)
+
+          };
+
+        await fetchData()
     }
 
     return(
@@ -204,13 +222,11 @@ export default function Admin_refunds(){
             <br />
             <br />
 
-            <button onClick={() => {set_search_gate_active(!search_gate_active); set_search_gate_processing(false); set_search_gate_cancel(false); set_search_gate_done(false)}}>status Active</button>
+            <button onClick={() => {handle_status_select("Proccesing"); set_search_gate_active(false); set_search_gate_processing(!search_gate_processing); set_search_gate_cancel(false); set_search_gate_done(false)}}>status Proccesing</button>
 
-            <button onClick={() => {set_search_gate_active(false); set_search_gate_processing(!search_gate_processing); set_search_gate_cancel(false); set_search_gate_done(false)}}>status Proccesing</button>
+            <button onClick={() => {handle_status_select("Cancel"); set_search_gate_active(false); set_search_gate_processing(false); set_search_gate_cancel(!search_gate_cancel); set_search_gate_done(false)}}>status Cancled</button>
 
-            <button onClick={() => {set_search_gate_active(false); set_search_gate_processing(false); set_search_gate_cancel(!search_gate_cancel); set_search_gate_done(false)}}>status Cancled</button>
-
-            <button onClick={() => {set_search_gate_active(false); set_search_gate_processing(false); set_search_gate_cancel(false); set_search_gate_done(!search_gate_done)}}>status Done</button>
+            <button onClick={() => {handle_status_select("Done"); set_search_gate_active(false); set_search_gate_processing(false); set_search_gate_cancel(false); set_search_gate_done(!search_gate_done)}}>status Done</button>
 
 
             {is_admin ? refund_arr_display.length > 0 ?

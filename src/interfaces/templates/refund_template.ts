@@ -1,3 +1,3 @@
 export default interface refund_template_interface {
-    orders: {id$: number, email$: string}
+    orders: {order_code$: number, email$: string}
 }
