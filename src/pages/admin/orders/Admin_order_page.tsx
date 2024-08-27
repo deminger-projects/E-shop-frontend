@@ -53,11 +53,11 @@ export default function Admin_order_page(){
 
             if(is_admin.next_status === true){
                 set_is_admin(true)
+                set_loading(false)
             }
         }
 
         temp()
-        set_loading(false)
     }, [])
 
     useEffect(() => {      // searches products based on user input, valid input: product name, product size

@@ -4,6 +4,7 @@ import AccessDenied from '../user/Access_denied';
 
 import { useEffect, useState } from 'react';
 import check_for_admin from '../../functions/sub_functions/check_for_admin';
+import Loading from '../../components/Loading';
 
 export default function Admin_page(){
 
@@ -14,23 +15,25 @@ export default function Admin_page(){
     const [loading, set_loading] = useState<boolean>(true)
 
     useEffect(() => {
+        set_loading(true)
         const temp = async() => {
             if(user_data.length > 0){
                 var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
 
                 if(is_admin.next_status === true){
                     set_is_admin(true)
+                    set_loading(false)
+
                 }
             }
         }
         temp()
 
-        set_loading(false)
     }, [user_data])
 
     return(
         <>
-            {is_admin ? 
+            {loading ? <Loading></Loading> : is_admin ? 
             <>
                 <br />
                 <div>

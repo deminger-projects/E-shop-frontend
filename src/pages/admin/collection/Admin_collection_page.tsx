@@ -72,6 +72,7 @@ export default function Admin_collection_page(){
     useEffect(() => {
         const fetchData = async () => {
             var data = await get_admin_collections()
+            console.log("🚀 ~ fetchData ~ data:", data)
 
             set_search_collections(data)
             set_search_collections_display(data)
@@ -102,6 +103,7 @@ export default function Admin_collection_page(){
     }
 
     var handle_click = async (event:React.MouseEvent<HTMLElement>, id: number, collection: Collections) => {
+    console.log("🚀 ~ varhandle_click= ~ collection:", collection)
 
         set_loading(true)
 

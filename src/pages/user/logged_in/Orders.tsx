@@ -47,8 +47,21 @@ export default function Orders(){
         const fetchData = async () => {
             var data = await get_user_orders(user_data[0].email, user_data[0].password, last_item_id)
 
-            set_orders_arr(data)
-            set_orders_arr_display(data)
+            if(data.length < 3){
+                set_roll_button_status(false)
+            }
+    
+            if (data.length === 3){
+                set_roll_button_status(true)
+            }
+
+            if(data.length > 0){
+                set_orders_arr(data)
+                set_orders_arr_display(data)
+    
+                set_last_item_id(data[data.length - 1].refunds[0].id)
+            }
+
             set_loading(false);
           };
 
@@ -60,7 +73,15 @@ export default function Orders(){
 
         var data1 = await get_user_orders(user_data[0].email, user_data[0].password, last_item_id)
 
-        if(data1.length > 2){
+        if(data1.length < 3){
+            set_roll_button_status(false)
+        }
+
+        if (data1.length === 3){
+            set_roll_button_status(true)
+        }
+
+        if(data1.length > 0){
             var products_arr_copy = [...orders_arr]
             var new_data = products_arr_copy.concat(data1)
     
@@ -68,10 +89,11 @@ export default function Orders(){
             set_orders_arr_display(new_data)
     
             set_last_item_id(data1[data1.length - 1].refunds[0].id)
-            
-            set_roll_button_status(true)
-        }else if (data1.length <= 2){
+        }
+
+        if(data1.length < 3){
             set_roll_button_status(false)
+
         }
 
         set_loading(false)

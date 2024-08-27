@@ -5,6 +5,7 @@ import User_refunds, {OrderProduct} from "../../../../interfaces/user/User_Refun
 import { useEffect, useState } from "react"
 import get_user_placed_returns from "../../../../apis/getters/user/get_user_placed_returns"
 import Loading from "../../../../components/Loading"
+import Roll_button from "../../../../components/Roll_button"
 
 export default function Placed_returns(){
 
@@ -16,6 +17,9 @@ export default function Placed_returns(){
     const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     const [loading, set_loading] = useState<boolean>(true)
+
+    const [roll_button_status, set_roll_button_status] = useState<boolean>(false)
+    const [last_item_id, set_last_item_id] = useState<number>(0)
 
     useEffect(() => {
         var res_arr: Array<User_refunds> = []
@@ -42,16 +46,62 @@ export default function Placed_returns(){
 
     useEffect(() => {
         const fetchData = async () => {
-            var data = await get_user_placed_returns(user_data[0].email, user_data[0].password)
+            var data = await get_user_placed_returns(user_data[0].email, user_data[0].password, last_item_id)
     
-            set_refunds_arr(data)
-            set_refunds_arr_display(data)
+            if(data.length < 3){
+                set_roll_button_status(false)
+            }
+    
+            if (data.length === 3){
+                set_roll_button_status(true)
+            }
+
+            if(data.length > 0){
+                set_refunds_arr(data)
+                set_refunds_arr_display(data)
+
+                set_last_item_id(data[data.length - 1].refunds[0].id)
+
+            }
+            
     
             set_loading(false);
           };
 
         fetchData()
     }, [])
+
+
+    var get_more_products = async () => {
+        set_loading(true)
+
+        var data1 = await get_user_placed_returns(user_data[0].email, user_data[0].password, last_item_id)
+
+        if(data1.length < 3){
+            set_roll_button_status(false)
+        }
+
+        if (data1.length === 3){
+            set_roll_button_status(true)
+        }
+
+        if(data1.length > 0){
+            var products_arr_copy = [...refunds_arr]
+            var new_data = products_arr_copy.concat(data1)
+    
+            set_refunds_arr(new_data)
+            set_refunds_arr_display(new_data)
+    
+            set_last_item_id(data1[data1.length - 1].refunds[0].id)
+        }
+
+        if(data1.length < 3){
+            set_roll_button_status(false)
+
+        }
+
+        set_loading(false)
+    }
 
     return(
         <>
@@ -123,6 +173,9 @@ export default function Placed_returns(){
                     :<p>no data</p>
                     : <Access_denied></Access_denied>
                 }
+                                
+                {roll_button_status ? <Roll_button get_more_products={get_more_products}></Roll_button> : <></>}
+
             </>}
             
         </>

@@ -1,9 +1,10 @@
-export default async function get_user_placed_returns(email: string, password: string){
+export default async function get_user_placed_returns(email: string, password: string, last_item_id: number){
     try {
         const form_data = new FormData()
 
         form_data.append("email", JSON.stringify(email))
         form_data.append("password", JSON.stringify(password))
+        form_data.append("last_item_id", JSON.stringify(last_item_id))
 
 
       const response = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/get_user_place_returns', {

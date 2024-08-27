@@ -20,15 +20,7 @@ export default function Login_hud(){
 
     const [cookies, set_cookies] = useCookies(["user_data"])
 
-    useEffect(() => {
-        console.log(cookies)
-
-        console.log(user_data)
-
-        console.log(sessionStorage.getItem("user_data"))
-
-
-    }, [cookies, user_data])
+    const [gate, set_gate] = useState<boolean>(false)
 
     useEffect(() => {
         const temp = async() => {
@@ -48,6 +40,26 @@ export default function Login_hud(){
 
         temp()
     }, [cookies.user_data, user_data.length, user_data])
+
+
+    useEffect(() => {
+
+        var data = sessionStorage.getItem("user_data")
+    
+        if(data !== null){
+
+            var user_data_data = JSON.parse(data)
+
+            if(user_data_data.length === 0){
+                set_cookies("user_data", JSON.stringify([]))
+
+                set_user_data(user_data_data)
+                set_is_admin(false)
+                set_gate(true)
+            }
+        }
+        
+    }, [sessionStorage.getItem("user_data")])
 
 
     var handle_on_click = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -72,13 +84,18 @@ export default function Login_hud(){
         set_loading(false)
     }
 
+    useEffect(() => {
+        console.log("🚀 ~ useEffect ~ user_data:", user_data)
+
+    }, [user_data])
+
     return(
         <> 
             {loading ? <p>loading</p> : <>
                 <p>{err_msg}</p>
 
                 <div id={"login_data"}>
-                    {user_data.length > 0 ? 
+                    {user_data.length > 0 && cookies.user_data[0] ?  
                         is_admin ? 
                             <>
                                 <div>

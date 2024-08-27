@@ -36,19 +36,23 @@ export default function Admin_collection_edit(){
 
     const [cookies, setCookie] = useCookies(['user_data'])
 
-    const [loading, set_loading] = useState<boolean>(false);  
+    const [loading, set_loading] = useState<boolean>(true);  
 
     const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     const [is_admin, set_is_admin] = useState<boolean>(false)
 
     useEffect(() => {
+
+        set_loading(true)
+
         const temp = async() => {
             var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
 
             if(is_admin.next_status === true){
                 set_is_admin(true)
             }
+
         }
 
         temp()
@@ -66,11 +70,12 @@ export default function Admin_collection_edit(){
 
             set_base_layout(file_set_up.ulrs)
             set_urls(file_set_up.ulrs)
+
+            set_loading(false)
         }
 
         fetch_data()
 
-        set_loading(false)
     }, [])
 
     

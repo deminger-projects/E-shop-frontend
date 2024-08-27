@@ -10,6 +10,8 @@ import logoff_template from "../../../../templates/login/get_logoff_teplate";
 import logoff from "../../../../apis/login/logoff";
 import get_user_data from "../../../../apis/getters/user/get_user_data";
 import Loading from "../../../../components/Loading";
+import check_password from "../../../../apis/other/check_password";
+import Login_hud from "../../../../components/Login_hud";
 
 export default function Psw_change(){
 
@@ -45,13 +47,17 @@ export default function Psw_change(){
 
         event.preventDefault();
 
-        if(data.password.toUpperCase() !== current_psw.toUpperCase()){set_error_msg("current password is incorect")}
+        var user_data = await get_user_data(data.email, data.password)
+
+        var psw_check_result = (await check_password(current_psw, user_data.password))[0].status        
+
+        if(!psw_check_result){set_error_msg("current password is incorect")}
         if(!psw_input2){set_error_msg("new again password in empty")}
         if(!psw_input1){set_error_msg("new password in empty")}
         if(!current_psw){set_error_msg("current password in empty")}
         if(psw_input1 !== psw_input2){set_error_msg("passwords do not match")}
 
-        if(current_psw && psw_input1 && psw_input2 && user_data[0].password.toUpperCase() === current_psw.toUpperCase() && psw_input1 === psw_input2){
+        if(current_psw && psw_input1 && psw_input2 && psw_check_result && psw_input1 === psw_input2){
         
             const psw_template = get_psw_template(psw_input1)
 
