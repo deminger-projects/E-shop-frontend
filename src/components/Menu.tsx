@@ -13,8 +13,8 @@ export default function Menu() {
       <button className="menu-button" onClick={handle_menu_status_change}>Menu</button>
         {menu_status ? 
           <ul className="menu-options">
-              <li><Link to="/make-refund">make a refund</Link></li>
-              <li><Link to="/about_us">about us</Link></li>
+              <li onClick={handle_menu_status_change}><Link to="/make-refund">make a refund</Link></li>
+              <li onClick={handle_menu_status_change}><Link to="/about_us">about us</Link></li>
           </ul>
         : <></>}
     </div>
