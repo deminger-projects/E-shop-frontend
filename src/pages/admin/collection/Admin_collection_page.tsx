@@ -36,19 +36,25 @@ export default function Admin_collection_page(){
 
     useEffect(() => {
         const temp = async() => {
-            if(user_data.length > 0){
-                var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
+            set_loading(true)
 
-                if(is_admin.next_status === true){
-                    set_is_admin(true)
-                }
+                if(user_data.length > 0){
+                    var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
+
+                    if(is_admin.next_status === true){
+                        set_is_admin(true)
+                    }
             }
+            
+            set_loading(false);
         }
 
         temp()
     }, [user_data])
 
     useEffect(() => {
+        set_loading(true)
+
         var res_arr: Array<Collections> = []
 
         for(var colletion of search_collections){             
@@ -70,9 +76,10 @@ export default function Admin_collection_page(){
     },[search_value, search_collections])
 
     useEffect(() => {
+        set_loading(true)
+
         const fetchData = async () => {
             var data = await get_admin_collections()
-            console.log("🚀 ~ fetchData ~ data:", data)
 
             set_search_collections(data)
             set_search_collections_display(data)
@@ -103,7 +110,6 @@ export default function Admin_collection_page(){
     }
 
     var handle_click = async (event:React.MouseEvent<HTMLElement>, id: number, collection: Collections) => {
-    console.log("🚀 ~ varhandle_click= ~ collection:", collection)
 
         set_loading(true)
 

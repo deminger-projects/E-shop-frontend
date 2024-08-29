@@ -188,22 +188,22 @@ export default function Admin_product_page(){
                 <input type="string" value={search} onChange={(event) => set_search(event.target.value)}></input>
 
                 <select value={search_collection} onChange={(event) => set_search_collection(event.target.value)}>
-                    <option value={""}>select collection</option>
+                    <option value={""}>Select collection</option>
                     <AdminCollectionSelect collections={fetch_collections}></AdminCollectionSelect>
                 </select>            
 
-                <Link to={'/admin_product_add'}>Přidat produkt</Link>
+                <Link to={'/admin_product_add'}>Add new product</Link>
 
                 {is_admin ? products_arr_display.length > 0 ?
                     <table>
                         <thead>
                             <tr>
-                                <th>product name</th>
-                                <th>cost</th>
-                                <th>description</th>
-                                <th>collection</th>
-                                <th>main image</th>
-                                <th>add date</th>
+                                <th>Product name</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                                <th>Collection</th>
+                                <th>Product preview</th>
+                                <th>Add date</th>
                             </tr>
                         </thead>
                         

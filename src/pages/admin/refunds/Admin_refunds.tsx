@@ -188,65 +188,67 @@ export default function Admin_refunds(){
             <p>{api_responce_msg}</p>
             <p>{error_msg}</p>
 
-            <button onClick={() => {set_search_gate_order_id(!search_gate_order_id); set_search_gate_name(false); set_search_gate_email(false); set_search_gate_phone(false)}}>search by order id</button>
+            <button onClick={() => {set_search_gate_order_id(!search_gate_order_id); set_search_gate_name(false); set_search_gate_email(false); set_search_gate_phone(false)}}>Search by order code</button>
 
-            <button onClick={() => {set_search_gate_name(!search_gate_name); set_search_gate_order_id(false); set_search_gate_email(false); set_search_gate_phone(false)}}>search by name</button>
+            <button onClick={() => {set_search_gate_name(!search_gate_name); set_search_gate_order_id(false); set_search_gate_email(false); set_search_gate_phone(false)}}>Search by customer name</button>
 
-            <button onClick={() => {set_search_gate_email(!search_gate_email); set_search_gate_name(false); set_search_gate_order_id(false); set_search_gate_phone(false)}}>search by email</button>
+            <button onClick={() => {set_search_gate_email(!search_gate_email); set_search_gate_name(false); set_search_gate_order_id(false); set_search_gate_phone(false)}}>Search by customer email</button>
 
-            <button onClick={() => {set_search_gate_phone(!search_gate_phone); set_search_gate_name(false); set_search_gate_email(false); set_search_gate_order_id(false)}}>search by phone number</button>
+            <button onClick={() => {set_search_gate_phone(!search_gate_phone); set_search_gate_name(false); set_search_gate_email(false); set_search_gate_order_id(false)}}>Search by customer phone number</button>
 
             
             {search_gate_order_id ? <>
-                <label htmlFor="">order code</label>
+                <label htmlFor="">Order code</label>
                 <input type="string" value={search_order_id} onChange={(event) => set_search_order_id(event.target.value)}></input>
             </> : ""}
 
             {search_gate_name ? <>
-                <label htmlFor="">name</label>
+                <label htmlFor="">Customer name</label>
                 <input type="string" value={search_name} onChange={(event) => set_search_name(event.target.value)}></input>
 
-                <label htmlFor="">surname</label>
+                <label htmlFor="">Customer surname</label>
                 <input type="string" value={search_surname} onChange={(event) => set_search_surname(event.target.value)}></input>
             </> : ""}
 
             {search_gate_email ? <>
-                <label htmlFor="">email</label>
+                <label htmlFor="">Customer email</label>
                 <input type="string" value={search_email} onChange={(event) => set_search_email(event.target.value)}></input>
             </> : ""}
 
             {search_gate_phone ? <>
-                <label htmlFor="">phone</label>
+                <label htmlFor="">Customer phone</label>
                 <input type="string" value={search_phone} onChange={(event) => set_search_phone(event.target.value)}></input>
             </> : ""}
 
             <br />
             <br />
 
-            <button onClick={() => {handle_status_select("Proccesing"); set_search_gate_active(false); set_search_gate_processing(!search_gate_processing); set_search_gate_cancel(false); set_search_gate_done(false)}}>status Proccesing</button>
+            <button onClick={() => {handle_status_select("Proccesing"); set_search_gate_active(false); set_search_gate_processing(!search_gate_processing); set_search_gate_cancel(false); set_search_gate_done(false)}}>Status Proccesing</button>
 
-            <button onClick={() => {handle_status_select("Cancel"); set_search_gate_active(false); set_search_gate_processing(false); set_search_gate_cancel(!search_gate_cancel); set_search_gate_done(false)}}>status Cancled</button>
+            <button onClick={() => {handle_status_select("Cancel"); set_search_gate_active(false); set_search_gate_processing(false); set_search_gate_cancel(!search_gate_cancel); set_search_gate_done(false)}}>Status Cancled</button>
 
-            <button onClick={() => {handle_status_select("Done"); set_search_gate_active(false); set_search_gate_processing(false); set_search_gate_cancel(false); set_search_gate_done(!search_gate_done)}}>status Done</button>
+            <button onClick={() => {handle_status_select("Done"); set_search_gate_active(false); set_search_gate_processing(false); set_search_gate_cancel(false); set_search_gate_done(!search_gate_done)}}>Status Done</button>
 
 
             {is_admin ? refund_arr_display.length > 0 ?
                 <div>
-                    <p>refunds</p>
+
+                    <p>Refunds</p>
+
                     {refund_arr_display.map((refund: Refund) => 
                         
                             <table key={refund.refunds[0].id}>
                                 <thead>
                                     <tr>
-                                        <th>order code</th>
-                                        <th>name</th>
-                                        <th>surname</th>
-                                        <th>adress</th>
-                                        <th>email</th>
-                                        <th>phone</th>
-                                        <th>psc</th>
-                                        <th>order_date</th>
-                                        <th>status</th>
+                                        <th>Order code</th>
+                                        <th>Name</th>
+                                        <th>Surname</th>
+                                        <th>Adress</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>PSČ</th>
+                                        <th>Add date</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 
@@ -266,11 +268,11 @@ export default function Admin_refunds(){
                                 
                                 <thead>
                                     <tr>
-                                        <th>product_name</th>
-                                        <th>size</th>
-                                        <th>prize</th>
-                                        <th>quantity</th>
-                                        <th>reason</th>
+                                        <th>Product name</th>
+                                        <th>Size</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Refund Reason</th>
                                     </tr>
                                 </thead>
                                 

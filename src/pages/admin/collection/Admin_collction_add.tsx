@@ -112,7 +112,7 @@ export default function Admin_collection_add(){
 
                         <Admin_image_add on_change={set_files} on_delete={set_urls}></Admin_image_add>
 
-                        <button>save</button>
+                        <button>Save</button>
 
                     </form>
                 </div> : <Access_denied></Access_denied>}

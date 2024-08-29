@@ -43,20 +43,15 @@ export default function Money_sum(props: {delivery: number}) {
           <table>
             <tbody>
                 <tr>
-                    <th>Item</th>
-                    <th>Cost</th>
-                    <th>Sum</th>
+                    <th>Items price</th>
+                    <th>Delivery price</th>
+                    <th>Complete price</th>
                 </tr>
 
                 <tr>
-                    <th>Products:</th>
-                    <th>Delivery:</th>
-                </tr>
-
-                <tr>
-                    <td>{products_cost + "€"}</td>
-                    <td>{props.delivery + "€"}</td>
-                    <td>{products_cost + props.delivery + "€"}</td>
+                    <td>{products_cost + " €"}</td>
+                    <td>{props.delivery + " €"}</td>
+                    <td>{products_cost + props.delivery + " €"}</td>
                 </tr>
               </tbody>
           </table>

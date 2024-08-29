@@ -76,7 +76,7 @@ export default function Login(){
                     </form>
                 </div>
 
-                <Link to={"/forgoten-password"}>forgot password</Link>
+                <Link to={"/forgoten-password"}>Forgot password ?</Link>
             </>}      
         </>
     )

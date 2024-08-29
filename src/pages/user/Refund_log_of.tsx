@@ -56,7 +56,7 @@ export default function Refund(){
                 <label htmlFor="email">Email</label>
                 <input id="email" value={email} onChange={(event) => set_email(event.target.value)} type="email"></input>
                 
-                <button onClick={handleSubmit}>proceed</button>
+                <button onClick={handleSubmit}>Proceed</button>
             </>}
             
         </>

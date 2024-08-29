@@ -76,13 +76,12 @@ export default function Account_info(){
                     <><table>
                     <thead>
                         <tr>
-                            <th>name</th>
-                            <th>surname</th>
-                            <th>phone</th>
-                            <th>adress</th>
-                            <th>city</th>
-                            <th>psc</th>
-                            <th>status</th>
+                            <th>Name</th>
+                            <th>Surname</th>
+                            <th>Phone</th>
+                            <th>Adress</th>
+                            <th>City</th>
+                            <th>PSČ</th>
                         </tr>
                     </thead>
 
@@ -97,9 +96,8 @@ export default function Account_info(){
                                     <td><p>{user_data.adress}</p></td>
                                     <td><p>{user_data.city}</p></td>
                                     <td><p>{user_data.postcode}</p></td>
-                                    <td><p>{user_data.status}</p></td>
-                                    <td><button><Link to={"/edit-delivery-info"} state={{data: user_data}}>edit</Link></button></td>
-                                    <td><button onClick={(event) => handle_delete(event, user_data)}>delete</button></td>
+                                    <td><button><Link to={"/edit-delivery-info"} state={{data: user_data}}>EDIT</Link></button></td>
+                                    <td><button onClick={(event) => handle_delete(event, user_data)}>DELETE</button></td>
                                 </tr>         
                         ) } 
 
@@ -109,7 +107,7 @@ export default function Account_info(){
                 : <p>no delivery info</p>} 
                            
 
-                        <button><Link to="/add-delivery-info">add info</Link></button>
+                        <button><Link to="/add-delivery-info">Add info</Link></button>
 
                     </> : <AccessDenied></AccessDenied> 
                 }

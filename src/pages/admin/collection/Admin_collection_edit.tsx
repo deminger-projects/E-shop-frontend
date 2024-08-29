@@ -61,7 +61,9 @@ export default function Admin_collection_edit(){
     useEffect(() => {
         set_loading(true)
 
+
         const fetch_data = async () => {
+
             var data = await get_collection_by_id(location.state.collection_data.collections.collections[0].id)
 
             setCollection_name(data[0].collections[0].name)
@@ -77,7 +79,6 @@ export default function Admin_collection_edit(){
         fetch_data()
 
     }, [])
-
     
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -122,7 +123,7 @@ export default function Admin_collection_edit(){
 
                         <Admin_image_add default_urls={urls} on_change={set_files} on_delete={set_urls}></Admin_image_add>
 
-                        <button>save</button>
+                        <button>Save</button>
 
                     </form>
                 </div> : <Access_denied></Access_denied>}

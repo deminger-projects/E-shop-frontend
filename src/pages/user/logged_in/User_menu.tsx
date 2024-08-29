@@ -12,15 +12,15 @@ export default function User_options(){
         <>
             {user_data.length > 0 ? 
                 <>
-                    <Link to="/refunds"><p>make refunds</p></Link>
-                    <Link to="/change-password"><p>change password</p></Link>
-                    <Link to="/orders"><p>orders log</p></Link>
-                    <Link to="/account-info"><p>account data info</p></Link>
-                    <Link to="/placed-returns"><p>placed returns</p></Link>
+                    <Link to="/refunds"><p>Place refund</p></Link>
+                    <Link to="/change-password"><p>Change password</p></Link>
+                    <Link to="/orders"><p>Your orders</p></Link>
+                    <Link to="/account-info"><p>Account informations</p></Link>
+                    <Link to="/placed-returns"><p>Placed returns</p></Link>
 
                     <br></br>
 
-                    <Link to="/add-delivery-info"><p>add delivery informations</p></Link>
+                    <Link to="/add-delivery-info"><p>Add informations for delivery</p></Link>
                 </> 
                 
                 : <Access_denied></Access_denied>}

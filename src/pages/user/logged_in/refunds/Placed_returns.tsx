@@ -107,7 +107,7 @@ export default function Placed_returns(){
         <>
 
             {loading ? <Loading></Loading> : <>
-                <label htmlFor="">order code</label>
+                <label htmlFor="">Order code</label>
                 <input type="text" value={search_refund_id} onChange={(event) => set_search_refund_id(event.target.value)}/>
 
                 {user_data.length > 0 ? refunds_arr_display.length !== 0 ?   
@@ -116,15 +116,15 @@ export default function Placed_returns(){
                             <table key={refund.refunds[0].id.toString()}>
                                 <thead>
                                     <tr>
-                                        <th>order code</th>
-                                        <th>name</th>
-                                        <th>surname</th>
-                                        <th>email</th>
-                                        <th>phone</th>
-                                        <th>adress</th>
-                                        <th>psc</th>
-                                        <th>order date</th>
-                                        <th>status</th>
+                                        <th>Order code</th>
+                                        <th>Name</th>
+                                        <th>Surname</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Adress</th>
+                                        <th>PSČ</th>
+                                        <th>Add date</th>
+                                        <th>Status</th>
                                     </tr> 
                                 </thead>
 
@@ -144,11 +144,11 @@ export default function Placed_returns(){
 
                                 <thead>
                                     <tr>
-                                        <th>product name</th>
-                                        <th>product size</th>
-                                        <th>product prize</th>
-                                        <th>product quntity</th>
-                                        <th>image</th>
+                                        <th>Product name</th>
+                                        <th>Size</th>
+                                        <th>Prize</th>
+                                        <th>Quntity</th>
+                                        <th>Product preview</th>
                                     </tr>
                                 </thead>
 

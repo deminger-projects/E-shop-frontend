@@ -30,11 +30,11 @@ export default function Cart_items(){
             <table>
                 <thead>
                     <tr>
-                        <th>name</th>
-                        <th>size</th>
-                        <th>image</th>
-                        <th>price</th>
-                        <th>quantity</th>
+                        <th>Product name</th>
+                        <th>Size</th>
+                        <th>Product preview</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
                     </tr>
                 </thead>
                 
@@ -47,7 +47,7 @@ export default function Cart_items(){
                         <td><img src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products/" + item.product[0].id + "/" + item.product[0].url} width={"100px"} height={"100px"}></img></td>
                         <td>{item.product[0].price + "€"}</td>
                         <td>{item.size_data.current_amount}</td>
-                        <td><button onClick={(event) =>handle_on_click(event, index)}>remove</button></td>
+                        <td><button onClick={(event) =>handle_on_click(event, index)}>Remove item</button></td>
                     </tr>
             )}
                 </tbody>

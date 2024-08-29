@@ -25,21 +25,24 @@ export default function Login_hud(){
     useEffect(() => {
         const temp = async() => {
             if(sessionStorage.getItem("user_data")){
-                if(user_data.length > 0 || cookies.user_data.lenght > 0){
-                    var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
-
-                    if(is_admin.next_status === true){
-                        set_is_admin(true)
-                    }else{
-                        set_is_admin(false)
+                if(cookies.user_data !== undefined){
+                    if(user_data.length > 0 || cookies.user_data.lenght > 0){
+                        var is_admin = await check_for_admin(user_data[0].email, user_data[0].password)
+    
+                        if(is_admin.next_status === true){
+                            set_is_admin(true)
+                        }else{
+                            set_is_admin(false)
+                        }
                     }
+                    set_user_data(cookies.user_data)
                 }
-                set_user_data(cookies.user_data)
+                
             }
         } 
 
         temp()
-    }, [cookies.user_data, user_data.length, user_data])
+    }, [cookies.user_data, user_data])
 
 
     useEffect(() => {
@@ -84,26 +87,29 @@ export default function Login_hud(){
         set_loading(false)
     }
 
-    useEffect(() => {
-        console.log("🚀 ~ useEffect ~ user_data:", user_data)
-
-    }, [user_data])
-
     return(
         <> 
             {loading ? <p>loading</p> : <>
                 <p>{err_msg}</p>
 
                 <div id={"login_data"}>
-                    {user_data.length > 0 && cookies.user_data[0] ?  
+                    {cookies.user_data === undefined ?
+                    <>
+                        <div>
+                            <Link to="/login">{"Login"}</Link>
+                            <p>--------</p>
+                            <Link to="/register">{"Register"}</Link>
+                        </div>
+                    </>
+                    : user_data.length > 0 && cookies.user_data[0] ?  
                         is_admin ? 
                             <>
                                 <div>
                                     <Link to="/user-menu">{cookies.user_data[0].username}</Link>
                                     <br></br>
-                                    <button onClick={handle_on_click}>log out</button>
+                                    <button onClick={handle_on_click}>Log out</button>
                                     <br></br>
-                                    <Link to="/admin_page">{"admin page"}</Link>
+                                    <Link to="/admin_page">{"Admin page"}</Link>
                                 </div>  
                             </>
                         :    
@@ -111,18 +117,19 @@ export default function Login_hud(){
                                 <div>
                                     <Link to="/user-menu">{cookies.user_data[0].username}</Link>
                                     <br></br>
-                                    <button onClick={handle_on_click}>log out</button>
+                                    <button onClick={handle_on_click}>Log out</button>
                                 </div>  
                             </>
                     :
                         <>
                             <div>
-                                <Link to="/login">{"login"}</Link>
+                                <Link to="/login">{"Login"}</Link>
                                 <p>--------</p>
-                                <Link to="/register">{"register"}</Link>
+                                <Link to="/register">{"Register"}</Link>
                             </div>
                         </>
                         }
+                    
                 </div>
             </>}
         </>

@@ -81,12 +81,12 @@ export default function Order_refund(){
                     <table>
                         <thead>
                             <tr>
-                                <th>product name</th>
-                                <th>product size</th>
-                                <th>product prize</th>
-                                <th>product quntity</th>
-                                <th>reason</th>
-                                <th>refund/yes-no</th>
+                                <th>Product name</th>
+                                <th>Size</th>
+                                <th>Prize</th>
+                                <th>Quntity</th>
+                                <th>Refund reason</th>
+                                <th>Refund thes item ?</th>
                             </tr>
                         </thead>
 

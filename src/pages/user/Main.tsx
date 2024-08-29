@@ -72,10 +72,6 @@ export default function Main(){
         fetchData()
     }, [])
 
-
-    //var get_more_products = get_more_products1(set_loading, get_main_page_data, set_roll_button_status, set_products_arr, set_products_arr_display, products_arr, last_item_id, last_item_id, set_last_item_id) 
-
-
     var get_more_products = async () => {
         set_loading(true)
 

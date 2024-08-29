@@ -37,14 +37,14 @@ export default function Admin_page(){
             <>
                 <br />
                 <div>
-                        <Link to="/admin_collection_page"><button>collections page</button></Link>
-                        <Link to="/admin_product_page"><button>products page</button></Link>
-                        <Link to="/admin_order_page"><button>orders page</button></Link>
+                        <Link to="/admin_collection_page"><button>Edit collections</button></Link>
+                        <Link to="/admin_product_page"><button>Edit products</button></Link>
+                        <Link to="/admin_order_page"><button>Manage orders</button></Link>
 
-                        <Link to="/admin_collection_add"><button>Add collections</button></Link>
-                        <Link to="/admin_product_add"><button>Add products</button></Link>
+                        <Link to="/admin_collection_add"><button>Add collection</button></Link>
+                        <Link to="/admin_product_add"><button>Add product</button></Link>
 
-                        <Link to="/admin_refunds"><button>refunds</button></Link>
+                        <Link to="/admin_refunds"><button>Manage refunds</button></Link>
                     </div> 
             </>
                 

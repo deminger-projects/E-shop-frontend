@@ -67,27 +67,27 @@ export default function Edit_delivery_info(){
                             <form onSubmit={handleSubmit}>
                                 
                                     <div>
-                                        <label htmlFor="name">name</label>
+                                        <label htmlFor="name">Name</label>
                                         <input id={"name"} type="text" value={name} onChange={(e) => set_name(e.target.value)}></input>
 
-                                        <label htmlFor="surname">surname</label>
+                                        <label htmlFor="surname">Surname</label>
                                         <input id={"surname"} type="text" value={surname} onChange={(e) => set_surname(e.target.value)}></input>
 
-                                        <label htmlFor="adress">adress</label>
+                                        <label htmlFor="adress">Adress</label>
                                         <input id={"adress"} type="text" value={adress} onChange={(e) => set_adress(e.target.value)}></input>
 
-                                        <label htmlFor="city">city</label>
+                                        <label htmlFor="city">City</label>
                                         <input id={"city"} type="text" value={city} onChange={(e) => set_city(e.target.value)}></input>
                                         
-                                        <label htmlFor="phone">adress</label>
+                                        <label htmlFor="phone">Adress</label>
                                         <input id={"phone"} type="text" value={phone} onChange={(e) => set_phone(e.target.value)}></input>
 
-                                        <label htmlFor="psc">psc</label>
+                                        <label htmlFor="psc">PSČ</label>
                                         <input id={"psc"} type="text" value={psc} onChange={(e) => set_psc(e.target.value)}></input>
                                     </div>
                                 
                                 
-                                <button>send</button>
+                                <button>Proceed</button>
                             </form>
                         </div>
                     </> : <Access_denied></Access_denied>

@@ -78,7 +78,7 @@ export default function Add_delivery_info(){
 
                 {user_data.length > 0 ? 
                     <>
-                        <p>Add_delivery_info</p>
+                        <p>Add delivery infonations</p>
 
                         <div className="admin_add_product">
                             <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -106,11 +106,11 @@ export default function Add_delivery_info(){
                                 <input id="city" type="text" value={city} onChange={(e) => setCity(e.target.value)}></input>
                                 <br></br>
 
-                                <label htmlFor="PSC">{"PSC"}</label>
+                                <label htmlFor="PSC">{"PSČ"}</label>
                                 <input id="PSC" type="number" value={PSC} onChange={(e) => setPSC(e.target.value)}></input>
                                 <br></br>
 
-                                <button>add</button>
+                                <button>Proceed</button>
 
                             </form>
                         </div>

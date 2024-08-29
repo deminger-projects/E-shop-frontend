@@ -44,12 +44,12 @@ export default function Refund_row(props: {product_data: OrderProduct, pozition:
             <tr>
                 <td>{props.product_data.name}</td>
                 <td>{props.product_data.size}</td>
-                <td>{props.product_data.prize}</td>
+                <td>{props.product_data.prize + " €"}</td>
 
                 <td>
                     <select onChange={(event) => handle_amount(props.pozition, event.target.value)} id="quntity">
 
-                            <option value={"no_data"}>select amount</option>
+                            <option value={"no_data"}>Select amount</option>
                             
                             {num_to_arr(props.product_data.amount).map((num: number) =>                                
                                 <option key={num.toString()} value={num}>{num}</option>
@@ -60,7 +60,7 @@ export default function Refund_row(props: {product_data: OrderProduct, pozition:
                 <td>
                     <select onChange={(event) => handle_reason(props.pozition, event.target.value)}>
                             
-                            <option value={"no_data"}>select reason</option>
+                            <option value={"no_data"}>Select reason</option>
                             
                             {props.reasons.map((reason: Reasons, index: number) =>  
                                 <option key={index.toString()} value={reason.refund_reasons[0].id}>{reason.refund_reasons[0].reason}</option>  

@@ -172,7 +172,7 @@ export default function Admin_product_add(){
 
                         <br></br>
 
-                        <button>add</button>
+                        <button>Add</button>
 
                     </form>
                 </div> : <Access_denied></Access_denied>}

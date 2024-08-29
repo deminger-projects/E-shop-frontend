@@ -101,3 +101,8 @@ table, th, td{
     left: -75px;
     top: 30px;    
 }
+
+a {
+    text-decoration: none;
+    color:midnightblue;
+}

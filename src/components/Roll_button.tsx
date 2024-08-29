@@ -6,7 +6,7 @@ export default function Roll_button(props: {get_more_products: Function}) {
 
   return (
     <>
-        <button onClick={() => props.get_more_products()}>rool</button>
+        <button onClick={() => props.get_more_products()}>More products</button>
     </>
   );
 }

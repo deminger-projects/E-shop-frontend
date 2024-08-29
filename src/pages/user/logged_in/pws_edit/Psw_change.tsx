@@ -88,13 +88,13 @@ export default function Psw_change(){
                             <input type="password" id="current_psw" value={current_psw} onChange={(e) => set_current_psw(e.target.value)}></input>
 
 
-                            <label htmlFor="first_psw">new password</label>
+                            <label htmlFor="first_psw">New password</label>
                             <input type="password" id="first_psw" value={psw_input1} onChange={(e) => setPsw_input1(e.target.value)}></input>
 
-                            <label htmlFor="second_psw">new again password</label>
+                            <label htmlFor="second_psw">New password again</label>
                             <input type="password" id="second_psw" value={psw_input2} onChange={(e) => setPsw_input2(e.target.value)}></input>
 
-                            <button>send</button>
+                            <button>Proceed</button>
                         </form>
                         
                     </div>

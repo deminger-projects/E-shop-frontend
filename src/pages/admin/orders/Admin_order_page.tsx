@@ -137,26 +137,6 @@ export default function Admin_order_page(){
 
     },[search_order_id, search_name, search_surname, search_email, search_phone, search_gate_active, search_gate_preparing, search_gate_prepared, search_gate_on_trave, search_gate_delivered, search_gate_cancled])
 
-    
-    // useEffect(() => {
-    //     set_loading(true)
-
-    //     const fetchData = async () => {
-            
-    //         var data = await get_admin_orders()
-
-    //         set_order_arr(data)
-    //         set_order_arr_display(data)
-
-    //         set_loading(false);
-    //       };
-
-    //     fetchData()
-        
-
-    // }, [update])
-
-
     var handle_submit = async (event: React.MouseEvent<HTMLElement>, record_id: number, status: string) => {
 
         set_loading(true)
@@ -183,6 +163,17 @@ export default function Admin_order_page(){
     var handle_status_select = async(status: string) => {
         set_loading(true)
 
+        set_search_order_id("")
+        set_search_name("")
+        set_search_surname("")
+        set_search_email("")
+        set_search_phone("")
+
+        set_search_gate_order_id(false)
+        set_search_gate_name(false)
+        set_search_gate_email(false)
+        set_search_gate_phone(false)
+
         const fetchData = async () => {
             
             var data = await get_admin_orders(status)
@@ -204,35 +195,35 @@ export default function Admin_order_page(){
             <p>{responce_msg}</p>
             <p>{error_msg}</p>
 
-            <button onClick={() => {set_search_gate_order_id(!search_gate_order_id); set_search_gate_name(false); set_search_gate_email(false); set_search_gate_phone(false)}}>search by order code</button>
+            <button onClick={() => {set_search_gate_order_id(!search_gate_order_id); set_search_gate_name(false); set_search_gate_email(false); set_search_gate_phone(false)}}>Search by order code</button>
 
-            <button onClick={() => {set_search_gate_name(!search_gate_name); set_search_gate_order_id(false); set_search_gate_email(false); set_search_gate_phone(false)}}>search by name</button>
+            <button onClick={() => {set_search_gate_name(!search_gate_name); set_search_gate_order_id(false); set_search_gate_email(false); set_search_gate_phone(false)}}>Search by customer name</button>
 
-            <button onClick={() => {set_search_gate_email(!search_gate_email); set_search_gate_name(false); set_search_gate_order_id(false); set_search_gate_phone(false)}}>search by email</button>
+            <button onClick={() => {set_search_gate_email(!search_gate_email); set_search_gate_name(false); set_search_gate_order_id(false); set_search_gate_phone(false)}}>Search by customer email</button>
 
-            <button onClick={() => {set_search_gate_phone(!search_gate_phone); set_search_gate_name(false); set_search_gate_email(false); set_search_gate_order_id(false)}}>search by phone number</button>
+            <button onClick={() => {set_search_gate_phone(!search_gate_phone); set_search_gate_name(false); set_search_gate_email(false); set_search_gate_order_id(false)}}>Search by customer phone number</button>
 
 
             {search_gate_order_id ? <>
-                <label htmlFor="">order code</label>
+                <label htmlFor="">Order code</label>
                 <input type="string" value={search_order_id} onChange={(event) => set_search_order_id(event.target.value)}></input>
             </> : ""}
 
             {search_gate_name ? <>
-                <label htmlFor="">name</label>
+                <label htmlFor="">Customer name</label>
                 <input type="string" value={search_name} onChange={(event) => set_search_name(event.target.value)}></input>
 
-                <label htmlFor="">surname</label>
+                <label htmlFor="">Customer surname</label>
                 <input type="string" value={search_surname} onChange={(event) => set_search_surname(event.target.value)}></input>
             </> : ""}
 
             {search_gate_email ? <>
-                <label htmlFor="">email</label>
+                <label htmlFor="">Customer email</label>
                 <input type="string" value={search_email} onChange={(event) => set_search_email(event.target.value)}></input>
             </> : ""}
 
             {search_gate_phone ? <>
-                <label htmlFor="">phone</label>
+                <label htmlFor="">Customer phone number</label>
                 <input type="string" value={search_phone} onChange={(event) => set_search_phone(event.target.value)}></input>
             </> : ""}
 
@@ -264,17 +255,17 @@ export default function Admin_order_page(){
                         <table key={order.orders[0].id.toString()}>
                             <thead>
                                 <tr>
-                                    <th>order code</th>
-                                    <th>name</th>
-                                    <th>surname</th>
-                                    <th>adress</th>
-                                    <th>email</th>
-                                    <th>phone</th>
-                                    <th>psc</th>
-                                    <th>order_date</th>
-                                    <th>country</th>
-                                    <th>zasilkovna status</th>
-                                    <th>status</th>
+                                    <th>Order code</th>
+                                    <th>Name</th>
+                                    <th>Surname</th>
+                                    <th>Adress</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>PSČ</th>
+                                    <th>Add date</th>
+                                    <th>Country</th>
+                                    <th>Zásilkovna status</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             
@@ -296,9 +287,9 @@ export default function Admin_order_page(){
                             
                             <thead>
                                 <tr>
-                                    <th>product_name</th>
-                                    <th>size</th>
-                                    <th>quantity</th>
+                                    <th>Product name</th>
+                                    <th>Size</th>
+                                    <th>Quantity</th>
                                 </tr>
                             </thead>
                             
@@ -313,11 +304,11 @@ export default function Admin_order_page(){
                     )}
                                 <tr>
                                     <td>
-                                        <button onClick={(event) => handle_submit(event, order.orders[0].id, "Preparing")}>preparing</button>
-                                        <button onClick={(event) => handle_submit(event, order.orders[0].id, "Prepared")}>prepared</button>
-                                        <button onClick={(event) => handle_submit(event, order.orders[0].id, "On travel")}>on travel</button>
-                                        <button onClick={(event) => handle_submit(event, order.orders[0].id, "Delivered")}>delivered</button>
-                                        <button onClick={(event) => handle_submit(event, order.orders[0].id, "Cancled")}>cancled</button>
+                                        <button onClick={(event) => handle_submit(event, order.orders[0].id, "Preparing")}>Preparing</button>
+                                        <button onClick={(event) => handle_submit(event, order.orders[0].id, "Prepared")}>Prepared</button>
+                                        <button onClick={(event) => handle_submit(event, order.orders[0].id, "On travel")}>On travel</button>
+                                        <button onClick={(event) => handle_submit(event, order.orders[0].id, "Delivered")}>Delivered</button>
+                                        <button onClick={(event) => handle_submit(event, order.orders[0].id, "Cancled")}>Cancled</button>
 
                                     </td>
                                 </tr>

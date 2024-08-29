@@ -21,10 +21,10 @@ export default function Code_psw(){
     return(
 
         <>
-            <p>code send to email</p>
+            <p>Code send to email</p>
 
             <div>
-                <label htmlFor="code">code</label>
+                <label htmlFor="code">Code</label>
                 <input id="code" type="number" onChange={(e) => setUser_code(e.target.value)}></input>
             </div>
         </>

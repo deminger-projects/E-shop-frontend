@@ -211,10 +211,10 @@ export default function Prepare_order(){
                         <table>
                             <thead>
                                 <tr>
-                                    <th>name</th>
-                                    <th>surname</th>
-                                    <th>email</th>
-                                    <th>phone</th>
+                                    <th>Name</th>
+                                    <th>Surname</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
                                 </tr>
                             </thead>
 
@@ -254,20 +254,21 @@ export default function Prepare_order(){
                         <br></br>
 
                         
-                        <p>Select delivery</p>
+                        <p>Select delivery</p>                       
+
+                        <button onClick={(e) => {e.preventDefault(); set_hand_gate(!hand_gate); setAdress(""); setCity(""); setPSC(""); set_zasilkovna_gate_jo(false); set_zasilkovna_gate(false)}}>Delivery to adress</button>
 
                         <br />
 
-                        <button onClick={(e) => {e.preventDefault(); set_hand_gate(!hand_gate); setAdress(""); setCity(""); setPSC(""); set_zasilkovna_gate_jo(false); set_zasilkovna_gate(false)}}>Balík do ruky</button>
-
                     {hand_gate ? <>
 
+                        {delivery_data.length > 0 && user_data.length > 0 && user_data[0].login_status === "Active" && delivery_data[0].user_data.length > 0 ?
                         <table>
                             <thead>
                                 <tr>
-                                    <th>adress</th>
-                                    <th>city</th>
-                                    <th>psc</th>
+                                    <th>Adress</th>
+                                    <th>City</th>
+                                    <th>PSČ</th>
                                 </tr>
                             </thead>
 
@@ -282,12 +283,14 @@ export default function Prepare_order(){
                             </tr>
                     ): <></>}
                             </tbody> 
-                        </table>
+                        </table> : <></>}
+
+                        <br />
 
                         <label htmlFor="country">{"Country"}</label>
                         <select id='country' onChange={(event) => hadle_country_hange(event.target.value)}>
-                            <option value="cz">Česká republika</option>
-                            <option value="sk">Slovensko</option>        
+                            <option value="cz">Czech republic</option>
+                            <option value="sk">Slovakia</option>        
                         </select>   
 
                         <br />
@@ -300,16 +303,16 @@ export default function Prepare_order(){
                         <input id="city" type="text" value={city} onChange={(e) => setCity(e.target.value)}></input>
                         <br></br>
 
-                        <label htmlFor="PSC">{"PSC"}</label>
+                        <label htmlFor="PSC">{"PSČ"}</label>
                         <input id="PSC" type="text" value={PSC} onChange={(e) => setPSC(e.target.value)}></input>
                         <br></br>
                     </> : <></>}
 
-                    <button onClick={(e) => {e.preventDefault(); set_zasilkovna_gate(!zasilkovna_gate); setAdress(""); setCity(""); setPSC(""); set_hand_gate(false); set_zasilkovna_gate_jo(false)}}>Zásilkovna výdejní místo</button>
+                    <button onClick={(e) => {e.preventDefault(); set_zasilkovna_gate(!zasilkovna_gate); setAdress(""); setCity(""); setPSC(""); set_hand_gate(false); set_zasilkovna_gate_jo(false)}}>Use packeta delivery points</button>
 
                     {zasilkovna_gate ? 
                     <>
-                        <button onClick={(e) => {e.preventDefault(); zasilkovna_mapa_handle()}}>Vybrat zásilkovnu</button>
+                        <button onClick={(e) => {e.preventDefault(); zasilkovna_mapa_handle()}}>Choose delivery point</button>
 
                         {zasilkovna_gate_jo ? <>
 
@@ -329,14 +332,14 @@ export default function Prepare_order(){
 
 
                         </> : <>
-                            <p>místo nevybráno</p>
+                            <p>Delivery point not selected</p>
                         </>}
 
                         
                     </>
                     : <></>} 
 
-                    <button>send</button>
+                    <button>Proceed to payment</button>
 
                     </form>                
 

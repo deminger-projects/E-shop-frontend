@@ -5,7 +5,7 @@ import fix_file_name from "../../functions/sub_functions/fix_file_name"
 
 import Files from "../../interfaces/Files"
 
-export default function Admin_image_add(props: {on_change: Function, on_delete: Function, default_files?: {main: File|undefined, hover: File|undefined, other: Array<File>, model_show_case: {status: Boolean, data: Array<{file: File, url: string}>}, detail_show_case: {status: Boolean, data: Array<{file: File, url: string}>}}, default_urls?: {main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}, settings?: {hover: boolean, model_show_case?: boolean, detail_show_case?: boolean}, test?: string}){
+export default function Admin_image_add(props: {on_change: Function, on_delete: Function, default_files?: {main: File|undefined, hover: File|undefined, other: Array<File>, model_show_case: {status: Boolean, data: Array<{file: File, url: string}>}, detail_show_case: {status: Boolean, data: Array<{file: File, url: string}>}}, default_urls?: {main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}, settings?: {hover: boolean, model_show_case?: boolean, detail_show_case?: boolean}, is_order?: boolean}){
 
     const settings = props.settings ? {main: true, hover: props.settings.hover, model_show_case: props.settings.model_show_case, detail_show_case: props.settings.detail_show_case} : {main: true, hover: false, model_show_case: false, detail_show_case: false}
 
@@ -258,7 +258,7 @@ export default function Admin_image_add(props: {on_change: Function, on_delete: 
 
     return(
         <>
-            {props.test ? <input type="text" value={props.test} /> : ""}
+
             
             {default_urls.main !== undefined || settings.main === true ? 
                 <div key={"main"}>
@@ -286,11 +286,11 @@ export default function Admin_image_add(props: {on_change: Function, on_delete: 
                     <input accept="image/png, image/gif, image/jpeg" type="file" id={"other_" + index.toString()} onChange={(event) => {handle_input_change(event.target.files, "other", index)}}></input>
                     <label htmlFor={"other_" + index.toString()}></label>
 
-                    <button type='button' onClick={() => handle_delete_img(index)}>delete</button>
+                    <button type='button' onClick={() => handle_delete_img(index)}>Delete</button>
                 </div> 
             )}
 
-            <button type='button' onClick={handle_add_img}>add image</button>
+            <button type='button' onClick={handle_add_img}>Add image</button>
 
             <br />
 

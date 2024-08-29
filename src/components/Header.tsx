@@ -9,9 +9,9 @@ export default function Header(){
         <>
             <div id="header">
 
-                <Link id="collections" to="/collections">collections</Link>
+                <Link id="collections" to="/collections">Collections</Link>
 
-                <Link id="company_name" to="/main">company name (nbc)</Link>
+                <Link id="company_name" to="/main">Joynda</Link>
                 <Login_hud></Login_hud>
 
                 <Menu></Menu>
