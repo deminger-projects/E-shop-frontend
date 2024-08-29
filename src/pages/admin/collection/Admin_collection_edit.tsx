@@ -53,6 +53,7 @@ export default function Admin_collection_edit(){
                 set_is_admin(true)
             }
 
+            set_loading(false)
         }
 
         temp()
@@ -66,12 +67,14 @@ export default function Admin_collection_edit(){
 
             var data = await get_collection_by_id(location.state.collection_data.collections.collections[0].id)
 
-            setCollection_name(data[0].collections[0].name)
+            if(data.length > 0){
+                setCollection_name(data[0].collections[0].name)
 
-            const file_set_up = set_up_files(data[0].collection_images, data[0].collections[0], "collections")
-
-            set_base_layout(file_set_up.ulrs)
-            set_urls(file_set_up.ulrs)
+                const file_set_up = set_up_files(data[0].collection_images, data[0].collections[0], "collections")
+    
+                set_base_layout(file_set_up.ulrs)
+                set_urls(file_set_up.ulrs)
+            }
 
             set_loading(false)
         }

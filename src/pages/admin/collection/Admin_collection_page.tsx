@@ -44,6 +44,9 @@ export default function Admin_collection_page(){
                     if(is_admin.next_status === true){
                         set_is_admin(true)
                     }
+
+                    set_loading(false);
+
             }
             
             set_loading(false);
@@ -53,7 +56,6 @@ export default function Admin_collection_page(){
     }, [user_data])
 
     useEffect(() => {
-        set_loading(true)
 
         var res_arr: Array<Collections> = []
 
@@ -103,7 +105,7 @@ export default function Admin_collection_page(){
         if(error){
             set_error_msg("error ocured")
         }else{
-            set_responce_msg(api_responce.msg)
+            set_responce_msg("Record succesfully deleted")
         }
 
         set_update(!update)
@@ -146,9 +148,9 @@ export default function Admin_collection_page(){
                     <table>
                         <thead>
                             <tr>
-                                <th>collection name</th>
-                                <th>image</th>
-                                <th>add date</th>
+                                <th>Collection name</th>
+                                <th>Collection preview</th>
+                                <th>Add date</th>
                             </tr>
                         </thead>
                         

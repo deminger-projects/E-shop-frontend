@@ -98,7 +98,7 @@ export default function Order_refund(){
 
                     </table>
 
-                    <button>submit</button>
+                    <button>Submit refund</button>
 
                 </form> 
                 

@@ -51,9 +51,9 @@ export default function Forgot_psw(){
                 <div>
                     <form onSubmit={handleSubmit}>
 
-                        <label htmlFor={"forgot"}>email</label>
+                        <label htmlFor={"forgot"}>Email</label>
                         <input id={"forgot"} type="email" value={email} onChange={(e) => setEmail(e.target.value)}></input>
-                        <button>send</button>
+                        <button>Proceed</button>
 
                     </form>
                 </div>

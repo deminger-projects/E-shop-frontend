@@ -282,7 +282,7 @@ export default function Admin_refunds(){
                                     <tr key={index.toString()}>
                                         <td>{product.name}</td>
                                         <td>{product.size}</td>
-                                        <td>{product.price}</td>
+                                        <td>{"€" + product.price}</td>
                                         <td>{product.amount}</td>
                                         <td>{product.reason}</td>
                                     </tr>
@@ -302,7 +302,7 @@ export default function Admin_refunds(){
                     )}
                 </div>
             
-            : <p>no records</p> 
+            : current_status === "" ? <><p>No status selected</p></> : <><p>No refunds with this status</p></> 
             : <Access_denied></Access_denied>}
             </>}
             

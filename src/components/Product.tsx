@@ -12,7 +12,7 @@ export default function Product_comp(props: {item: Product}){
                 <Link to={"/item-info/" + product.products[0].id} state={{product_data: product}}>
                     <p>{product.products[0].product_name}</p>
                     <img alt={product.products[0].product_name} className="images" src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products/" + product.products[0].id + "/" + product.products[0].url} width={"100px"} height={"100px"}></img>
-                    <p>{product.products[0].price + " €"}</p>
+                    <p>{"€" + product.products[0].price}</p>
                 </Link>
                                 
                 <br></br>

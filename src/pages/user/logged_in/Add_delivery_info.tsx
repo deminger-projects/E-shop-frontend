@@ -61,7 +61,7 @@ export default function Add_delivery_info(){
                 set_error_msg("error ocured")
             }else{
                 if(api_responce.next_status === true){
-                    navigate('/account-info', {state: {msg: "info added"}})
+                    navigate('/account-info', {state: {msg: "Customer information successfully added"}})
                 }else{
                     set_error_msg(api_responce.msg)
                 }  

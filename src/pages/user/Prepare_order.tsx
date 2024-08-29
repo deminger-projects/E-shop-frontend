@@ -34,7 +34,9 @@ export default function Prepare_order(){
     const [PSC, setPSC] = useState<string>("");
 
     const [country, set_country] = useState<string>("cz");
-    const [delivery_price, set_delivery_price] = useState<number>(80);
+    const [delivery_price, set_delivery_price] = useState<number>(3);
+
+    const [products_price, set_products_price] = useState<number>(0);
 
     const [error_msg, set_error_msg] = useState<string>("");    
     
@@ -42,11 +44,16 @@ export default function Prepare_order(){
 
     const [delivery_data, set_delivery_data] = useState<Array<UserData>>([]);    
 
-    const [session_cart_data] = useState<Array<any>>(sessionStorage.getItem("cart_data") === null ? [] : JSON.parse(sessionStorage.getItem("cart_data")!))
+    const [session_cart_data, set_session_cart_data] = useState<Array<any>>(sessionStorage.getItem("cart_data") === null ? [] : JSON.parse(sessionStorage.getItem("cart_data")!))
 
     const [cookies] = useCookies(['user_data'])
 
     const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
+
+    const [update, set_update] = useState<boolean>(false);
+
+    const [cart, set_cart] = useState<any>("");
+
 
       useEffect(() => {
         const fetchData = async () => {
@@ -61,21 +68,22 @@ export default function Prepare_order(){
 
         fetchData()
     }, [])
-      
+
+        
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
         set_loading(true)
 
         event.preventDefault();
 
-        if(!name){set_error_msg("name is empty")}
-        if(!surname){set_error_msg("surname is empty")}
-        if(!email){set_error_msg("email is empty")}
-        if(!telephone){set_error_msg("telephone is empty")}
-        if(!adress){set_error_msg("adress is empty")}
-        if(!city){set_error_msg("city is empty")}
-        if(!PSC){set_error_msg("PSC is empty")}
-        if(session_cart_data.length < 1){set_error_msg("must put items in cart")}
+        if(!name){set_error_msg("Name is missing")}
+        if(!surname){set_error_msg("Surname is missing")}
+        if(!email){set_error_msg("Email is missing")}
+        if(!telephone){set_error_msg("Phone number is missing")}
+        if(!adress){set_error_msg("Adress is missing")}
+        if(!city){set_error_msg("City is missing")}
+        if(!PSC){set_error_msg("PSČ is missing")}
+        if(session_cart_data.length < 1){set_error_msg("must put items in missing")}
        
         if(name && surname && email && telephone && adress && city && PSC && session_cart_data.length > 0){
 
@@ -172,37 +180,45 @@ export default function Prepare_order(){
 
         if(country === "sk"){
             if(hand_gate){
-                set_delivery_price(130)
+                set_delivery_price(5)
             }
             if(zasilkovna_gate){
-                set_delivery_price(100)
+                set_delivery_price(4)
             }
         }
 
 
         if(country === "cz"){
             if(hand_gate){
-                set_delivery_price(100)
+                set_delivery_price(4)
             }
             if(zasilkovna_gate){
-                set_delivery_price(80)
+                set_delivery_price(3)
             }
         }
         
         set_country(country)
     }
         
-    console.log(session_cart_data)
+    useEffect(() => {
+
+        if(sessionStorage.getItem("cart_data") === null){
+            set_session_cart_data([])
+        }else{
+            set_session_cart_data(JSON.parse(sessionStorage.getItem("cart_data")!))
+        }
+
+    }, [update])
 
     return(
         <>
 
             {loading ? <Loading></Loading> : <>
-                <Cart_items></Cart_items>
+                <Cart_items update={set_update} updata_status={update} price_change={set_products_price}></Cart_items>
                 <br />
     
                 {session_cart_data.length > 0 ? <>
-                    <Money_sum delivery={delivery_price}></Money_sum>
+                    <Money_sum delivery={delivery_price} delivery_price_change={set_delivery_price} items={products_price} items_price_change={set_products_price}></Money_sum>
 
                 <p>{error_msg}</p>
 

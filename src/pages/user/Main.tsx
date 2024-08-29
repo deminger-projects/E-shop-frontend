@@ -9,8 +9,6 @@ import Product_comp from "../../components/Product";
 import Loading from "../../components/Loading";
 import Roll_button from "../../components/Roll_button";
 
-import get_more_products1 from "../../functions/get_more_products";
-
 export default function Main(){
 
     const location = useLocation()

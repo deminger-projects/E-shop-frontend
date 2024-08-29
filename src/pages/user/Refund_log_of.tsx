@@ -35,7 +35,7 @@ export default function Refund(){
                     set_error_msg("error ocured")
                 }else{
                     if(api_responce.next_status === false){
-                        set_error_msg(api_responce.msg)
+                        set_error_msg("Incorect email or order code")
                     }else if(api_responce.next_status === true){
                         navigate('/code-check',{state: {code: api_responce.code, data: api_responce.data, request: "refund"}})
                     }

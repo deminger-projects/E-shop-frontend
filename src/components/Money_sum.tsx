@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export default function Money_sum(props: {delivery: number}) {
+export default function Money_sum(props: {delivery: number, delivery_price_change?: Function, items?: number, items_price_change?: Function}) {
   
   const [cart_data] = useState<Array<any>>(sessionStorage.getItem("cart_data") === null ? [] : JSON.parse(sessionStorage.getItem("cart_data")!))
 
@@ -10,28 +10,35 @@ export default function Money_sum(props: {delivery: number}) {
 
   useEffect(() => {
 
-    if(cart_data.length > 0){
-      var sum_product_cost = 0
-
-      for(let item of cart_data){
-          var price = item.product[0].price
-          var discount = Number(item.product[0].discount)
+    if(sessionStorage.getItem("cart_data") !== null){
+      if(cart_data.length > 0){
+        var sum_product_cost = 0
   
-          if(discount !== 0){
-              price = price * discount / 100
+        for(let item of JSON.parse(sessionStorage.getItem("cart_data")!)){
+            var price = item.product[0].price
+            var discount = Number(item.product[0].discount)
+    
+            if(discount !== 0){
+                price = price * discount / 100
+            }
+    
+            let quantiti = item.size_data.current_amount
+    
+            sum_product_cost += quantiti * price
           }
+    
+          set_products_cost(sum_product_cost)
   
-          let quantiti = item.size_data.current_amount
+          if(props.items_price_change){
+            props.items_price_change(sum_product_cost)
+          }
+      }
   
-          sum_product_cost += quantiti * price
-        }
-  
-        set_products_cost(sum_product_cost)
     }
-
+    
     set_loading(false)
     
-  },[cart_data])
+  },[cart_data, props.delivery, props.items, sessionStorage.getItem("cart_data")])
     
     
     

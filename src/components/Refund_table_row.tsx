@@ -44,7 +44,7 @@ export default function Refund_row(props: {product_data: OrderProduct, pozition:
             <tr>
                 <td>{props.product_data.name}</td>
                 <td>{props.product_data.size}</td>
-                <td>{props.product_data.prize + " €"}</td>
+                <td>{"€" + props.product_data.prize}</td>
 
                 <td>
                     <select onChange={(event) => handle_amount(props.pozition, event.target.value)} id="quntity">

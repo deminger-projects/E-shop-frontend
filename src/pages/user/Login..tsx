@@ -28,8 +28,8 @@ export default function Login(){
 
         set_error_msg("")
 
-        if(!password){set_error_msg("password is missing")}
-        if(!email){set_error_msg("email is missing")}
+        if(!password){set_error_msg("Password is missing")}
+        if(!email){set_error_msg("Email is missing")}
 
         if(email && password){
 
@@ -57,7 +57,7 @@ export default function Login(){
     return(
         <>      
             {loading ? <Loading></Loading> : <>
-                <p>{error_msg}</p>
+                <p className='server_msg'>{error_msg}</p>
 
                 <div className='login_register_div'>
                     <form onSubmit={(event) => handleSubmit(event)} encType="multipart/form-data">

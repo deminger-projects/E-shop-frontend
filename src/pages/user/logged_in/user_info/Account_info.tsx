@@ -52,7 +52,7 @@ export default function Account_info(){
         if(error){
             set_error_msg("error ocured")
         }else if(api_responce.next_status === true){
-            set_responce_msg('info deleted')
+            set_responce_msg('Customer information successfully deleted')
         }else{
             set_responce_msg(api_responce.msg)
         }
@@ -104,7 +104,7 @@ export default function Account_info(){
                     </tbody>
                     </table>
                         </>
-                : <p>no delivery info</p>} 
+                : <p>No customer delivery informations available</p>} 
                            
 
                         <button><Link to="/add-delivery-info">Add info</Link></button>

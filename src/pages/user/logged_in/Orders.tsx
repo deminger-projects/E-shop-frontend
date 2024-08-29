@@ -158,7 +158,7 @@ export default function Orders(){
                                             <tr key={index2.toString()}>
                                                 <td><p>{product.name}</p></td>
                                                 <td><p>{product.size}</p></td>
-                                                <td><p>{product.prize}</p></td>
+                                                <td><p>{"€" + product.prize}</p></td>
                                                 <td><p>{product.amount}</p></td>
                                                 <td><img src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products" + "/" + product.product_id + "/" + product.image_url} width={"100px"} height={"100px"}/></td>
                                             </tr>
@@ -168,7 +168,7 @@ export default function Orders(){
 
                             <br />
                         </div>               
-                )} </> : <p>no orders</p> : <Access_denied></Access_denied>}
+                )} </> : <p>No orders available</p> : <Access_denied></Access_denied>}
 
                 {roll_button_status ? <Roll_button get_more_products={get_more_products}></Roll_button> : <></>}
 

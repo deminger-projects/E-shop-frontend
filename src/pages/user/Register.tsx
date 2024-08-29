@@ -36,16 +36,16 @@ export default function Register(){
 
         if(password !== password_again){set_err_msg("passwords do not match")}
         
-        if(!psc){set_err_msg("psc is empty")}
-        if(!name){set_err_msg("name is empty")}
-        if(!surname){set_err_msg("surname is empty")}
-        if(!telephone){set_err_msg("telephone is empty")}
-        if(!adress){set_err_msg("adress is empty")}
-        if(!city){set_err_msg("city is empty")}
+        if(!psc){set_err_msg("PSČ is missing")}
+        if(!name){set_err_msg("Name is missing")}
+        if(!surname){set_err_msg("Surname is missing")}
+        if(!telephone){set_err_msg("Phone number is missing")}
+        if(!adress){set_err_msg("Adress is missing")}
+        if(!city){set_err_msg("City is missing")}
 
-        if(!email){set_err_msg("email is empty")}
-        if(!password){set_err_msg("password is empty")}        
-        if(!username){set_err_msg("username is empty")}
+        if(!email){set_err_msg("Email is missing")}
+        if(!password){set_err_msg("Password is missing")}        
+        if(!username){set_err_msg("Username is missing")}
         
         if(username && password && email && name && surname && telephone && adress && city && psc && password === password_again){
 

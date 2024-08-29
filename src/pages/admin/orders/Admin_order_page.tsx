@@ -177,6 +177,7 @@ export default function Admin_order_page(){
         const fetchData = async () => {
             
             var data = await get_admin_orders(status)
+            console.log("🚀 ~ fetchData ~ data:", data)
 
             set_order_arr(data)
             set_order_arr_display(data)
@@ -230,17 +231,17 @@ export default function Admin_order_page(){
             <br />
             <br />
 
-            <button onClick={() => {handle_status_select("Active"); set_search_gate_active(!search_gate_active); set_search_gate_preparing(false); set_search_gate_prepared(false); set_search_gate_on_trave(false); set_search_gate_delivered(false); set_search_gate_cancled(false)}}>Active status</button>
+            <button onClick={() => {handle_status_select("Active"); set_search_gate_active(!search_gate_active); set_search_gate_preparing(false); set_search_gate_prepared(false); set_search_gate_on_trave(false); set_search_gate_delivered(false); set_search_gate_cancled(false)}}>Status Active</button>
 
-            <button onClick={() => {handle_status_select("Preparing"); set_search_gate_active(false); set_search_gate_preparing(!search_gate_preparing); set_search_gate_prepared(false); set_search_gate_on_trave(false); set_search_gate_delivered(false); set_search_gate_cancled(false)}}>Preparing status</button>
+            <button onClick={() => {handle_status_select("Preparing"); set_search_gate_active(false); set_search_gate_preparing(!search_gate_preparing); set_search_gate_prepared(false); set_search_gate_on_trave(false); set_search_gate_delivered(false); set_search_gate_cancled(false)}}>Status Preparing</button>
 
-            <button onClick={() => {handle_status_select("Prepared"); set_search_gate_active(false); set_search_gate_preparing(false); set_search_gate_prepared(!search_gate_prepared); set_search_gate_on_trave(false); set_search_gate_delivered(false); set_search_gate_cancled(false)}}>Prepared status</button>
+            <button onClick={() => {handle_status_select("Prepared"); set_search_gate_active(false); set_search_gate_preparing(false); set_search_gate_prepared(!search_gate_prepared); set_search_gate_on_trave(false); set_search_gate_delivered(false); set_search_gate_cancled(false)}}>Status Prepared</button>
 
-            <button onClick={() => {handle_status_select("On travel"); set_search_gate_active(false); set_search_gate_preparing(false); set_search_gate_prepared(false); set_search_gate_on_trave(!search_gate_on_trave); set_search_gate_delivered(false); set_search_gate_cancled(false)}}>On travel status</button>
+            <button onClick={() => {handle_status_select("On travel"); set_search_gate_active(false); set_search_gate_preparing(false); set_search_gate_prepared(false); set_search_gate_on_trave(!search_gate_on_trave); set_search_gate_delivered(false); set_search_gate_cancled(false)}}>Status On travel</button>
 
-            <button onClick={() => {handle_status_select("Delivered"); set_search_gate_active(false); set_search_gate_preparing(false); set_search_gate_prepared(false); set_search_gate_on_trave(false); set_search_gate_delivered(!search_gate_delivered); set_search_gate_cancled(false)}}>Delivered status</button>
+            <button onClick={() => {handle_status_select("Delivered"); set_search_gate_active(false); set_search_gate_preparing(false); set_search_gate_prepared(false); set_search_gate_on_trave(false); set_search_gate_delivered(!search_gate_delivered); set_search_gate_cancled(false)}}>Status Delivered</button>
 
-            <button onClick={() => {handle_status_select("Cancled"); set_search_gate_active(false); set_search_gate_preparing(false); set_search_gate_prepared(false); set_search_gate_on_trave(false); set_search_gate_delivered(false); set_search_gate_cancled(!search_gate_cancled)}}>Cancled status</button>
+            <button onClick={() => {handle_status_select("Cancled"); set_search_gate_active(false); set_search_gate_preparing(false); set_search_gate_prepared(false); set_search_gate_on_trave(false); set_search_gate_delivered(false); set_search_gate_cancled(!search_gate_cancled)}}>Status Cancled</button>
 
 
             <br />
@@ -288,6 +289,7 @@ export default function Admin_order_page(){
                             <thead>
                                 <tr>
                                     <th>Product name</th>
+                                    <th>Price</th>
                                     <th>Size</th>
                                     <th>Quantity</th>
                                 </tr>
@@ -298,6 +300,7 @@ export default function Admin_order_page(){
                     {order.order_products.map((item: OrderProduct) => 
                                 <tr key={item.id}>
                                     <td>{item.name}</td>
+                                    <td>{"€" + item.price}</td>
                                     <td>{item.size}</td>
                                     <td>{item.amount}</td>
                                 </tr>
@@ -320,7 +323,7 @@ export default function Admin_order_page(){
                 )}
                 
                 </div>
-                : <p>no records</p>
+                : current_status === "" ? <><p>No status selected</p></> : <><p>No orders with this status</p></>
                 : <Access_denied></Access_denied>
                 }
             </>}

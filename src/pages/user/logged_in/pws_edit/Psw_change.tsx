@@ -51,11 +51,11 @@ export default function Psw_change(){
 
         var psw_check_result = (await check_password(current_psw, user_data.password))[0].status        
 
-        if(!psw_check_result){set_error_msg("current password is incorect")}
-        if(!psw_input2){set_error_msg("new again password in empty")}
-        if(!psw_input1){set_error_msg("new password in empty")}
-        if(!current_psw){set_error_msg("current password in empty")}
-        if(psw_input1 !== psw_input2){set_error_msg("passwords do not match")}
+        if(!psw_check_result){set_error_msg("Current password is incorrect")}
+        if(!psw_input2){set_error_msg("New again password in empty")}
+        if(!psw_input1){set_error_msg("New password in empty")}
+        if(!current_psw){set_error_msg("Current password in empty")}
+        if(psw_input1 !== psw_input2){set_error_msg("Passwords do not match")}
 
         if(current_psw && psw_input1 && psw_input2 && psw_check_result && psw_input1 === psw_input2){
         
@@ -69,7 +69,7 @@ export default function Psw_change(){
 
             sessionStorage.setItem("user_data", JSON.stringify([]))
 
-            navigate("/login", {state: {msg: "password changed"}})
+            navigate("/login", {state: {msg: "Password successfully changed"}})
         }
 
         set_loading(false)

@@ -144,7 +144,7 @@ export default function Admin_product_add(){
                         <br></br>
                     
                         <label htmlFor="product_cost">{"Product price"}</label>
-                        <input id="product_cost" type="number" name="product_cost" value={cost} onChange={(e) => setCost(e.target.value)} min="0"></input>
+                        <input id="product_cost" type="number" name="product_cost" value={cost} onChange={(e) => setCost(e.target.value)} placeholder="€" min="0"></input>
                         <br></br>
                         <br></br>
 

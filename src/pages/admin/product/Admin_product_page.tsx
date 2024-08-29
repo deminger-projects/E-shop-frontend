@@ -135,7 +135,7 @@ export default function Admin_product_page(){
         if(error){
             set_error_msg("error ocured")
         }else{
-            set_responce_msg(api_responce.msg)
+            set_responce_msg("Record successfully deleted")
         }
 
         set_update(!update)
@@ -212,7 +212,7 @@ export default function Admin_product_page(){
                         {products_arr_display.map((product: Product) => 
                             <tr key={product.products[0].id}>
                                 <td><p>{product.products[0].product_name}</p></td>
-                                <td><p>{product.products[0].price}</p></td>
+                                <td><p>{"€" + product.products[0].price}</p></td>
                                 <td><p>{product.products[0].description}</p></td>
                                 {product.products[0].collection_name === null ? <td><p>NONE</p></td> : <td><p>{product.products[0].collection_name}</p></td>}
                                 

@@ -38,7 +38,7 @@ export default function User_size_select(props: {sizes: Array<ProductSize>, on_c
                 </select>
             :
                 <select id={"size_count_select"}>
-                    <option>choose size</option>        
+                    <option>Choose size</option>        
                 </select>
             }
         </>

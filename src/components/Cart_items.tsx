@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
-export default function Cart_items(){
+export default function Cart_items(props: {update?: Function, updata_status?: boolean, price_change?: Function}){
 
     const [responce_msg, set_responce_msg] = useState<string>()
 
@@ -11,14 +12,18 @@ export default function Cart_items(){
         event.preventDefault();
 
         let clone = [...session_cart_data]
-        
+
         clone.splice(pozition, 1)
 
         sessionStorage.setItem("cart_data", JSON.stringify(clone))
 
         set_session_cart_data(clone)
 
-        set_responce_msg("item removed from cart")
+        set_responce_msg("Item successfully removed from cart")
+
+        if(props.update){
+            props.update(!props.updata_status)
+        }
     }
 
     return(
@@ -45,7 +50,7 @@ export default function Cart_items(){
                         <td>{item.product[0].product_name}</td>
                         <td>{item.size_data.size}</td>
                         <td><img src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products/" + item.product[0].id + "/" + item.product[0].url} width={"100px"} height={"100px"}></img></td>
-                        <td>{item.product[0].price + "€"}</td>
+                        <td>{item.product[0].price + " €"}</td>
                         <td>{item.size_data.current_amount}</td>
                         <td><button onClick={(event) =>handle_on_click(event, index)}>Remove item</button></td>
                     </tr>
@@ -54,7 +59,11 @@ export default function Cart_items(){
 
             </table>
             
-            : <p>epmty cart</p> : ""}
+            : <>
+                <p>Epmty cart</p>
+                <Link to={"/main"}>Home page</Link>
+            </>
+             : ""}
         </>
     )
 }

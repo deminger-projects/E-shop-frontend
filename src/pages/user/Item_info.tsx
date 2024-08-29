@@ -96,28 +96,38 @@ export default function Item_info(){
                 <p id='description'>{data[0].products[0].description}</p>
                 
                 <div id='buy_hud'>
-                    <p>{"name: " +  data[0].products[0].product_name}</p>
-                    <p>{"price: " + data[0].products[0].price}</p>
+                    
+                    <p>{"Product name: " + data[0].products[0].product_name}</p>
+
+                    <p>{"Product price: " + "€" + data[0].products[0].price}</p>
 
                     <p>{response}</p>
 
                     <User_size_select sizes={data[0].product_sizes} on_change={set_size_select}></User_size_select>
             
+                    <br />
+
                     {size_select ?       
                         <>
-                            <button onClick={(event) => handle_cart_change(event)}>add_to_cart</button>
 
-                            <button onClick={(event) => handle_cart_change(event, true)}>buy</button>
+                            <br />
+
+                            <button onClick={(event) => handle_cart_change(event)}>Add to cart</button>
+
+                            <br />
+
+                            <br />
+
+                            <button onClick={(event) => handle_cart_change(event, true)}>Buy</button>
                             
                         </>          
                 
                     : <></> }
 
-                    <p>popis produktu</p>
-                    <p>material</p>
-                    <p>prani</p>
-                    <p>qr kod mozna</p>
-                    <p>a tak</p>
+                    <p>Product description</p>
+                    <p>Material: 100% cotton</p>
+                    <p>Model product size: M</p>
+                    <p>Model height: 180 cm</p>
                     
                 </div>
             </>}

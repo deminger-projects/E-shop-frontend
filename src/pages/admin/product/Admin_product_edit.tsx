@@ -88,22 +88,23 @@ export default function Admin_product_edit(){
         const fetch_data = async () => {
             var data = await get_product_by_id(location.state.product_data.products.products[0].id)
 
-            setName(data[0].products[0].product_name)
-            setCollection(data[0].products[0].collection_id)
-            setCost(data[0].products[0].price)
-            setDescription(data[0].products[0].description)
-
-            const file_set_up = set_up_files(data[0].product_images, data[0].products[0], "products")
-            const size_set_up = set_up_sizes(data[0].product_sizes)
-
-            set_files({main: undefined, hover: undefined, other: [], model_show_case: {status: file_set_up.model_status, data: []}, detail_show_case: {status: file_set_up.detail_status, data: []}})
-            set_urls(file_set_up.ulrs)
-            set_sizes(size_set_up)
-
-            set_base_layout(file_set_up.ulrs)
+            if(data.length > 0){
+                setName(data[0].products[0].product_name)
+                setCollection(data[0].products[0].collection_id)
+                setCost(data[0].products[0].price)
+                setDescription(data[0].products[0].description)
+    
+                const file_set_up = set_up_files(data[0].product_images, data[0].products[0], "products")
+                const size_set_up = set_up_sizes(data[0].product_sizes)
+    
+                set_files({main: undefined, hover: undefined, other: [], model_show_case: {status: file_set_up.model_status, data: []}, detail_show_case: {status: file_set_up.detail_status, data: []}})
+                set_urls(file_set_up.ulrs)
+                set_sizes(size_set_up)
+    
+                set_base_layout(file_set_up.ulrs)
+            }
+            
             set_loading(false)
-
-        
         }
 
         fetch_data()
@@ -118,7 +119,6 @@ export default function Admin_product_edit(){
 
         const filtred_sizes = filter_sizes(sizes)
         const filtred_data = get_filtred_data(urls, files, base_layout)
-        console.log("🚀 ~ handleSubmit ~ filtred_data:", filtred_data)
         
         if(!name){set_error_msg("name is empty")}
         if(!cost){set_error_msg("cost is empty")}
@@ -186,7 +186,7 @@ export default function Admin_product_edit(){
                         <br></br>
 
                         <label htmlFor="product_cost_edit">{"Product price"}</label>
-                        <input id="product_cost_edit" type="number" name="product_cost_edit" value={cost} onChange={(e) => setCost(e.target.value)}></input>
+                        <input id="product_cost_edit" type="number" name="product_cost_edit" placeholder='€' value={cost} onChange={(e) => setCost(e.target.value)}></input>
                         <br></br>
                         <br></br>
 
