@@ -52,6 +52,7 @@ import Collection_product_showcase from "./pages/user/Showcase";
 import Padding from "./components/Padding";
 
 import Term_or_servise from "./pages/user/Term_of_servise";
+import Term_of_refund from "./pages/user/Term_of_refund";
 
 export default function App(){
   
@@ -113,6 +114,8 @@ export default function App(){
           <Route path="/showcase/:id" element={<Collection_product_showcase/>} />
 
           <Route path="/term-or-servise" element={<Term_or_servise/>} />
+
+          <Route path="/term-or-refund" element={<Term_of_refund/>} />
 
       </Routes>
 

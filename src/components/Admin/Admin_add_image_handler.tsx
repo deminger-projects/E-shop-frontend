@@ -22,8 +22,8 @@ export default function Admin_image_add(props: {on_change: Function, on_delete: 
     }
 
     var handle_input_change = (file: FileList|null, type: string, pozition?: number, special_type?: string) => {
-        //&& file[0] !== undefined
-        if(file ){
+
+        if(file && file[0].name && file[0]){ //file[0].name && file[0] pridano bez testovani
 
             var all_file_names = []
     
