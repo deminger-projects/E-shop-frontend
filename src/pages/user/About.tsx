@@ -34,7 +34,7 @@ export default function About(){
 
             <h3>Terms of service</h3>
 
-            <Link to={"/term-or-servise"}>Terms of service</Link>
+            <Link to="/term-or-servise">Terms of service</Link>
 
             <br />
             <br />
@@ -48,7 +48,7 @@ export default function About(){
 
             <h3>Terms of refunds</h3>
 
-            <Link to={"/term-or-refund"}>Terms of refunds</Link>
+            <Link to="/term-or-refund">Terms of refunds</Link>
         </>
     )
 }
