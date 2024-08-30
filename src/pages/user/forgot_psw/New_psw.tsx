@@ -26,9 +26,9 @@ export default function New_psw(){
 
         event.preventDefault();
 
-        if(!psw_input2){set_error_msg("new again password in empty")}
-        if(!psw_input1){set_error_msg("new password in empty")}
-        if(psw_input1 !== psw_input2){set_error_msg("passwords do not match")}
+        if(!psw_input2){set_error_msg("New password again in missing")}
+        if(!psw_input1){set_error_msg("New password in missing")}
+        if(psw_input1 !== psw_input2){set_error_msg("Passwords do not match")}
 
         if(psw_input1 && psw_input2 && psw_input1 === psw_input2){
 
@@ -55,10 +55,10 @@ export default function New_psw(){
 
                 <div>
                     <form onSubmit={handleSubmit}>
-                        <label htmlFor="first_psw">new password</label>
+                        <label htmlFor="first_psw">New password</label>
                         <input type="password" id="first_psw" value={psw_input1} onChange={(e) => setPsw_input1(e.target.value)}></input>
 
-                        <label htmlFor="second_psw">new again password</label>
+                        <label htmlFor="second_psw">New password again</label>
                         <input type="password" id="second_psw" value={psw_input2} onChange={(e) => setPsw_input2(e.target.value)}></input>
 
                         <button>send</button>

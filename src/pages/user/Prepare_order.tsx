@@ -100,10 +100,10 @@ export default function Prepare_order(){
                 name: name,
                 surname: surname,
                 email: email,
-                telephone: telephone,
+                phone: telephone,
                 adress: adress,
                 city: city,
-                PSC: PSC
+                postcode: PSC
             }
 
             if(validation_responce.next_status === true){
@@ -116,11 +116,12 @@ export default function Prepare_order(){
                 }
 
                 var responce = await get_stripe_payment_url(cart_data.cart_items_for_stripe_paywall, order_template, delivery_price, order_code, customer_obj)
-                console.log("🚀 ~ handleSubmit ~ responce:", responce)
     
                 if(responce.url){
                     window.location = responce.url
                     sessionStorage.setItem("cart_data", JSON.stringify([]))
+                    set_loading(false)
+
                 }
             }else{
                 sessionStorage.setItem("cart_data", JSON.stringify([]))
@@ -128,7 +129,6 @@ export default function Prepare_order(){
             }
         }
 
-        set_loading(false)
     }
 
     var handle_click_user = (pointer: number) => {
