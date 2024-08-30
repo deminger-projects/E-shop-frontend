@@ -105,7 +105,7 @@ export default function Collections_showcase(){
                         collection_arr_display.map(((collection: Collections) =>
                             <Collection_comp key={collection.collections[0].id.toString()} item={collection}></Collection_comp>
                         ))
-                    : <p>no records</p> }
+                    : <p>No collecions available</p> }
                 </div>
 
                 {roll_button_status ? <Roll_button get_more_products={get_more_products}></Roll_button> : <></>}

@@ -120,10 +120,10 @@ export default function Admin_product_edit(){
         const filtred_sizes = filter_sizes(sizes)
         const filtred_data = get_filtred_data(urls, files, base_layout)
         
-        if(!name){set_error_msg("name is empty")}
-        if(!cost){set_error_msg("cost is empty")}
-        if(!description){set_error_msg("description is empty")}
-        if(filtred_sizes.sizes.length <= 0){set_error_msg("select sizes")}
+        if(!name){set_error_msg("Name is missing")}
+        if(!cost){set_error_msg("Price is missing")}
+        if(!description){set_error_msg("Description is missing")}
+        if(filtred_sizes.sizes.length <= 0){set_error_msg("Must select sizes")}
 
         if(files){
             if(((files.model_show_case?.status === true && filtred_data.model_show_case_status !== true) || (files.detail_show_case?.status === true && filtred_data.detail_show_case_status !== true))){set_error_msg("missing images in show case")}

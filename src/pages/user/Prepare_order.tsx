@@ -246,10 +246,15 @@ export default function Prepare_order(){
                     )}
                             </tbody> 
                         </table>
-                    </>: <p>no delivery info</p>
+                    </>: <>
+                    <p>No customer delivery informations</p>
+                    <Link to={"/add-delivery-info"}>Add delivery informations</Link>
+                    <br />
+                    
+                    </>
                 : ""}
 
-                    
+                <br />
 
                 <div className="admin_add_product">
                     <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -324,7 +329,13 @@ export default function Prepare_order(){
                         <br></br>
                     </> : <></>}
 
+                    <br />
+
                     <button onClick={(e) => {e.preventDefault(); set_zasilkovna_gate(!zasilkovna_gate); setAdress(""); setCity(""); setPSC(""); set_hand_gate(false); set_zasilkovna_gate_jo(false)}}>Use packeta delivery points</button>
+
+                    <br />
+
+                    <br /> 
 
                     {zasilkovna_gate ? 
                     <>
@@ -334,17 +345,13 @@ export default function Prepare_order(){
 
                             <br />
 
-                            <label htmlFor="country">{"Country"}</label>
-                            <p id="country">{country}</p>
+                            {country === "sk" ? <><p id="country">{"Country: Slovakia"}</p></> : <p id="country">{"Country: Czech republic"}</p>}
 
-                            <label htmlFor="adress">{"Adress"}</label>
-                            <p id="adress">{adress}</p>
+                            <p id="adress">{"Adress: " + adress}</p>
 
-                            <label htmlFor="city">{"City"}</label>
-                            <p id="city">{city}</p>
+                            <p id="city">{"City: " + city}</p>
 
-                            <label htmlFor="PSC">{"PSC"}</label>
-                            <p id="PSC">{PSC}</p>
+                            <p id="PSC">{"PSČ: " + PSC}</p>
 
 
                         </> : <>
@@ -354,6 +361,10 @@ export default function Prepare_order(){
                         
                     </>
                     : <></>} 
+
+                    <br />
+
+                    <br />
 
                     <button>Proceed to payment</button>
 

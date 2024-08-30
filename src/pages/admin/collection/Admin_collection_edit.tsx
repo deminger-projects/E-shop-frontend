@@ -90,7 +90,7 @@ export default function Admin_collection_edit(){
 
         event.preventDefault();
 
-        if(!collection_name){set_err_msg("empty collection name")}
+        if(!collection_name){set_err_msg("Collection name is missing")}
 
         if(collection_name){
 

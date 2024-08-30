@@ -22,8 +22,8 @@ export default function Refund(){
 
         event.preventDefault();        
 
-            if(!order_code){set_error_msg("order code is empty")}
-            if(!email){set_error_msg("email is empty")}
+            if(!order_code){set_error_msg("Order code is missing")}
+            if(!email){set_error_msg("Email is missing")}
 
             if(order_code && email){
 

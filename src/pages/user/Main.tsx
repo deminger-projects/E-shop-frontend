@@ -110,7 +110,7 @@ export default function Main(){
                         products_arr_display.map(((product: Product) =>
                             <Product_comp key={product.products[0].id.toString()} item={product}></Product_comp>
                         ))
-                        : <p>no records</p>  }
+                        : <p>No products available</p>  }
 
                 </div>
 

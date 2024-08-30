@@ -63,9 +63,9 @@ export default function Admin_collection_add(){
 
             var filtred_data = get_filtred_data(urls, files, file_set_up.ulrs)
 
-            if(!files.main){set_error_msg("select main image")}
+            if(!files.main){set_error_msg("Must select main image")}
 
-            if(!collection_name){set_error_msg("collection name is empty")}
+            if(!collection_name){set_error_msg("Collection name is missing")}
             if(filtred_data.file_names_for_table.length <= 0){set_error_msg("select image")}
     
             if(collection_name && filtred_data.file_names_for_table.length > 0 && files.main){

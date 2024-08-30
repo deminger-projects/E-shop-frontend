@@ -176,7 +176,7 @@ export default function Admin_collection_page(){
                     )}
                         </tbody>
                     </table>
-                : <p>no records</p>
+                : <p>No collections available</p>
                 : <AccessDenied></AccessDenied>
                 }
 

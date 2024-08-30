@@ -95,16 +95,16 @@ export default function Admin_product_add(){
             const filtred_data = get_filtred_data(urls, files, file_set_up.ulrs)
             const filtred_sizes = filter_sizes(sizes)
 
-            if(!files.main){set_error_msg("select main image")}
-            if(!files.hover){set_error_msg("select hover image")}
+            if(!files.main){set_error_msg("Must select main image")}
+            if(!files.hover){set_error_msg("Must select hover image")}
     
             if((files.model_show_case?.status === true && filtred_data.model_show_case_status !== true) || (files.detail_show_case?.status === true && filtred_data.detail_show_case_status !== true)){set_error_msg("show case missing images")}
 
-            if(!name){set_error_msg("name is empty")}
-            if(!cost){set_error_msg("cost is empty")}
-            if(!description){set_error_msg("description is empty")}
-            if(filtred_data.file_names_for_table.length <= 0){set_error_msg("select image")}
-            if(filtred_sizes.sizes.length <= 0){set_error_msg("select size")}
+            if(!name){set_error_msg("Name is missing")}
+            if(!cost){set_error_msg("Price is missing")}
+            if(!description){set_error_msg("Description is missing")}
+            if(filtred_data.file_names_for_table.length <= 0){set_error_msg("Must select image")}
+            if(filtred_sizes.sizes.length <= 0){set_error_msg("Must Select size")}
 
             if(name && cost && description && filtred_data.file_names_for_table.length > 0 && filtred_sizes.sizes.length > 0 && files.main && files.hover && ((files.model_show_case?.status === true && filtred_data.model_show_case_status === true) || files.model_show_case?.status === false) && ((files.detail_show_case?.status === true && filtred_data.detail_show_case_status === true) || files.detail_show_case?.status === false)){            
     
@@ -122,7 +122,7 @@ export default function Admin_product_add(){
 
             }
         }else{
-            set_error_msg("select files")
+            set_error_msg("Must select files")
         }
 
         set_loading(false)

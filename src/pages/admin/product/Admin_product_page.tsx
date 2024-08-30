@@ -236,7 +236,7 @@ export default function Admin_product_page(){
                         </tbody>
                     </table>
                     
-                : <p>no records</p>
+                : <p>No products available</p>
                 : <AccessDenied></AccessDenied>}
             </>}
             
