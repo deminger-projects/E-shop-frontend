@@ -21,7 +21,7 @@ export default function Forgot_psw(){
 
         event.preventDefault();
 
-        if(!email){set_error_msg("email empty")}
+        if(!email){set_error_msg("Email is missing")}
 
         if(email){
 

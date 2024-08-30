@@ -121,7 +121,7 @@ export default function Register(){
                             <br></br>
         
                             <label htmlFor="PSC">{"PSC"}</label>
-                            <input id="PSC" type="number" value={psc} onChange={(e) => setPsc(e.target.value)}></input>
+                            <input id="PSC" type="text" value={psc} onChange={(e) => setPsc(e.target.value)}></input>
                             <br></br>
 
                 

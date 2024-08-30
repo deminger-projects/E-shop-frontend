@@ -72,7 +72,6 @@ export default function Prepare_order(){
         
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
-        set_loading(true)
 
         event.preventDefault();
 
@@ -90,6 +89,8 @@ export default function Prepare_order(){
        
         if(name && surname && email && telephone && adress && city && PSC && session_cart_data.length > 0 && terms_of_servise_status){
 
+            set_loading(true)
+
             var cart_data = get_cart_data(session_cart_data)
 
             var validation_responce: any = await cart_products_validation(cart_data.templates_for_validation)
@@ -105,6 +106,7 @@ export default function Prepare_order(){
                 city: city,
                 postcode: PSC
             }
+            console.log("🚀 ~ handleSubmit ~ customer_obj:", delivery_data)
 
             if(validation_responce.next_status === true){
                 var order_template;
@@ -120,15 +122,16 @@ export default function Prepare_order(){
                 if(responce.url){
                     window.location = responce.url
                     sessionStorage.setItem("cart_data", JSON.stringify([]))
-                    set_loading(false)
 
                 }
             }else{
                 sessionStorage.setItem("cart_data", JSON.stringify([]))
                 navigate("/main", {state:{msg: "Error: invalid manipulation with data"}});
+                
+                set_loading(false)
             }
         }
-
+        
     }
 
     var handle_click_user = (pointer: number) => {

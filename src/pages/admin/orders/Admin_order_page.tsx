@@ -177,7 +177,6 @@ export default function Admin_order_page(){
         const fetchData = async () => {
             
             var data = await get_admin_orders(status)
-            console.log("🚀 ~ fetchData ~ data:", data)
 
             set_order_arr(data)
             set_order_arr_display(data)

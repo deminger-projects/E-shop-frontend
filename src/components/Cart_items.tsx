@@ -13,7 +13,11 @@ export default function Cart_items(props: {update?: Function, updata_status?: bo
 
         let clone = [...session_cart_data]
 
-        clone.splice(pozition, 1)
+        if(clone[pozition].size_data.current_amount > 1){
+            clone[pozition].size_data.current_amount -= 1
+        }else{
+            clone.splice(pozition, 1)
+        }
 
         sessionStorage.setItem("cart_data", JSON.stringify(clone))
 

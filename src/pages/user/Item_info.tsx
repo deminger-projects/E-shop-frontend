@@ -33,7 +33,14 @@ export default function Item_info(){
 
         if(cart_session_data){
             var cart = JSON.parse(cart_session_data)
-            set_cart_item_count(cart.length)
+
+            var len = 0
+
+            for(var item of cart){
+                len += item.size_data.current_amount
+            }
+
+            set_cart_item_count(len)
         }
        
     }, [])
@@ -42,7 +49,6 @@ export default function Item_info(){
     useEffect(() => {
         const fetchData = async () => {
             var data = await get_product_by_id(id)
-            console.log("🚀 ~ fetchData ~ data:", data)
 
             set_data(data);
             set_loading(false);
@@ -64,15 +70,54 @@ export default function Item_info(){
                 sessionStorage.setItem("cart_data", JSON.stringify(data_insert))
             }else{
                 var cart_session_data = sessionStorage.getItem("cart_data")
-    
-                if(cart_session_data){
-                    var cart = JSON.parse(cart_session_data)
-    
-                    cart.push({size_data: size_select, product: data[0].products})
+               
+                var run = false
 
-                    set_cart_item_count(cart.length)
-    
-                    sessionStorage.setItem("cart_data", JSON.stringify(cart))
+                if(cart_session_data && size_select){
+                    var cart2 = JSON.parse(cart_session_data)
+
+                    var product = data[0].products[0]
+                    var size = size_select.size
+                    var amount = Number(size_select.current_amount)
+
+                    for (let index = 0; index < cart2.length; index++) {
+                        if(cart2[index].product[0].id === product.id && size === cart2[index].size_data.size){
+                            cart2[index].size_data.current_amount = Number(cart2[index].size_data.current_amount) + amount
+                            run = true
+
+                            sessionStorage.setItem("cart_data", JSON.stringify(cart2))
+                            
+                            break
+                        }
+                        
+                    }
+
+                    var len = 0
+
+                    for(var item of cart2){
+                        len += Number(item.size_data.current_amount)
+                    }
+
+                    set_cart_item_count(len)
+            
+
+                    if(!run){
+                        if(cart_session_data){
+                            var cart = JSON.parse(cart_session_data)
+            
+                            cart.push({size_data: size_select, product: data[0].products})
+
+                            var len = 0
+
+                            for(var item of cart){
+                                len += Number(item.size_data.current_amount)
+                            }
+        
+                            set_cart_item_count(len)
+            
+                            sessionStorage.setItem("cart_data", JSON.stringify(cart))
+                        }
+                    }
                 }
             }
         }

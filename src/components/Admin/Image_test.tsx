@@ -7,7 +7,6 @@ export default function Image_test(props: {base_images: any, settings: {hover: b
 
         for(var foto of images){
             var split_foto = foto.image_url.split(".")[0]
-            console.log("🚀 ~ useEffect ~ split_foto:", split_foto)
         }
     }, [])
 

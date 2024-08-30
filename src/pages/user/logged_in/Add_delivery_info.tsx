@@ -107,7 +107,7 @@ export default function Add_delivery_info(){
                                 <br></br>
 
                                 <label htmlFor="PSC">{"PSČ"}</label>
-                                <input id="PSC" type="number" value={PSC} onChange={(e) => setPSC(e.target.value)}></input>
+                                <input id="PSC" type="text" value={PSC} onChange={(e) => setPSC(e.target.value)}></input>
                                 <br></br>
 
                                 <button>Proceed</button>

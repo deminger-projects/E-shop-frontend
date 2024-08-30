@@ -50,7 +50,7 @@ export default function Order_refund(){
 
         const filtred_refund_data = filter_refund_data(refund_data)
 
-        if(filtred_refund_data.ids.length <= 0){set_error_msg("selelct value")}
+        if(filtred_refund_data.ids.length <= 0){set_error_msg("Select product to refund")}
 
         if(filtred_refund_data.ids.length > 0){
 
