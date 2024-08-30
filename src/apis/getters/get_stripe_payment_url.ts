@@ -3,9 +3,8 @@ export default async function get_stripe_payment_url(cart_data: any, order_templ
     
         const form_data = new FormData()
 
-        form_data.append('items', JSON.stringify({products: cart_data.cart_items_for_stripe_paywall}))
+        form_data.append('items', JSON.stringify(cart_data))
         form_data.append('tables', JSON.stringify(order_template))
-        form_data.append('cart', JSON.stringify(cart_data.cart_items_for_stripe_paywall))
 
         form_data.append('order_code', JSON.stringify(order_code))
 

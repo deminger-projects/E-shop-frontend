@@ -114,11 +114,9 @@ export default function Prepare_order(){
                 }else{
                     order_template = get_order_template(delivery_data[0].users[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user_data[0].login_status, country, zasilkovna_gate, order_code)
                 }
-    
-                console.log("🚀 ~ handleSubmit ~ order_template:", JSON.stringify(cart_data))
 
-
-                var responce = await get_stripe_payment_url(cart_data, order_template, delivery_price, order_code, customer_obj)
+                var responce = await get_stripe_payment_url(cart_data.cart_items_for_stripe_paywall, order_template, delivery_price, order_code, customer_obj)
+                console.log("🚀 ~ handleSubmit ~ responce:", responce)
     
                 if(responce.url){
                     window.location = responce.url

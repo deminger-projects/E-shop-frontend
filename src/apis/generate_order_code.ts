@@ -6,7 +6,6 @@ export default async function generate_order_code(){
         })
 
         const data = await responce.json()
-        console.log("🚀 ~ generate_order_code ~ data:", data)
 
       return data
 
