@@ -117,7 +117,7 @@ export default function Orders(){
                                             <th>Name</th>
                                             <th>Surname</th>
                                             <th>Email</th>
-                                            <th>Phone</th>
+                                            <th>Phone number</th>
                                             <th>Adress</th>
                                             <th>PSČ</th>
                                             <th>Add date</th>

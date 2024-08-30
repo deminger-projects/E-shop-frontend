@@ -1,4 +1,4 @@
-export default async function get_stripe_payment_url(cart_data: any, order_template: any, delivery_price: number, order_code: string){
+export default async function get_stripe_payment_url(cart_data: any, order_template: any, delivery_price: number, order_code: string, customer_obj: any){
     try {
     
         const form_data = new FormData()
@@ -10,6 +10,8 @@ export default async function get_stripe_payment_url(cart_data: any, order_templ
         form_data.append('order_code', JSON.stringify(order_code))
 
         form_data.append('delivery_price', JSON.stringify(delivery_price))
+
+        form_data.append('customer_obj', JSON.stringify(customer_obj))
 
         const responce = await fetch(process.env.REACT_APP_SECRET_SERVER_URL + '/stripe_create_session', {
             method: 'POST',

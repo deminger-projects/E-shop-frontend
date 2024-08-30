@@ -108,7 +108,7 @@ export default function Register(){
                             <input id="surname" type="text" value={surname} onChange={(e) => setSurname(e.target.value)}></input>
                             <br></br>
         
-                            <label htmlFor="telephone">{"Telephone"}</label>
+                            <label htmlFor="telephone">{"Phone number"}</label>
                             <input id="telephone" type="tel" value={telephone} onChange={(e) => setTelephone(e.target.value)}></input>
                             <br></br>
         

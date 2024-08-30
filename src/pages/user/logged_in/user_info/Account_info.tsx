@@ -78,7 +78,7 @@ export default function Account_info(){
                         <tr>
                             <th>Name</th>
                             <th>Surname</th>
-                            <th>Phone</th>
+                            <th>Phone number</th>
                             <th>Adress</th>
                             <th>City</th>
                             <th>PSČ</th>

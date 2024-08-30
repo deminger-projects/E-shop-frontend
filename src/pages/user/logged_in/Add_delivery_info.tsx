@@ -94,7 +94,7 @@ export default function Add_delivery_info(){
                                 <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}></input>
                                 <br></br>
                                 
-                                <label htmlFor="telephone">{"Telephone"}</label>
+                                <label htmlFor="telephone">{"Phone number"}</label>
                                 <input id="telephone" type="tel" value={telephone} onChange={(e) => setTelephone(e.target.value)}></input>
                                 <br></br>
 

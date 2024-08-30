@@ -96,6 +96,16 @@ export default function Prepare_order(){
 
             var order_code = (await generate_order_code()).order_code
 
+            var customer_obj = {
+                name: name,
+                surname: surname,
+                email: email,
+                telephone: telephone,
+                adress: adress,
+                city: city,
+                PSC: PSC
+            }
+
             if(validation_responce.next_status === true){
                 var order_template;
 
@@ -105,7 +115,10 @@ export default function Prepare_order(){
                     order_template = get_order_template(delivery_data[0].users[0].id, name, surname, email, adress, telephone, PSC, cart_data.ids, cart_data.sizes, cart_data.amounts, cart_data.prizes, cookies.user_data[0].login_status, country, zasilkovna_gate, order_code)
                 }
     
-                var responce = await get_stripe_payment_url(cart_data, order_template, delivery_price, order_code)
+                console.log("🚀 ~ handleSubmit ~ order_template:", JSON.stringify(cart_data))
+
+
+                var responce = await get_stripe_payment_url(cart_data, order_template, delivery_price, order_code, customer_obj)
     
                 if(responce.url){
                     window.location = responce.url
@@ -113,7 +126,7 @@ export default function Prepare_order(){
                 }
             }else{
                 sessionStorage.setItem("cart_data", JSON.stringify([]))
-                navigate("/main", {state:{msg: "error: invalid manipulation with data"}});
+                navigate("/main", {state:{msg: "Error: invalid manipulation with data"}});
             }
         }
 
@@ -273,7 +286,7 @@ export default function Prepare_order(){
                         <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}></input>
                         <br></br>
                         
-                        <label htmlFor="telephone">{"Telephone"}</label>
+                        <label htmlFor="telephone">{"Phone number"}</label>
                         <input id="telephone" type="tel" value={telephone} onChange={(e) => setTelephone(e.target.value)}></input>
                         <br></br>
 
