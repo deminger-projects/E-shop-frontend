@@ -51,6 +51,8 @@ import Collection_product_showcase from "./pages/user/Showcase";
 
 import Padding from "./components/Padding";
 
+import Term_or_servise from "./pages/user/Term_of_servise";
+
 export default function App(){
   
   return(
@@ -109,6 +111,8 @@ export default function App(){
           
           <Route path="/collections" element={<Collections/>} />
           <Route path="/showcase/:id" element={<Collection_product_showcase/>} />
+
+          <Route path="/term-or-servise" element={<Term_or_servise/>} />
 
       </Routes>
 

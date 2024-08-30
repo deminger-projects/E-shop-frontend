@@ -52,7 +52,7 @@ export default function Prepare_order(){
 
     const [update, set_update] = useState<boolean>(false);
 
-    const [cart, set_cart] = useState<any>("");
+    const [terms_of_servise_status, set_terms_of_servise_status] = useState<boolean>(false);
 
 
       useEffect(() => {
@@ -83,9 +83,12 @@ export default function Prepare_order(){
         if(!adress){set_error_msg("Adress is missing")}
         if(!city){set_error_msg("City is missing")}
         if(!PSC){set_error_msg("PSČ is missing")}
-        if(session_cart_data.length < 1){set_error_msg("must put items in missing")}
+        if(session_cart_data.length < 1){set_error_msg("Must put items in cart")}
+
+        if(terms_of_servise_status === false){set_error_msg("You must agree with terms of service to proceed")}
+
        
-        if(name && surname && email && telephone && adress && city && PSC && session_cart_data.length > 0){
+        if(name && surname && email && telephone && adress && city && PSC && session_cart_data.length > 0 && terms_of_servise_status){
 
             var cart_data = get_cart_data(session_cart_data)
 
@@ -365,6 +368,9 @@ export default function Prepare_order(){
                     <br />
 
                     <br />
+
+                    <label htmlFor="terms_of_servise_status">Do you agree with the terms of service? <Link to={"/term-or-servise"}>See terms of service</Link></label>
+                    <input id='terms_of_servise_status' type="checkbox" onChange={() => set_terms_of_servise_status(!terms_of_servise_status)}/>
 
                     <button>Proceed to payment</button>
 
