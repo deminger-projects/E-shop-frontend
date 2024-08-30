@@ -11,9 +11,10 @@ export default function About(){
 
             <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nullam lectus justo, vulputate eget mollis sed, tempor sed magna. Aliquam erat volutpat. Nullam lectus justo, vulputate eget mollis sed, tempor sed magna. Vivamus luctus egestas leo. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In rutrum. Mauris elementum mauris vitae tortor. Nam sed tellus id magna elementum tincidunt.</p>
 
-            <h3>Informations about company</h3>
-
             <br />
+
+
+            <h3>Informations about company</h3>
 
             <p>Company name: Joynda s.r.o.</p>
             <br />
@@ -29,13 +30,13 @@ export default function About(){
 
             <p>DIČ: ???? teprve dostaneme nejspis</p>
             <br />
-            
-            <br />
+
 
             <h3>Terms of service</h3>
 
-            <Link to={"term-or-servise"}>Terms of service</Link>
+            <Link to={"/term-or-servise"}>Terms of service</Link>
 
+            <br />
             <br />
 
             <h3>GDPR</h3>
@@ -44,9 +45,10 @@ export default function About(){
 
             <br />
 
+
             <h3>Terms of refunds</h3>
 
-            <Link to={"term-or-refund"}>Terms of refunds</Link>
+            <Link to={"/term-or-refund"}>Terms of refunds</Link>
         </>
     )
 }
