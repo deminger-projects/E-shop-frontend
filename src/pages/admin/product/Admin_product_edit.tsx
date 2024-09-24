@@ -124,9 +124,6 @@ export default function Admin_product_edit(){
         //const filtred_data = get_filtred_data(urls, files, base_layout)
 
         var new_data = filter_images(files, urls)
-        console.log("🚀 ~ handleSubmit ~ new_data:", new_data)
-        console.log("🚀 ~ handleSubmit ~ files_to_delete:", files_to_delete)
-
         
         if(!name){set_error_msg("Name is missing")}
         if(!cost){set_error_msg("Price is missing")}
@@ -164,17 +161,6 @@ export default function Admin_product_edit(){
 
         set_loading(false)
     }
-
-
-    useEffect(() => {
-        //console.log("🚀 ~ Admin_product_edit ~ urls:", urls)
-          //  console.log("🚀 ~ Admin_product_edit ~ files_to_delete:", files_to_delete)
-
-        //console.log("🚀 ~ Admin_product_edit ~ files:", files)
-
-        console.log(files)
-    
-    }, [files, urls, files_to_delete])
     
     return(
         <>

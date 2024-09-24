@@ -146,7 +146,6 @@ export default function Admin_product_page(){
         set_loading(true)
 
         var data1 = await get_admin_products_images(id)
-        console.log("🚀 ~ varget_admin_images= ~ data1:", data1)
 
         //var new_data = {products: product, products_images: data1}        
         

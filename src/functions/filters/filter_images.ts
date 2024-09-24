@@ -21,8 +21,6 @@ export default function filter_images(files: any, urls: any){
             }
         }
     }
-    console.log("🚀 ~ filter_images ~ files:", files)
-
     
 
     if(files.model_show_case[0]){
@@ -33,10 +31,8 @@ export default function filter_images(files: any, urls: any){
             //     }
             // }
             files_for_save.push(files.model_show_case[0])
-            console.log("model test jo")
 
         }else{
-            console.log("model test ne")
             for(let image of files.model_show_case){
                 if(image !== undefined){
                     files_for_save.push(image)
@@ -133,9 +129,6 @@ export default function filter_images(files: any, urls: any){
             }
         }
     }
-
-    console.log("🚀 ~ filter_images ~ files_names_for_tables:", files_names_for_tables)
-    console.log("🚀 ~ filter_images ~ files_for_save:", files_for_save)
 
 
     return({files_for_save: files_for_save, files_names_for_tables: files_names_for_tables, model_files: model, detail_files: detail})

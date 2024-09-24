@@ -40,7 +40,6 @@ export default function Image_test(props: {files_to_delete: Array<string>, chang
                 //if(props.default_files.main){
 
                 var new_files = props.default_files
-                console.log("🚀 ~ new_files:", new_files)
 
                 new_files.main = new_file
 
@@ -187,12 +186,9 @@ export default function Image_test(props: {files_to_delete: Array<string>, chang
                 
                 if(props.default_files.model_show_case){
                     var new_files = props.default_files
-                    console.log("🚀 ~ new_files:", new_files)
 
                     new_files.model_show_case[pozition] = new_file
-                    console.log("🚀 ~ new_files.model_show_case[pozition]:", new_files.model_show_case[pozition])
 
-    
                     props.change_files({...props.default_files, model_show_case: new_files.model_show_case})
     
                     if(old_name){
@@ -382,24 +378,13 @@ export default function Image_test(props: {files_to_delete: Array<string>, chang
                 data2.other.splice(pozition, 1)
             }
 
-            console.log("🚀 ~ handle_other_delete ~ data:", data)
-
             // data.other = copy_blobs
 
             props.change_urls(data)
             props.change_files(data2)
-
-            console.log("🚀 ~ handle_other_delete ~ data:", data)
-            console.log("🚀 ~ handle_other_delete ~ data2:", data2)
-            console.log("🚀 ~ handle_other_delete ~ data2:", copy_blobs)
-
         }
 
     })
-
-    useEffect(() => {
-        //console.log(blobs.detail_show_case.length)
-    }, [blobs])
 
     return(
         <>

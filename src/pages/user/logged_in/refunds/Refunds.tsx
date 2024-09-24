@@ -30,8 +30,6 @@ export default function Refunds(){
 
         for(var order of orders_arr){
 
-            console.log(order)
-
             var order_fix: New_orders = order
 
             if(search_order_id){

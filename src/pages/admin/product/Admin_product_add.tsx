@@ -87,12 +87,6 @@ export default function Admin_product_add(){
         fetchData()
     }, [])
 
-    
-    useEffect(() => {
-        console.log("🚀 ~ useEffect ~ files:", files)
-        
-    }, [files])
-
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
         set_loading(true)
@@ -105,7 +99,6 @@ export default function Admin_product_add(){
             const filtred_sizes = filter_sizes(sizes)
 
             var new_data = filter_images(files, urls)
-            console.log("🚀 ~ handleSubmit ~ new_data:", new_data)
 
             if(!files.main){set_error_msg("Must select main image")}
             if(!files.hover){set_error_msg("Must select hover image")}
@@ -144,11 +137,6 @@ export default function Admin_product_add(){
         set_loading(false)
     }
 
-    useEffect(() => {
-        console.log("🚀 ~ Admin_collection_add ~ urls:", urls)
-        console.log("🚀 ~ useEffect ~ files:", files)
-    }, [files, urls])
-    
     return(
         <>
 

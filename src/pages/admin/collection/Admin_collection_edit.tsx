@@ -87,9 +87,7 @@ export default function Admin_collection_edit(){
 
     }, [])
     
-    console.log("🚀 ~ constfetch_data= ~ base_layout:", base_layout)
-    console.log("🚀 ~ constfetch_data= ~ base_layout:", files_to_delete)
-
+   
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
         set_loading(true)
@@ -170,7 +168,6 @@ export default function Admin_collection_edit(){
             })
 
             var to_keep = new_function()
-            console.log("🚀 ~ handleSubmit ~ to_keep:", to_keep)
 
             const edit_collection_template = get_edit_collection_template(collection_name, location.state.collection_data.collections.collections[0].id, new_data.files_names_for_tables)
 
@@ -186,10 +183,6 @@ export default function Admin_collection_edit(){
         set_loading(false)
     }
 
-    useEffect(() => {
-        console.log("🚀 ~ Admin_collection_edit ~ urls:", urls)
-   
-    }, [urls])
     
     return(
         <>

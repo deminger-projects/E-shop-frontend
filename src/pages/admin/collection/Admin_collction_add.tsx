@@ -57,11 +57,6 @@ export default function Admin_collection_add(){
         temp()
     }, [])
 
-    useEffect(() => {
-        //console.log("🚀 ~ Admin_collection_add ~ files:", files)
-
-    }, [files])
-
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
         set_loading(true)
@@ -71,7 +66,6 @@ export default function Admin_collection_add(){
         if(files){
 
             var filtred_data2 = filter_images(files, urls)
-            console.log("🚀 ~ handleSubmit ~ filtred_data2:", filtred_data2)
         
             if(!files.main){set_error_msg("Must select main image")}
             if(!collection_name){set_error_msg("Collection name is missing")}
@@ -81,7 +75,6 @@ export default function Admin_collection_add(){
                 const collection_edit_template = get_edit_collection_template(collection_name, null, filtred_data2.files_names_for_tables)
                 
                const [api_responce, error] = await add_record(collection_edit_template, cookies.user_data[0].id, "collections", filtred_data2.files_for_save)
-               console.log("🚀 ~ handleSubmit ~ api_responce:", api_responce)
     
                 if(api_responce.duplicit_value === true){
                     set_error_msg("duplicit name")
@@ -104,12 +97,6 @@ export default function Admin_collection_add(){
 
         set_loading(false)
     }
-
-    useEffect(() => {
-        console.log("🚀 ~ Admin_collection_add ~ urls:", urls)
-        console.log("🚀 ~ useEffect ~ files:", files)
-    }, [files, urls])
-       
 
     return(
         <>

@@ -35,7 +35,6 @@ export default function New_psw(){
             const psw_template = get_psw_template(psw_input1)
 
             const [api_respocse, error] = await edit_record(psw_template, location.state.record_id, location.state.record_id, undefined, undefined, undefined, true)
-            console.log("🚀 ~ handleSubmit ~ api_respocse:", api_respocse)
             
             if(error){
                 set_error_msg("error ocured")
