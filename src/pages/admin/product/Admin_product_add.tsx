@@ -21,6 +21,8 @@ import { useCookies } from 'react-cookie';
 import check_for_admin from '../../../functions/sub_functions/check_for_admin';
 import get_admin_collections from '../../../apis/getters/admin/get_admin_collections';
 import Loading from '../../../components/Loading';
+import Image_test from '../../../components/Admin/Image_test';
+import filter_images from '../../../functions/filters/filter_images';
 
 export default function Admin_product_add(){
 
@@ -37,7 +39,7 @@ export default function Admin_product_add(){
     const [collection, setCollection] = useState<string>();
     const [description, setDescription] = useState<string>("");
 
-    const [files, set_files] = useState<Files>()
+    const [files, set_files] = useState<any>({main: undefined, hover: undefined, other: [], model_show_case: [], detail_show_case: []})
 
     const [sizes, set_sizes] = useState<Array<Size>>(size_set_up)
 
@@ -53,6 +55,8 @@ export default function Admin_product_add(){
     const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     const [is_admin, set_is_admin] = useState<boolean>(false)
+
+    const [files_to_delete, set_files_to_delete] = useState<Array<string>>([])
 
     useEffect(() => {
         set_loading(true)
@@ -84,6 +88,11 @@ export default function Admin_product_add(){
     }, [])
 
     
+    useEffect(() => {
+        console.log("🚀 ~ useEffect ~ files:", files)
+        
+    }, [files])
+
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
         set_loading(true)
@@ -92,25 +101,31 @@ export default function Admin_product_add(){
 
         if(files){
 
-            const filtred_data = get_filtred_data(urls, files, file_set_up.ulrs)
+            //const filtred_data = get_filtred_data(urls, files, file_set_up.ulrs)
             const filtred_sizes = filter_sizes(sizes)
+
+            var new_data = filter_images(files, urls)
+            console.log("🚀 ~ handleSubmit ~ new_data:", new_data)
 
             if(!files.main){set_error_msg("Must select main image")}
             if(!files.hover){set_error_msg("Must select hover image")}
+            if(files.model_show_case.length < 4){set_error_msg("Must select model image")}
+            if(files.detail_show_case.length < 4){set_error_msg("Must select detail image")}
+
     
-            if((files.model_show_case?.status === true && filtred_data.model_show_case_status !== true) || (files.detail_show_case?.status === true && filtred_data.detail_show_case_status !== true)){set_error_msg("show case missing images")}
+            // if((files.model_show_case?.status === true && filtred_data.model_show_case_status !== true) || (files.detail_show_case?.status === true && filtred_data.detail_show_case_status !== true)){set_error_msg("show case missing images")}
 
             if(!name){set_error_msg("Name is missing")}
             if(!cost){set_error_msg("Price is missing")}
             if(!description){set_error_msg("Description is missing")}
-            if(filtred_data.file_names_for_table.length <= 0){set_error_msg("Must select image")}
+            //if(filtred_data.file_names_for_table.length <= 0){set_error_msg("Must select image")}
             if(filtred_sizes.sizes.length <= 0){set_error_msg("Must Select size")}
 
-            if(name && cost && description && filtred_data.file_names_for_table.length > 0 && filtred_sizes.sizes.length > 0 && files.main && files.hover && ((files.model_show_case?.status === true && filtred_data.model_show_case_status === true) || files.model_show_case?.status === false) && ((files.detail_show_case?.status === true && filtred_data.detail_show_case_status === true) || files.detail_show_case?.status === false)){            
+            if(name && cost && description && filtred_sizes.sizes.length > 0 && new_data.model_files.length === 4 && new_data.detail_files.length === 4 && files.main && files.hover){            
     
-                const product_template = get_product_template(Number(collection), name, Number(cost), description, filtred_sizes.sizes, null, filtred_sizes.amounts, filtred_data.file_names_for_table, files)
+                const product_template = get_product_template(Number(collection), name, Number(cost), description, filtred_sizes.sizes, null, filtred_sizes.amounts, new_data.files_names_for_tables, files)
     
-                const [api_responce, error] = await add_record(product_template, cookies.user_data[0].id, "products", filtred_data.files_to_save)    
+                const [api_responce, error] = await add_record(product_template, cookies.user_data[0].id, "products", new_data.files_for_save)    
 
                 if(error){
                     set_error_msg("error ocured")
@@ -118,6 +133,7 @@ export default function Admin_product_add(){
                     navigate("/admin_product_page", {state: {msg: api_responce.msg}})
                 }else{
                     set_responce_msg(api_responce.msg)
+                    set_error_msg("")
                 }
 
             }
@@ -128,6 +144,11 @@ export default function Admin_product_add(){
         set_loading(false)
     }
 
+    useEffect(() => {
+        console.log("🚀 ~ Admin_collection_add ~ urls:", urls)
+        console.log("🚀 ~ useEffect ~ files:", files)
+    }, [files, urls])
+    
     return(
         <>
 
@@ -168,7 +189,10 @@ export default function Admin_product_add(){
 
                         <br></br>
                         
-                        <Admin_image_add settings={{hover: true, detail_show_case: true, model_show_case: true}} on_delete={set_urls} on_change={set_files}></Admin_image_add>
+                  {     // <Admin_image_add settings={{hover: true, detail_show_case: true, model_show_case: true}} on_delete={set_urls} on_change={set_files}></Admin_image_add>
+                  }
+
+                        <Image_test default_files={files} change_files={set_files} change_urls={set_urls} default_urls={urls} files_to_delete={files_to_delete} change_files_to_delete={set_files_to_delete} settings={{hover: true, model_show_case: true, detail_show_case: true, other: false}}></Image_test>
 
                         <br></br>
 

@@ -17,6 +17,8 @@ import check_for_admin from '../../../functions/sub_functions/check_for_admin';
 import Loading from '../../../components/Loading';
 import get_product_by_id from '../../../apis/getters/get_product_by_id';
 import get_collection_by_id from '../../../apis/getters/get_collection_by_id';
+import Image_test from '../../../components/Admin/Image_test';
+import filter_images from '../../../functions/filters/filter_images';
 
 export default function Admin_collection_edit(){
 
@@ -41,6 +43,8 @@ export default function Admin_collection_edit(){
     const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     const [is_admin, set_is_admin] = useState<boolean>(false)
+
+    const [files_to_delete, set_files_to_delete] = useState<Array<string>>([])
 
     useEffect(() => {
 
@@ -83,6 +87,8 @@ export default function Admin_collection_edit(){
 
     }, [])
     
+    console.log("🚀 ~ constfetch_data= ~ base_layout:", base_layout)
+    console.log("🚀 ~ constfetch_data= ~ base_layout:", files_to_delete)
 
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -94,11 +100,81 @@ export default function Admin_collection_edit(){
 
         if(collection_name){
 
-            const filtred_data = get_filtred_data(urls, files, base_layout)
+            //const filtred_data = get_filtred_data(urls, files, base_layout)
 
-            const edit_collection_template = get_edit_collection_template(collection_name, location.state.collection_data.collections.collections[0].id, filtred_data.file_names_for_table)
+            var new_data = filter_images(files, urls)
 
-            const [api_responce, error] = await edit_record(edit_collection_template, location.state.collection_data.collections.collections[0].id, cookies.user_data[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "collections")
+            var new_function = (() => {
+                var urls = []
+
+                var to_keep = []
+
+                if(base_layout.main){
+                    var split1 = base_layout.main.split("/")
+                    var url = split1[split1.length - 1]
+
+                    urls.push(url)
+                }
+
+                if(base_layout.hover){
+                    var split1 = base_layout.hover.split("/")
+                    var url = split1[split1.length - 1]
+
+                    urls.push(url)
+                }
+
+                if(base_layout.other.length > 0){
+                    for(let item of base_layout.other){
+                        var split1 = item.split("/")
+                        var url = split1[split1.length - 1]
+
+                        urls.push(url)
+                    }
+                }
+
+                if(base_layout.model_show_case.length > 0){
+                    for(let item of base_layout.model_show_case){
+
+                        var split1 = item.split("/")
+                        var url = split1[split1.length - 1]
+
+                        urls.push(url)
+                    }
+                }
+
+                if(base_layout.detail_show_case.length > 0){
+                    for(let item of base_layout.detail_show_case){
+                        var split1 = item.split("/")
+                        var url = split1[split1.length - 1]
+
+                        urls.push(url)
+                    }
+                }
+
+
+
+                for(let url of urls){
+                    var is_keep = true
+                    for(let deleted_image of files_to_delete){
+                        if(url === deleted_image){
+                            is_keep = false
+                            break
+                        }
+                    }
+                    if(is_keep){
+                        to_keep.push(url)
+                    }
+                }
+
+                return to_keep
+            })
+
+            var to_keep = new_function()
+            console.log("🚀 ~ handleSubmit ~ to_keep:", to_keep)
+
+            const edit_collection_template = get_edit_collection_template(collection_name, location.state.collection_data.collections.collections[0].id, new_data.files_names_for_tables)
+
+            const [api_responce, error] = await edit_record(edit_collection_template, location.state.collection_data.collections.collections[0].id, cookies.user_data[0].id, new_data.files_for_save, to_keep, "collections")
 
             if(error){
                 set_err_msg("error ocured")
@@ -109,7 +185,12 @@ export default function Admin_collection_edit(){
 
         set_loading(false)
     }
+
+    useEffect(() => {
+        console.log("🚀 ~ Admin_collection_edit ~ urls:", urls)
    
+    }, [urls])
+    
     return(
         <>
 
@@ -124,7 +205,10 @@ export default function Admin_collection_edit(){
                         <br></br>
                         <br></br>
 
-                        <Admin_image_add default_urls={urls} on_change={set_files} on_delete={set_urls}></Admin_image_add>
+                        {//<Admin_image_add default_urls={urls} on_change={set_files} on_delete={set_urls}></Admin_image_add>
+                        }
+
+                        <Image_test files_to_delete={files_to_delete} change_files_to_delete={set_files_to_delete} default_files={{main: "", hover: "", other: [], model_show_case: [], detail_show_case: []}} change_urls={set_urls} change_files={set_files} default_urls={urls} settings={{hover: false, model_show_case: false, detail_show_case: false, other: false}}></Image_test>
 
                         <button>Save</button>
 

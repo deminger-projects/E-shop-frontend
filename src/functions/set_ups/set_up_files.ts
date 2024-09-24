@@ -25,6 +25,9 @@ export default function set_up_files(images?: Array<ProductImage>, product?: Pro
                 suffix = suffix_split[suffix_split.length - 1]
                 type = suffix_split[suffix_split.length - 2]
             }
+
+           
+
     
             if(suffix){
                 if(suffix === "main"){
@@ -50,10 +53,13 @@ export default function set_up_files(images?: Array<ProductImage>, product?: Pro
                     default_files_without_path.detail_show_case.push(images[index].image_url)
 
                     is_detail = true
+                }else if(type === "other"){
+                    default_files.other.push(path + images[index].image_url)
+                    default_files_without_path.other.push(images[index].image_url)
                 }
             }
 
-            files_to_keep.push(images[index].image_url)
+            //files_to_keep.push(images[index].image_url)
 
         }
     }

@@ -16,6 +16,10 @@ import get_edit_collection_template from '../../../templates/admin/get_edit_coll
 import { useCookies } from 'react-cookie';
 import check_for_admin from '../../../functions/sub_functions/check_for_admin';
 import Loading from '../../../components/Loading';
+import Image_test from '../../../components/Admin/Image_test';
+import { hover } from '@testing-library/user-event/dist/hover';
+import filter_images from '../../../functions/filters/filter_images';
+import { url } from 'inspector';
 
 export default function Admin_collection_add(){
     
@@ -30,7 +34,7 @@ export default function Admin_collection_add(){
     var file_set_up = set_up_files(undefined, undefined, undefined)
 
     const [urls, set_urls] = useState<{main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}>(file_set_up.ulrs)
-    const [files, set_files] = useState<Files>()
+    const [files, set_files] = useState<any>({main: undefined, hover: undefined, other: [], model_show_case: [], detail_show_case: []})
 
     const [error_msg, set_error_msg] = useState<string>("");  
 
@@ -53,6 +57,11 @@ export default function Admin_collection_add(){
         temp()
     }, [])
 
+    useEffect(() => {
+        //console.log("🚀 ~ Admin_collection_add ~ files:", files)
+
+    }, [files])
+
     var handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
         set_loading(true)
@@ -61,18 +70,18 @@ export default function Admin_collection_add(){
 
         if(files){
 
-            var filtred_data = get_filtred_data(urls, files, file_set_up.ulrs)
-
+            var filtred_data2 = filter_images(files, urls)
+            console.log("🚀 ~ handleSubmit ~ filtred_data2:", filtred_data2)
+        
             if(!files.main){set_error_msg("Must select main image")}
-
             if(!collection_name){set_error_msg("Collection name is missing")}
-            if(filtred_data.file_names_for_table.length <= 0){set_error_msg("select image")}
     
-            if(collection_name && filtred_data.file_names_for_table.length > 0 && files.main){
+            if(collection_name && files.main){
 
-                const collection_edit_template = get_edit_collection_template(collection_name, null, filtred_data.file_names_for_table)
+                const collection_edit_template = get_edit_collection_template(collection_name, null, filtred_data2.files_names_for_tables)
                 
-                const [api_responce, error] = await add_record(collection_edit_template, cookies.user_data[0].id, "collections", filtred_data.files_to_save)
+               const [api_responce, error] = await add_record(collection_edit_template, cookies.user_data[0].id, "collections", filtred_data2.files_for_save)
+               console.log("🚀 ~ handleSubmit ~ api_responce:", api_responce)
     
                 if(api_responce.duplicit_value === true){
                     set_error_msg("duplicit name")
@@ -96,6 +105,12 @@ export default function Admin_collection_add(){
         set_loading(false)
     }
 
+    useEffect(() => {
+        console.log("🚀 ~ Admin_collection_add ~ urls:", urls)
+        console.log("🚀 ~ useEffect ~ files:", files)
+    }, [files, urls])
+       
+
     return(
         <>
 
@@ -110,8 +125,13 @@ export default function Admin_collection_add(){
                         <br></br>
                         <br></br>
 
-                        <Admin_image_add on_change={set_files} on_delete={set_urls}></Admin_image_add>
-
+                      { // <Admin_image_add on_change={set_files} on_delete={set_urls}></Admin_image_add>
+}
+                        <Image_test default_files={files} change_files={set_files} change_urls={set_urls} default_urls={urls} files_to_delete={[]} change_files_to_delete={function(){}} settings={{hover: false, model_show_case: false, detail_show_case: false, other: false}}></Image_test>
+                        
+                        <br />
+                        <br />
+                        
                         <button>Save</button>
 
                     </form>

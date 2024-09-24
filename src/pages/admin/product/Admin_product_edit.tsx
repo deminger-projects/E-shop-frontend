@@ -23,6 +23,7 @@ import Loading from '../../../components/Loading';
 import get_product_by_id from '../../../apis/getters/get_product_by_id';
 import { url } from 'inspector';
 import Image_test from '../../../components/Admin/Image_test';
+import filter_images from '../../../functions/filters/filter_images';
 
 export default function Admin_product_edit(){
 
@@ -38,7 +39,7 @@ export default function Admin_product_edit(){
 
     const [base_layout, set_base_layout] = useState<any>();
 
-    const [files, set_files] = useState<any>({main: undefined, hover: undefined, other: [], model_show_case: {status: file_set_up_test.model_status, data: []}, detail_show_case: {status: file_set_up_test.detail_status, data: []}})
+    const [files, set_files] = useState<any>({main: undefined, hover: undefined, other: [], model_show_case: [], detail_show_case: []})
     const [sizes, set_sizes] = useState<Array<Size>>([])
     const [urls, set_urls] = useState<{main: string|undefined, hover:string|undefined, other: Array<string>, model_show_case: Array<string>, detail_show_case: Array<string>}>(file_set_up_test.ulrs)
 
@@ -52,6 +53,8 @@ export default function Admin_product_edit(){
     const [user_data] = useState<Array<any>>(sessionStorage.getItem("user_data") === null ? [] : JSON.parse(sessionStorage.getItem("user_data")!))
 
     const [is_admin, set_is_admin] = useState<boolean>(false)
+
+    const [files_to_delete, set_files_to_delete] = useState<Array<string>>([])
 
     useEffect(() => {
         set_loading(true)
@@ -97,7 +100,7 @@ export default function Admin_product_edit(){
                 const file_set_up = set_up_files(data[0].product_images, data[0].products[0], "products")
                 const size_set_up = set_up_sizes(data[0].product_sizes)
     
-                set_files({main: undefined, hover: undefined, other: [], model_show_case: {status: file_set_up.model_status, data: []}, detail_show_case: {status: file_set_up.detail_status, data: []}})
+                set_files({main: undefined, hover: undefined, other: [], model_show_case: [], detail_show_case: []})
                 set_urls(file_set_up.ulrs)
                 set_sizes(size_set_up)
     
@@ -118,24 +121,25 @@ export default function Admin_product_edit(){
         event.preventDefault();
 
         const filtred_sizes = filter_sizes(sizes)
-        const filtred_data = get_filtred_data(urls, files, base_layout)
+        //const filtred_data = get_filtred_data(urls, files, base_layout)
+
+        var new_data = filter_images(files, urls)
+        console.log("🚀 ~ handleSubmit ~ new_data:", new_data)
+        console.log("🚀 ~ handleSubmit ~ files_to_delete:", files_to_delete)
+
         
         if(!name){set_error_msg("Name is missing")}
         if(!cost){set_error_msg("Price is missing")}
         if(!description){set_error_msg("Description is missing")}
         if(filtred_sizes.sizes.length <= 0){set_error_msg("Must select sizes")}
 
-        if(files){
-            if(((files.model_show_case?.status === true && filtred_data.model_show_case_status !== true) || (files.detail_show_case?.status === true && filtred_data.detail_show_case_status !== true))){set_error_msg("missing images in show case")}
-        }
-
-        if(name && cost && description && filtred_sizes.sizes.length > 0){
+        if(name && cost && description && filtred_sizes.sizes.length > 0  && new_data.detail_files.length === 4 && new_data.model_files.length === 4){
         
-            const product_template = get_product_template(collection, name, Number(cost), description, filtred_sizes.sizes, location.state.product_data.products.products[0].id, filtred_sizes.amounts, filtred_data.file_names_for_table, files)
+            const product_template = get_product_template(collection, name, Number(cost), description, filtred_sizes.sizes, location.state.product_data.products.products[0].id, filtred_sizes.amounts, new_data.files_names_for_tables, files)
 
             if(files){
-                if(((files.model_show_case?.status === true && filtred_data.model_show_case_status === true) || files.model_show_case?.status === false) && ((files.detail_show_case?.status === true && filtred_data.detail_show_case_status === true) || files.detail_show_case?.status === false)){
-                    const [api_responce, error] = await edit_record(product_template, location.state.product_data.products.products[0].id, cookies.user_data[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "products")
+                //if(((files.model_show_case?.status === true && filtred_data.model_show_case_status === true) || files.model_show_case?.status === false) && ((files.detail_show_case?.status === true && filtred_data.detail_show_case_status === true) || files.detail_show_case?.status === false)){
+                    const [api_responce, error] = await edit_record(product_template, location.state.product_data.products.products[0].id, cookies.user_data[0].id, new_data.files_for_save, new_data.files_names_for_tables, "products")
 
                     if(error){
                         set_error_msg("error ocured")
@@ -144,9 +148,9 @@ export default function Admin_product_edit(){
                     }else if(api_responce.next_status === false){
                         set_error_msg(api_responce.msg)
                     }
-                }
+                //}
             }else{
-                const [api_responce, error] = await edit_record(product_template, location.state.product_data.products.products[0].id, cookies.user_data[0].id, filtred_data.files_to_save, filtred_data.file_names_to_keep, "products")
+                const [api_responce, error] = await edit_record(product_template, location.state.product_data.products.products[0].id, cookies.user_data[0].id, new_data.files_for_save, new_data.files_names_for_tables, "products")
 
                 if(error){
                     set_error_msg("error ocured")
@@ -162,6 +166,16 @@ export default function Admin_product_edit(){
     }
 
 
+    useEffect(() => {
+        //console.log("🚀 ~ Admin_product_edit ~ urls:", urls)
+          //  console.log("🚀 ~ Admin_product_edit ~ files_to_delete:", files_to_delete)
+
+        //console.log("🚀 ~ Admin_product_edit ~ files:", files)
+
+        console.log(files)
+    
+    }, [files, urls, files_to_delete])
+    
     return(
         <>
 
@@ -200,9 +214,9 @@ export default function Admin_product_edit(){
                         <br></br>
                         <br></br>
 
-                        <Admin_image_add on_delete={set_urls} on_change={set_files} default_files={files} default_urls={urls} settings={{hover: true, model_show_case: true, detail_show_case: true}}></Admin_image_add>
-
-                        <Image_test base_images={location.state.product_data.product_images} settings={{hover: true,  model_show_case: true, detail_show_case: true}}></Image_test>
+{                    //    <Admin_image_add on_delete={set_urls} on_change={set_files} default_files={files} default_urls={urls} settings={{hover: true, model_show_case: true, detail_show_case: true}}></Admin_image_add>
+}
+                        <Image_test files_to_delete={files_to_delete} change_files_to_delete={set_files_to_delete} change_urls={set_urls} change_files={set_files} default_files={files} default_urls={urls} settings={{hover: true, model_show_case: true, detail_show_case: true, other: false}}></Image_test>
 
                         <button>save</button>
 
