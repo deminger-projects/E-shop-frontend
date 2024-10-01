@@ -181,10 +181,11 @@ export default function Admin_product_page(){
     useEffect(() => {
         var test = async()=> {
 
-              const response = await fetch(process.env.RAILWAY_VOLUME_MOUNT_PATH + "/image_storage/" + "products/", {
+              const response = await fetch("/image_storage/" + "products/", {
                   method: 'POST'
               }); 
-              console.log("🚀 ~ test ~ response:", response)
+              const data = await response.json();
+              console.log("🚀 ~ test ~ data:", data)
 
         }
 
