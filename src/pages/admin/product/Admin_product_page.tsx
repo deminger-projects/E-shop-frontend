@@ -188,7 +188,7 @@ export default function Admin_product_page(){
 
         }
 
-        test
+        test()
     }, [])
 
     return( 
