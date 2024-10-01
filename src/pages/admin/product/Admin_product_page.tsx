@@ -178,19 +178,19 @@ export default function Admin_product_page(){
     }
 
 
-    useEffect(() => {
-        var test = async()=> {
+    // useEffect(() => {
+    //     var test = async()=> {
 
-              const response = await fetch("/image_storage/" + "products/", {
-                  method: 'POST'
-              }); 
-              const data = await response.json();
-              console.log("🚀 ~ test ~ data:", data)
+    //           const response = await fetch("/image_storage/" + "products/", {
+    //               method: 'POST'
+    //           }); 
+    //           const data = await response.json();
+    //           console.log("🚀 ~ test ~ data:", data)
 
-        }
+    //     }
 
-        test()
-    }, [])
+    //     test()
+    // }, [])
 
     return( 
         <>
