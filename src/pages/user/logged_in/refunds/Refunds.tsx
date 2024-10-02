@@ -160,7 +160,7 @@ export default function Refunds(){
                                 <td><p>{refunds.size}</p></td>
                                 <td><p>{"€" + refunds.prize}</p></td>
                                 <td><p>{refunds.amount}</p></td>
-                                <td><img src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products/" + refunds.product_id + "/" + refunds.image_url} width={"100px"} height={"100px"}/>
+                                <td><img src={process.env.REACT_APP_SECRET_SERVER_URL + "/products/" + refunds.product_id + "/" + refunds.image_url} width={"100px"} height={"100px"}/>
     </td>
                             </tr>            
                         )}
