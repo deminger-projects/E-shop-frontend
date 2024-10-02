@@ -24,7 +24,7 @@ export default function Cart(props: {cart_item_count?: number}){
         <>
             <div id="cart">
                 <Link to="/prepare-order">
-                    <img src={process.env.REACT_APP_SECRET_SERVER_URL + "/public/images/cart_image.jpg"} width={"80px"} height={"80px"}></img>
+                    <img src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/cart_image.jpg"} width={"80px"} height={"80px"}></img>
                     {cart_data !== null ? <>
                         {cart_data ? props.cart_item_count ? <p id="cart_item_number">{props.cart_item_count}</p> : 
                         
