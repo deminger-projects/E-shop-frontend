@@ -233,7 +233,7 @@ export default function Admin_product_page(){
                                 <td>
                                     <img alt={product.products[0].product_name} src={process.env.REACT_APP_SECRET_SERVER_URL + "/products/" + product.products[0].id + "/" + product.products[0].url} width={"100px"} height={"100px"}></img>
                                 </td>
-
+ 
                                 <td><p>{product.products[0].add_date}</p></td>
 
                                 <td>
