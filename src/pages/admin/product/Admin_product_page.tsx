@@ -232,6 +232,8 @@ export default function Admin_product_page(){
                                 
                                 <td>
                                     <img alt={product.products[0].product_name} src={"/image_storage/" + "products/" + product.products[0].id + "/" + product.products[0].url} width={"100px"} height={"100px"}></img>
+                                    <img alt={product.products[0].product_name} src={"./image_storage/" + "products/" + product.products[0].id + "/" + product.products[0].url} width={"100px"} height={"100px"}></img>
+                                    <img alt={product.products[0].product_name} src={"/products/" + product.products[0].id + "/" + product.products[0].url} width={"100px"} height={"100px"}></img>
                                 </td>
 
                                 <td><p>{product.products[0].add_date}</p></td>
