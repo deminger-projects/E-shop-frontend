@@ -53,7 +53,7 @@ export default function Cart_items(props: {update?: Function, updata_status?: bo
                     <tr key={index.toString()}>
                         <td>{item.product[0].product_name}</td>
                         <td>{item.size_data.size}</td>
-                        <td><img src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/products/" + item.product[0].id + "/" + item.product[0].url} width={"100px"} height={"100px"}></img></td>
+                        <td><img src={process.env.REACT_APP_SECRET_SERVER_URL + "/products/" + item.product[0].id + "/" + item.product[0].url} width={"100px"} height={"100px"}></img></td>
                         <td>{item.product[0].price + " €"}</td>
                         <td>{item.size_data.current_amount}</td>
                         <td><button onClick={(event) =>handle_on_click(event, index)}>Remove item</button></td>
@@ -62,7 +62,6 @@ export default function Cart_items(props: {update?: Function, updata_status?: bo
                 </tbody>
 
             </table>
-            
             : <>
                 <p>Epmty cart</p>
                 <Link to={"/main"}>Home page</Link>

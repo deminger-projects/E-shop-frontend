@@ -29,13 +29,13 @@ export default function User_show_case(props: {images: Array<ProductImage>, id: 
     return(
         <>
             {show_cases.model_show_case.map((image, index) => (
-                <img key={image + index.toString()} className="grid-item2" src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/" + props.folder + "/" + props.id + "/" + image} alt="" width={"100xp"} height={"100px"}/>
+                <img key={image + index.toString()} className="grid-item2" src={process.env.REACT_APP_SECRET_SERVER_URL + "/" + props.folder + "/" + props.id + "/" + image} alt="" width={"100xp"} height={"100px"}/>
             ))}
 
             <br />
 
             {show_cases.detail_show_case.map((image, index) => (
-                <img key={image + index.toString()} className="grid-item2" src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/" + props.folder + "/" + props.id + "/" + image} alt="" width={"100xp"} height={"100px"}/>
+                <img key={image + index.toString()} className="grid-item2" src={process.env.REACT_APP_SECRET_SERVER_URL + "/" + props.folder + "/" + props.id + "/" + image} alt="" width={"100xp"} height={"100px"}/>
             ))}
 
             <br />
@@ -43,7 +43,7 @@ export default function User_show_case(props: {images: Array<ProductImage>, id: 
             {button_status ? <button onClick={() => set_other_status(!other_status)}>Rool</button> : <></>}
 
             {other_status ? new_other().map((image, index) => (
-                <img key={image + index.toString()} className="grid-item2" src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/" + props.folder + "/" + props.id + "/" + image} alt="" width={"100xp"} height={"100px"}/>
+                <img key={image + index.toString()} className="grid-item2" src={process.env.REACT_APP_SECRET_SERVER_URL + "/" + props.folder + "/" + props.id + "/" + image} alt="" width={"100xp"} height={"100px"}/>
             )) : <></>}
 
             
