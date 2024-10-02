@@ -160,7 +160,7 @@ export default function Admin_collection_page(){
                             <tr key={collection.collections[0].id}>
                                 <td><p>{collection.collections[0].name}</p></td>
                                 <td>                            
-                                    <img alt={collection.collections[0].name} src={process.env.REACT_APP_SECRET_SERVER_URL + "/images/collections/" + collection.collections[0].id + "/" + collection.collections[0].image_url} width={"100px"} height={"100px"}></img>
+                                    <img alt={collection.collections[0].name} src={process.env.REACT_APP_SECRET_SERVER_URL + "/collections/" + collection.collections[0].id + "/" + collection.collections[0].image_url} width={"100px"} height={"100px"}></img>
                                 </td>    
 
                                 <td><p>{collection.collections[0].add_date}</p></td>
